@@ -1,0 +1,349 @@
+docDscr:
+  citation: ~
+  guide: ~
+  docStatus: ~
+  controlledVocabUsed:
+    codeListName: ~
+    codeListID: ~
+    codeListAgencyName: ~
+    codeListURN: ~
+    usage:
+      attribute: ~
+      selector: ~
+      specificElements: ~
+fileDscr:
+  fileTxt:
+    fileStrc: ~
+    fileStrc-type: ~
+    fileName: ~
+    fileCitation:
+      biblCit: ~
+    fileCont: ~
+    fileCont-lang: ~
+    fileType: ~
+    fileType-charset: ~
+    ProcStat: ~
+    dataMsng: ~
+    software: ~
+    software-version: ~
+    software-date: ~
+    verStmt:
+      version: ~
+      version-date: ~
+      version-type: ~
+      verResp: ~
+      verResp-affiliation: ~
+      notes: ~
+stdyDscr:
+  citation:
+    biblCit: ~
+    biblCit-format: ~
+    titlStmt:
+      titl: Sample Project 2
+      subTitl: ~
+      altTitl: ~
+      altTitl-lang: ~
+      IDNo: ~
+    rspStmt:
+    - AuthEnty:
+      - name: Author 1
+        affiliation: New York University
+    - AuthEnty:
+      - name: Author 2
+        affiliation: New York University
+    - othId:
+      - name: Data Manager name
+        role: Data Manager
+        affiliation: New York University
+    - othId:
+      - name: Data Manager name
+        role: Curator
+        affiliation: New York University
+    serStmt:
+    - serName: Series Name
+      abbr: SN
+      URI: ~
+      serInfo: |
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    prodStmt:
+      producer:
+      - name: Global TIES for Children
+        abbr: TIES-NYU
+        affililation: New York University
+        role: ~
+      - name: International Rescue Committee
+        abbr: IRC
+      prodPlac: New York
+      prodDate: ~
+      prodDate-date: ~
+      fundAg:
+      - name: Funder1
+        abbr: F1
+        role: Funding
+    distStmt:
+      distrbtr: ~
+      distrbtr-abbr: ~
+      distrbtr-affiliation: ~
+      distrbtr-URI: ~
+      distDate: ~
+      distDate-date: ~
+      depDate: ~
+      depDate-date: ~
+      depositor: ~
+      depositor-abbr: ~
+      depositor-affiliation: ~
+      contact: ~
+      contact-affiliation: ~
+      contact-email: ~
+  dataAccs:
+    setAvail:
+      avlStatus: ~
+      complete: ~
+      accsPlac: ~
+      accsPlac-URI: ~
+    useStmt:
+      confDec: ~
+      confDec-required: ~
+      confDec-formNo: ~
+      confDec-URI: ~
+      contact: ~
+      contact-affiliation: ~
+      contact-email: ~
+      conditions: ~
+      disclaimer: ~
+      restrctn: ~
+      specPerm: ~
+      specPerm-required: ~
+      specPerm-formNo: ~
+      specPerm-URI: ~
+      citReq: ~
+  stdyInfo:
+    subject:
+    - keyword: Education in Emergencies
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Social Emotional Learning
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Refugee Education
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Cluster Randomized Trial
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Mental Health
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Learning in a Healing Classroom
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Tutoring in a Healing Classroom
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Mindfulness
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Brain Games
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Middle East
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    - keyword: Primary Education
+      vocab: ~
+      vocabURI: ~
+      lang: en
+    sumDscr:
+      dataKind: ~
+      anlyUnit:
+      - group: individuals
+        lang: en
+        textForDocumentation: ~
+      - group: classrooms
+        lang: en
+        textForDocumentation: ~
+      - group: schools
+        lang: en
+        textForDocumentation: ~
+      universe:
+      - group: individuals
+        level: project level
+        clusion: I
+        lang: en
+        textForDocumentation: ~
+      - group: classrooms
+        level: project level
+        clusion: I
+        lang: en
+        textForDocumentation: ~
+      - group: schools
+        level: project level
+        lang: en
+        clusion: I
+        textForDocumentation: ~
+      timePrd:
+      - date: '2019-01-01'
+        event: start
+        cycle: Wave1
+      - date: '2019-04-30'
+        event: end
+        cycle: Wave1
+      collDate:
+      - date: '2019-01-01'
+        event: start
+        cycle: Wave1
+      - date: '2019-04-30'
+        event: end
+        cycle: Wave1
+      nation:
+      - value: Lebanon
+        abbr: LB
+        lang: en
+      geogCover:
+      - value: Beirut
+        lang: en
+      geogUnit:
+      - value: city
+        lang: en
+    qualityStatement:
+    - standardsCompliance: ~
+      standard:
+      - standardName: ~
+        producer: ~
+      complianceDescription: ~
+    abstract:
+    - value: ''
+      contentType: abstract
+      lang: en
+  method:
+    dataColl:
+      collectorTraining:
+      - value: ~
+        type: ~
+        lang: en
+      timeMeth:
+      - value: ''
+        lang: en
+        txt: .na.character
+      frequenc:
+      - value: ''
+        lang: en
+      dataCollector:
+      - value: IRC
+        lang: en
+      collMode:
+      - value: ''
+        lang: en
+      collSitu:
+      - value: ''
+        lang: en
+      resInstru:
+      - value: test
+        type: .na.character
+        lang: en
+      instrumentDevelopment:
+      - value: ''
+        type: ''
+        lang: en
+      ConOps:
+      - value: ''
+        agency: ''
+        lang: en
+      actMin:
+      - value: ''
+        lang: en
+      sampProc:
+      - value: ''
+        lang: en
+        txt: .na.character
+      deviat:
+      - value: ''
+        lang: en
+    stdyClas:
+      value: ~
+      type: ~
+      lang: ~
+    dataProcessing: ~
+  studyAuthorization:
+    authorizingAgency: ~
+    authroizingAgency-abbr: ~
+    authorizationStatement: ~
+  othrStdyMat:
+    relStdy: ~
+    relPubl: ~
+    relMat: ~
+dataDscr:
+  varGrp:
+    varGrp-var: ~
+    varGrp-name: ~
+    varGrp-type: ~
+    labl: ~
+    labl-country: ~
+    labl-sdatrefs: ~
+    concept: ~
+    concept-vocab: ~
+    concept-vocabURI: ~
+    defntn: ~
+    universe: ~
+    universe-level: ~
+    universe-clusion: ~
+  var:
+    var-qstn: ~
+    var-intrvl: ~
+    var-aggrMeth: ~
+    var-nature: ~
+    var-temporal: ~
+    var-geog: ~
+    var-geoVocab: ~
+    var-catQnty: ~
+    labl: ~
+    labl-sdatrefs: ~
+    labl-level: ~
+    imputation: ~
+    security: ~
+    security-date: ~
+    embargo: ~
+    embargo-date: ~
+    embargo-event: ~
+    concept: ~
+    concept-vocab: ~
+    concept-vocabURI: ~
+    anlysUnit: ~
+    respUnit: ~
+    qstn: ~
+    qstn-seqNo: ~
+    qstn-sdatrefs: ~
+    qstn-responseDomainType: ~
+    qstn-lang: ~
+    sumStat: ~
+    sumStat-wgtd: ~
+    sumStat-weight: ~
+    sumStat-type: ~
+    catgry: ~
+    catgry-missing: ~
+    catgry-missType: ~
+    catValu: ~
+    catLabl: ~
+    catLabl-level: ~
+    catStat: ~
+    catStat-type: ~
+    derivation: ~
+    derivation-var: ~
+    drvdesc: ~
+    drvmd: ~
+    drvmd-syntax: ~
+    codInstr: ~
+    universe: ~
+    universe-level: ~
+    universe-clusion: ~
+    undocCod: ~
