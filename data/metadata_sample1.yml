@@ -225,6 +225,9 @@ stdyDscr:
     - value: ''
       contentType: abstract
       lang: en
+    - value: ''
+      contentType: abstract
+      lang: fr
   method:
     dataColl:
       collectorTraining:

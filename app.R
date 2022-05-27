@@ -232,12 +232,16 @@ ui <- fluidPage(
                may be structured differently from the other elements because 
                ideally I want the researchers to assign what variable belongs to 
                what group.")),
-    tabPanel("Export",
+    tabPanel("Evaluation/Export",
              p("This section will allow the researcher/s to export the existing 
                metadata into a file using a .Rmd template. I might want them to 
                be able to pick elements to include OR include elements from 
                multiple projects. This way the metadata can serve as a resource 
-               for other writing."))
+               for other writing."),
+             p("In addition, this section will evaluate the metadata 
+               programmatically according to a rubric so that we know the curation
+               quality of the metadata.")
+             )
   )
 )
 
@@ -267,7 +271,7 @@ server <- function(input, output, session) {
     for (a in dat()$stdyDscr$stdyInfo$abstract) {
       abstract <- add_row(abstract, value = a$value, contentType = a$contentType, lang = a$lang)
     }
-    rht <- rhandsontable(abstract, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(abstract, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -292,7 +296,7 @@ server <- function(input, output, session) {
                          vocabURI = s$vocabURI,
                          lang = s$lang)
     }
-    rht <- rhandsontable(subject, stretchH = "all", height = 300) %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(subject, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -317,7 +321,7 @@ server <- function(input, output, session) {
                          lang = u$lang,
                          textForDocumentation = u$textForDocumentation)
     }
-    rht <- rhandsontable(universe, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(universe, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -340,7 +344,7 @@ server <- function(input, output, session) {
                           lang = a$lang,
                           textForDocumentation = a$textForDocumentation)
     }
-    rht <- rhandsontable(anlyUnit, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(anlyUnit, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -376,7 +380,7 @@ server <- function(input, output, session) {
                       cycle = cd$cycle
                       )
     }
-    rht <- rhandsontable(prds, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(prds, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -421,7 +425,7 @@ server <- function(input, output, session) {
                       lang = v$lang
       )
     }
-    rht <- rhandsontable(geog, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(geog, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(40, 100, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -444,7 +448,7 @@ server <- function(input, output, session) {
                           lang = t$lang,
                           txt = t$txt)
     }
-    rht <- rhandsontable(timeMeth, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(timeMeth, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -464,7 +468,7 @@ server <- function(input, output, session) {
                           value = f$value, 
                           lang = f$lang)
     }
-    rht <- rhandsontable(frequenc, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(frequenc, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -484,7 +488,7 @@ server <- function(input, output, session) {
                           value = d$value, 
                           lang = d$lang)
     }
-    rht <- rhandsontable(dataCollector, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(dataCollector, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -504,7 +508,7 @@ server <- function(input, output, session) {
                                value = c$value, 
                                lang = c$lang)
     }
-    rht <- rhandsontable(collMode, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(collMode, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -524,7 +528,7 @@ server <- function(input, output, session) {
                                value = c$value, 
                                lang = c$lang)
     }
-    rht <- rhandsontable(collSitu, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(collSitu, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -546,7 +550,7 @@ server <- function(input, output, session) {
                                type = r$type,
                                lang = r$lang)
     }
-    rht <- rhandsontable(resInstru, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(resInstru, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(40, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -568,7 +572,7 @@ server <- function(input, output, session) {
                                type = i$type,
                                lang = i$lang)
     }
-    rht <- rhandsontable(instrumentDevelopment, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(instrumentDevelopment, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -590,7 +594,7 @@ server <- function(input, output, session) {
                         agency = c$agency,    
                         lang = c$lang)
     }
-    rht <- rhandsontable(ConOps, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(ConOps, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -610,7 +614,7 @@ server <- function(input, output, session) {
                         value = a$value, 
                         lang = a$lang)
     }
-    rht <- rhandsontable(actMin, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(actMin, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -632,7 +636,7 @@ server <- function(input, output, session) {
                           lang = s$lang,
                           txt = s$txt)
     }
-    rht <- rhandsontable(sampProc, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(sampProc, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40, 100),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
@@ -652,7 +656,7 @@ server <- function(input, output, session) {
                         value = d$value, 
                         lang = d$lang)
     }
-    rht <- rhandsontable(deviat, stretchH = "all") %>% # converts the R dataframe to rhandsontable object
+    rht <- rhandsontable(deviat, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
       hot_cols(colWidths = c(100, 40),
                manualColumnMove = FALSE,
                manualColumnResize = FALSE) %>% 
