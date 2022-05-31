@@ -1,6 +1,6 @@
 library(shiny)
 library(rhandsontable)
-library(tibble)
+library(tidyverse)
 
 source("R/ui_utils.R")
 
@@ -228,6 +228,10 @@ ui <- fluidPage(
                  whole.'))
     ),
     tabPanel("Measures/Variable Groups",
+             rHandsontableOutput("varGrp"),
+             tags$br(),
+             actionButton("save_varGrp", "Save Variable Groups"),
+             tags$hr(),
              p("This will consist of a table of the varGrps and its elements, it 
                may be structured differently from the other elements because 
                ideally I want the researchers to assign what variable belongs to 
@@ -664,6 +668,60 @@ server <- function(input, output, session) {
       hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
     htmlwidgets::onRender(rht, change_hook)
   })
+  
+  output$varGrp <- renderRHandsontable({
+    req(dat())
+    varGrp <- tibble(
+      name = character(),
+      type = character(),
+      element = character(),
+      value = character(),
+      lang = character()
+    )
+    elementOptions <- c("labl", "defntn", "universe_I", "universe_E")
+    typeOptions <- c("section", "multipleResp", "grid", "display", "repetition",
+                     "subject", "version", "iteration", "analysis", "pragmatic",
+                     "record", "file", "randomized", "other")
+    for (vg in dat()$dataDscr$varGrp) {
+      name <- vg$name
+      type <- vg$type
+      for (l in vg$labl) {
+        varGrp <- add_row(varGrp,
+                          name = name,
+                          type = type,
+                          element = "labl",
+                          value = l$value,
+                          lang = l$lang)
+      }
+      for (d in vg$defntn) {
+        varGrp <- add_row(varGrp,
+                          name = name,
+                          type = type,
+                          element = "defntn",
+                          value = d$value,
+                          lang = d$lang)
+      }
+      for (u in vg$universe) {
+        varGrp <- add_row(varGrp,
+                          name = name,
+                          type = type,
+                          element = paste0("universe_", u$clusion),
+                          value = u$value,
+                          lang = u$lang
+                          )
+      }
+    }
+    rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
+      hot_cols(colWidths = c(40, 40, 40, 40, 40),
+               manualColumnMove = FALSE,
+               manualColumnResize = FALSE) %>% 
+      hot_rows(rowHeights = NULL) %>% 
+      hot_col("element", allowInvalid = FALSE, type = "dropdown", source = elementOptions) %>% 
+      hot_col("type", allowInvalid = FALSE, type = "dropdown", source = typeOptions) %>% 
+      hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
+    htmlwidgets::onRender(rht, change_hook)
+    
+  })
 # ---------------
   
   output$files <- renderText( {
@@ -1056,6 +1114,67 @@ server <- function(input, output, session) {
         yaml::write_yaml(updatedData, filepth())
       })
     })
+  
+  observeEvent(
+    input$save_varGrp, {
+      isolate({
+        req(dat())
+        updatedData <- dat()
+        updated_varGrp <- hot_to_r(input$varGrp)
+        new_varGrp <- list()
+        varGrpList <- unique(updated_varGrp$name)
+        for(vg in varGrpList) {
+          new_df <- updated_varGrp %>% filter(name == vg)
+          new_labl <- new_df %>% filter(element == "labl")
+          new_l <- list()
+          new_defntn <- new_df %>% filter(element == "defntn")
+          new_d <- list()
+          new_universe <- new_df %>% filter(element == "universe_I" | element == "universe_E")
+          new_u <- list()
+          name <- vg 
+          type <- new_df$type[[1]]
+          if(length(new_labl$value) > 0) {
+            for(l in 1:length(new_labl$value)) {
+              labl <- list(value = new_labl$value[l], lang = new_labl$lang[l], level = "varGrp")
+              new_l <- c(new_l, list(labl))
+            }
+          }
+          if(length(new_defntn$value) > 0) {
+            for(d in 1:length(new_defntn$value)) {
+              defntn <- list(value = new_defntn$value[d], lang = new_defntn$lang[d])
+              new_d <- c(new_d, list(defntn))
+            }
+          }
+          if(length(new_universe$value) > 0) {
+            for(u in 1:length(new_universe$value)) {
+              if(str_detect(new_universe$element[u], "_I$")) {
+                universe <- list(value = new_universe$value[u],
+                                 level = "varGrp",
+                                 clusion = "I",
+                                 lang = new_universe$lang[u])
+              } else {
+                universe <- list(value = new_universe$value[u],
+                                 level = "varGrp",
+                                 clusion = "E",
+                                 lang = new_universe$lang[u])
+              }
+              new_u <- c(new_u, list(universe))
+            }
+          }
+          # the below is creating empty elements when there isn't a labl, defntn or universe
+          new <- list()
+          new$name <- name
+          new$type <- type
+          if(length(new_l) > 0) new$labl <- new_l
+          if(length(new_d) > 0) new$defntn <- new_d
+          if(length(new_u) > 0) new$universe <- new_u
+          new_varGrp <- c(new_varGrp, list(new))
+        }
+        updatedData$dataDscr$varGrp <- new_varGrp
+        yaml::write_yaml(updatedData, filepth())
+      })
+    }
+  )
   
 }
 

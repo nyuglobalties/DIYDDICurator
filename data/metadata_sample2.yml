@@ -39,7 +39,7 @@ stdyDscr:
     biblCit: ~
     biblCit-format: ~
     titlStmt:
-      titl: Sample Project 2
+      titl: Sample Project 1
       subTitl: ~
       altTitl: ~
       altTitl-lang: ~
@@ -225,6 +225,9 @@ stdyDscr:
     - value: ''
       contentType: abstract
       lang: en
+    - value: ''
+      contentType: abstract
+      lang: fr
   method:
     dataColl:
       collectorTraining:
@@ -284,19 +287,20 @@ stdyDscr:
     relMat: ~
 dataDscr:
   varGrp:
-    varGrp-var: ~
-    varGrp-name: ~
-    varGrp-type: ~
-    labl: ~
-    labl-country: ~
-    labl-sdatrefs: ~
-    concept: ~
-    concept-vocab: ~
-    concept-vocabURI: ~
-    defntn: ~
-    universe: ~
-    universe-level: ~
-    universe-clusion: ~
+    - name: varGrp1
+      type: section
+      labl: 
+        - value: Variable Group 1
+          level: varGrp
+          lang: en
+      defntn: 
+        - value: Definition of variable group 1
+          lang: en
+      universe: 
+        - value: Children
+          level: varGrp
+          clusion: I
+          lang: en
   var:
     var-qstn: ~
     var-intrvl: ~

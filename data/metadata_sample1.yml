@@ -287,19 +287,20 @@ stdyDscr:
     relMat: ~
 dataDscr:
   varGrp:
-    varGrp-var: ~
-    varGrp-name: ~
-    varGrp-type: ~
-    labl: ~
-    labl-country: ~
-    labl-sdatrefs: ~
-    concept: ~
-    concept-vocab: ~
-    concept-vocabURI: ~
-    defntn: ~
-    universe: ~
-    universe-level: ~
-    universe-clusion: ~
+  - name: varGrp1
+    type: section
+    labl:
+    - value: ''
+      lang: en
+      level: varGrp
+    defntn:
+    - value: ''
+      lang: en
+    universe:
+    - value: ''
+      level: varGrp
+      clusion: I
+      lang: en
   var:
     var-qstn: ~
     var-intrvl: ~
