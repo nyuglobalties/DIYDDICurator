@@ -39,32 +39,37 @@ stdyDscr:
     biblCit: ~
     biblCit-format: ~
     titlStmt:
-      titl: Sample Project 1
+      titl: Sample Project 2
       subTitl: ~
       altTitl: ~
       altTitl-lang: ~
       IDNo: ~
     rspStmt:
     - AuthEnty:
-      - name: Author 1
+      - name: Author, FN
         affiliation: New York University
-    - AuthEnty:
-      - name: Author 2
+      - name: Author, FirstName
         affiliation: New York University
     - othId:
       - name: Data Manager name
         role: Data Manager
         affiliation: New York University
-    - othId:
-      - name: Data Manager name
+      - name: Data Curator name
         role: Curator
         affiliation: New York University
     serStmt:
-    - serName: Series Name
-      abbr: SN
-      URI: ~
-      serInfo: |
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      serName:
+      - value: Second Series Name
+        abbr: SSN
+        lang: en
+      serInfo:
+      - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+          non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        lang: en
     prodStmt:
       producer:
       - name: Global TIES for Children
@@ -287,20 +292,28 @@ stdyDscr:
     relMat: ~
 dataDscr:
   varGrp:
-    - name: varGrp1
-      type: section
-      labl: 
-        - value: Variable Group 1
-          level: varGrp
-          lang: en
-      defntn: 
-        - value: Definition of variable group 1
-          lang: en
-      universe: 
-        - value: Children
-          level: varGrp
-          clusion: I
-          lang: en
+  - name: varGrp1
+    labl:
+    - value: ''
+      lang: en
+      level: varGrp
+    defntn:
+    - value: ''
+      lang: en
+    universe:
+    - value: ''
+      level: varGrp
+      clusion: I
+      lang: en
+    concept:
+    - value: ''
+      vocab: UNESCO
+      vocabURI: http://vocabularies.unesco.org/thesaurus
+      lang: en
+    - value: ''
+      vocab: exporeSEL
+      vocabURI: http://exploresel.gse.harvard.edu/terms/
+      lang: en
   var:
     var-qstn: ~
     var-intrvl: ~
