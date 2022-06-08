@@ -45,12 +45,12 @@ stdyDscr:
       altTitl-lang: ~
       IDNo: ~
     rspStmt:
-    - AuthEnty:
+      AuthEnty:
       - name: Author 1
         affiliation: New York University
       - name: Author 2
         affiliation: New York University
-    - othId:
+      othId:
       - name: Data Manager name
         role: Data Manager
         affiliation: New York University

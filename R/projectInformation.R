@@ -27,8 +27,8 @@ projectInformation_server <- function(id, file) {
     
     output$authors <- renderText( {
       authors <- character()
-      if(length(file()$stdyDscr$citation$rspStmt[[1]]$AuthEnty) > 0) {
-        for(a in file()$stdyDscr$citation$rspStmt[[1]]$AuthEnty) {
+      if(length(file()$stdyDscr$citation$rspStmt$AuthEnty) > 0) {
+        for(a in file()$stdyDscr$citation$rspStmt$AuthEnty) {
           authors <- paste0(authors, a$name, " (", a$affiliation, "), ")
         }
       }
@@ -55,8 +55,8 @@ projectInformation_server <- function(id, file) {
     
     output$data_manager <- renderText( {
       manager <- "Data Manager: "
-      if(length(file()$stdyDscr$citation$rspStmt[[2]]$othId) > 0) {
-        for(a in file()$stdyDscr$citation$rspStmt[[2]]$othId) {
+      if(length(file()$stdyDscr$citation$rspStmt$othId) > 0) {
+        for(a in file()$stdyDscr$citation$rspStmt$othId) {
           if(a$role == "Data Manager") manager <- paste0(manager, a$name, 
                                                          " (", a$affiliation, "), ")
         }
@@ -66,8 +66,8 @@ projectInformation_server <- function(id, file) {
     
     output$data_curator <- renderText( {
       curator <- "Data Curator: "
-      if(length(file()$stdyDscr$citation$rspStmt[[2]]$othId) > 0) {
-        for(a in file()$stdyDscr$citation$rspStmt[[2]]$othId) {
+      if(length(file()$stdyDscr$citation$rspStmt$othId) > 0) {
+        for(a in file()$stdyDscr$citation$rspStmt$othId) {
           if(a$role == "Curator") curator <- paste0(curator, a$name, 
                                                     " (", a$affiliation, "), ")
         }
