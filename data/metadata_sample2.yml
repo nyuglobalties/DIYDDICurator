@@ -39,18 +39,18 @@ stdyDscr:
     biblCit: ~
     biblCit-format: ~
     titlStmt:
-      titl: Sample Project 2
+      titl: Sample Project 1
       subTitl: ~
       altTitl: ~
       altTitl-lang: ~
       IDNo: ~
     rspStmt:
-    - AuthEnty:
-      - name: Author, FN
+      AuthEnty:
+      - name: Author 1
         affiliation: New York University
-      - name: Author, FirstName
+      - name: Author 2
         affiliation: New York University
-    - othId:
+      othId:
       - name: Data Manager name
         role: Data Manager
         affiliation: New York University
@@ -59,8 +59,8 @@ stdyDscr:
         affiliation: New York University
     serStmt:
       serName:
-      - value: Second Series Name
-        abbr: SSN
+      - value: Series Name
+        abbr: SN
         lang: en
       serInfo:
       - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -74,13 +74,13 @@ stdyDscr:
       producer:
       - name: Global TIES for Children
         abbr: TIES-NYU
-        affililation: New York University
+        affiliation: New York University
         role: ~
       - name: International Rescue Committee
         abbr: IRC
       prodPlac: New York
-      prodDate: ~
-      prodDate-date: ~
+      prodDate: Jan 1, 2022
+      prodDate-date: 2022-01-01
       fundAg:
       - name: Funder1
         abbr: F1
@@ -123,93 +123,36 @@ stdyDscr:
       specPerm-URI: ~
       citReq: ~
   stdyInfo:
-    subject:
-    - keyword: Education in Emergencies
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Social Emotional Learning
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Refugee Education
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Cluster Randomized Trial
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Mental Health
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Learning in a Healing Classroom
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Tutoring in a Healing Classroom
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Mindfulness
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Brain Games
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Middle East
-      vocab: ~
-      vocabURI: ~
-      lang: en
-    - keyword: Primary Education
-      vocab: ~
-      vocabURI: ~
-      lang: en
     sumDscr:
-      dataKind: ~
+      dataKind: 
+      - value: survey
+        lang: en
       anlyUnit:
       - group: individuals
         lang: en
-        textForDocumentation: ~
+        txt: extended text
       - group: classrooms
         lang: en
-        textForDocumentation: ~
+        txt: extended text
       - group: schools
         lang: en
-        textForDocumentation: ~
+        txt: extended text
       universe:
       - group: individuals
-        level: project level
+        level: project
         clusion: I
         lang: en
-        textForDocumentation: ~
+        txt: .na.character
       - group: classrooms
-        level: project level
+        level: project
         clusion: I
         lang: en
-        textForDocumentation: ~
+        txt: .na.character
       - group: schools
-        level: project level
-        lang: en
+        level: project
         clusion: I
-        textForDocumentation: ~
-      timePrd:
-      - date: '2019-01-01'
-        event: start
-        cycle: Wave1
-      - date: '2019-04-30'
-        event: end
-        cycle: Wave1
-      collDate:
-      - date: '2019-01-01'
-        event: start
-        cycle: Wave1
-      - date: '2019-04-30'
-        event: end
-        cycle: Wave1
+        lang: en
+        txt: ''
       nation:
       - value: Lebanon
         abbr: LB
@@ -220,6 +163,20 @@ stdyDscr:
       geogUnit:
       - value: city
         lang: en
+      timePrd:
+      - date: '2019-01-01'
+        event: start
+        cycle: Wave1
+      - date: '2019-04-30'
+        event: end
+        cycle: Wave1
+      collDate:
+      - date: '2019-01-01'
+        event: start
+        cycle: Wave3
+      - date: '2019-04-30'
+        event: end
+        cycle: Wave3
     qualityStatement:
     - standardsCompliance: ~
       standard:
@@ -227,12 +184,57 @@ stdyDscr:
         producer: ~
       complianceDescription: ~
     abstract:
-    - value: ''
+    - value: adorjaifd
       contentType: abstract
       lang: en
-    - value: ''
-      contentType: abstract
+    - value: uykaurln
+      contentType: purpose
       lang: fr
+    subject:
+    - keyword: Education in Emergencies
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Social Emotional Learning
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Refugee Education
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Cluster Randomized Trial
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Mental Health
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Learning in a Healing Classroom
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Tutoring in a Healing Classroom
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Mindfulness
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Brain Games
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Middle East
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Primary Education
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
   method:
     dataColl:
       collectorTraining:
@@ -247,7 +249,7 @@ stdyDscr:
       - value: ''
         lang: en
       dataCollector:
-      - value: IRC
+      - value: International Rescue Committee
         lang: en
       collMode:
       - value: ''
@@ -256,8 +258,8 @@ stdyDscr:
       - value: ''
         lang: en
       resInstru:
-      - value: test
-        type: .na.character
+      - value: ''
+        type: structured
         lang: en
       instrumentDevelopment:
       - value: ''
@@ -273,7 +275,7 @@ stdyDscr:
       sampProc:
       - value: ''
         lang: en
-        txt: .na.character
+        txt: ''
       deviat:
       - value: ''
         lang: en
@@ -306,11 +308,11 @@ dataDscr:
       clusion: I
       lang: en
     concept:
-    - value: ''
+    - value: 'concept1'
       vocab: UNESCO
       vocabURI: http://vocabularies.unesco.org/thesaurus
       lang: en
-    - value: ''
+    - value: 'sel_concept1'
       vocab: exporeSEL
       vocabURI: http://exploresel.gse.harvard.edu/terms/
       lang: en

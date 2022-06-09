@@ -19,13 +19,13 @@ anlyUnit_server <- function(id, dat, filepth) {
       anlyUnit <- tibble(
         group = character(),
         lang = character(),
-        textForDocumentation = character()
+        txt = character()
       )
       for (a in dat()$stdyDscr$stdyInfo$sumDscr$anlyUnit) {
         anlyUnit <- add_row(anlyUnit, 
                             group = a$group, 
                             lang = a$lang,
-                            textForDocumentation = a$textForDocumentation)
+                            txt = a$txt)
       }
       rht <- rhandsontable(anlyUnit, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(100, 40, 40),
@@ -47,7 +47,7 @@ anlyUnit_server <- function(id, dat, filepth) {
           for(i in 1:length(updated_anlyUnit$group)) {
             new <- list(group = updated_anlyUnit$group[i],
                         lang  = updated_anlyUnit$lang[i],
-                        textForDocumentation = updated_anlyUnit$textForDocumentation[i]
+                        txt = updated_anlyUnit$txt[i]
             )
             new_anlyUnit <- c(new_anlyUnit, list(new))
           }

@@ -74,13 +74,13 @@ stdyDscr:
       producer:
       - name: Global TIES for Children
         abbr: TIES-NYU
-        affililation: New York University
+        affiliation: New York University
         role: ~
       - name: International Rescue Committee
         abbr: IRC
       prodPlac: New York
-      prodDate: ~
-      prodDate-date: ~
+      prodDate: Jan 1, 2022
+      prodDate-date: 2022-01-01
       fundAg:
       - name: Funder1
         abbr: F1
@@ -124,33 +124,35 @@ stdyDscr:
       citReq: ~
   stdyInfo:
     sumDscr:
-      dataKind: ~
+      dataKind: 
+      - value: survey
+        lang: en
       anlyUnit:
       - group: individuals
         lang: en
-        textForDocumentation: ''
+        txt: extended text
       - group: classrooms
         lang: en
-        textForDocumentation: .na.character
+        txt: extended text
       - group: schools
         lang: en
-        textForDocumentation: .na.character
+        txt: extended text
       universe:
       - group: individuals
         level: project
         clusion: I
         lang: en
-        textForDocumentation: .na.character
+        txt: .na.character
       - group: classrooms
         level: project
         clusion: I
         lang: en
-        textForDocumentation: .na.character
+        txt: .na.character
       - group: schools
         level: project
         clusion: I
         lang: en
-        textForDocumentation: ''
+        txt: ''
       nation:
       - value: Lebanon
         abbr: LB
@@ -182,11 +184,11 @@ stdyDscr:
         producer: ~
       complianceDescription: ~
     abstract:
-    - value: ''
+    - value: adorjaifd
       contentType: abstract
       lang: en
-    - value: ''
-      contentType: abstract
+    - value: uykaurln
+      contentType: purpose
       lang: fr
     subject:
     - keyword: Education in Emergencies
@@ -306,11 +308,11 @@ dataDscr:
       clusion: I
       lang: en
     concept:
-    - value: ''
+    - value: 'concept1'
       vocab: UNESCO
       vocabURI: http://vocabularies.unesco.org/thesaurus
       lang: en
-    - value: ''
+    - value: 'sel_concept1'
       vocab: exporeSEL
       vocabURI: http://exploresel.gse.harvard.edu/terms/
       lang: en
