@@ -103,43 +103,41 @@ descr_fundAg <- function(dat) {
 
 descr_anlyUnit <- function(dat) {
   ds <- tibble(group = character(), 
-               lang = character(), 
-               txt = character())
+               lang = character())
   for(n in dat$stdyDscr$stdyInfo$sumDscr$anlyUnit) {
     ds <- add_row(ds, 
                   group = n$group, 
-                  lang = n$lang,
-                  txt = n$txt)
+                  lang = n$lang)
   }
   pmap(
     .l = list(group = ds$group, 
-              lang = ds$lang,
-              txt = ds$txt),
-    .f = function(group, lang, txt) ddi_anlyUnit(group, ddi_txt(txt), lang = lang)
+              lang = ds$lang),
+    .f = function(group, lang) ddi_anlyUnit(group, lang = lang)
   )
 }
 
 descr_universe <- function(dat) {
-  ds <- tibble(group = character(), 
-               level = character(),
-               clusion = character(),
-               lang = character(), 
-               txt = character())
-  for(n in dat) {
-    ds <- add_row(ds, 
-                  group = n$group,
-                  level = n$level,
-                  clusion = n$clusion,
-                  lang = n$lang,
-                  txt = n$txt)
+  if(!is.data.frame(dat)) {
+    ds <- tibble(group = character(), 
+                 level = character(),
+                 clusion = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds, 
+                    group = n$group,
+                    level = n$level,
+                    clusion = n$clusion,
+                    lang = n$lang)
+    }
+  } else {
+    ds <- dat
   }
   pmap(
     .l = list(group = ds$group, 
               level = ds$level,
               clusion = ds$clusion,
-              lang = ds$lang,
-              txt = ds$txt),
-    .f = function(group, level, clusion, lang, txt) ddi_universe(group, ddi_txt(txt), level = level, clusion = clusion, lang = lang)
+              lang = ds$lang),
+    .f = function(group, level, clusion, lang) ddi_universe(group, level = level, clusion = clusion, lang = lang)
   )
 }
 
@@ -296,18 +294,16 @@ descr_collectorTraining <- function(dat) {
 
 descr_timeMeth<- function(dat) {
   ds <- tibble(value = character(),
-               lang = character(),
-               txt = character())
+               lang = character())
   for(n in dat$stdyDscr$method$dataColl$timeMeth) {
     ds <- add_row(ds, 
                   value = n$value,
-                  lang = n$lang,
-                  txt = n$txt
+                  lang = n$lang
     )
   }
   pmap(
-    .l = list(value = ds$value, txt = ds$txt, lang = ds$lang),
-    .f = function(value, txt, lang) ddi_timeMeth(value, ddi_txt(txt), lang = lang)
+    .l = list(value = ds$value, lang = ds$lang),
+    .f = function(value, lang) ddi_timeMeth(value, lang = lang)
   )
 }
 
@@ -439,17 +435,15 @@ descr_actMin <- function(dat) {
 
 descr_sampProc <- function(dat) {
   ds <- tibble(value = character(), 
-               lang = character(), 
-               txt = character())
+               lang = character())
   for(n in dat$stdyDscr$method$dataColl$sampProc) {
     ds <- add_row(ds, 
                   value = n$value, 
-                  lang = n$lang,
-                  txt = n$txt)
+                  lang = n$lang)
   }
   pmap(
-    .l = list(value = ds$value, lang = ds$lang,txt = ds$txt),
-    .f = function(value, lang, txt) ddi_sampProc(value, ddi_txt(txt), lang = lang)
+    .l = list(value = ds$value, lang = ds$lang),
+    .f = function(value, lang) ddi_sampProc(value, lang = lang)
   )
 }
 
@@ -471,17 +465,20 @@ descr_deviat <- function(dat) {
 # for dataDscr
 
 descr_labl <- function(dat) {
-  ds <- tibble(value = character(),
-               lang = character(),
-               level = character())
-  for(n in dat) {
-    ds <- add_row(ds,
-                  value = n$value,
-                  lang = n$lang,
-                  level = n$level
-                  )
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 lang = character(),
+                 level = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    lang = n$lang,
+                    level = n$level
+      )
+    }
+  } else {
+    ds <- dat
   }
-  browser()
   pmap(
     .l = list(value = ds$value, lang = ds$lang, level = ds$level),
     .f = function(value, lang, level) ddi_labl(value, lang = lang, level = level)
@@ -489,13 +486,17 @@ descr_labl <- function(dat) {
 }
 
 descr_defntn <- function(dat) {
-  ds <- tibble(value = character(),
-               lang = character())
-  for(n in dat) {
-    ds <- add_row(ds,
-                  value = n$value,
-                  lang = n$lang
-    )
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    lang = n$lang
+      )
+    }
+  } else {
+    ds <- dat
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
@@ -504,17 +505,21 @@ descr_defntn <- function(dat) {
 }
 
 descr_concept <- function(dat) {
-  ds <- tibble(value = character(),
-               vocab = character(),
-               vocabURI = character(),
-               lang = character())
-  for(n in dat) {
-    ds <- add_row(ds,
-                  value = n$value,
-                  vocab = n$vocab,
-                  vocabURI = n$vocabURI,
-                  lang = n$lang
-    )
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 vocab = character(),
+                 vocabURI = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    vocab = n$vocab,
+                    vocabURI = n$vocabURI,
+                    lang = n$lang
+      )
+    }
+  } else {
+    ds <- dat
   }
   pmap(
     .l = list(value = ds$value, vocab = ds$vocab, vocabURI = ds$vocabURI, lang = ds$lang),
@@ -528,22 +533,21 @@ descr_varGrp <- function(dat) {
                defntn = list(), 
                universe = list(),
                concept = list()
-               )
+  )
   #problem with below...this loop adds a new row for every list
   for(n in dat$dataDscr$varGrp) {
     ds <- add_row(ds, 
                   name = n$name, 
-                  labl = n$labl,
-                  defntn = n$defntn,
-                  universe = n$universe,
+                  labl = list(n$labl),
+                  defntn = list(n$defntn),
+                  universe = list(n$universe),
                   concept = list(n$concept))
   }
-  browser()
   pmap(
     .l = list(name = ds$name, labl = ds$labl, 
-              universe = ds$universe, concept = ds$concept[[1]]),
+              universe = ds$universe, concept = ds$concept),
     .f = function(name, labl, universe, concept) {
-      ddi_varGrp(name = name, descr_labl(labl), descr_universe(universe), descr_concept(concept))
+      splat(c(name = name, descr_labl(labl), descr_universe(universe), descr_concept(concept)), ddi_varGrp) 
     }
   ) # need to add back in defntn after fixing the function
 }
@@ -559,8 +563,9 @@ generate_stdyInfo <- function(dat) {
   )
   
   stdyInfo$content <- append(stdyInfo$content, descr_abstract(dat))
-  return(stdyInfo)
+  stdyInfo
 }
+
 #-------------------------------------------
 
 generate_ddi_codebook <- function(dat) {
@@ -598,6 +603,3 @@ generate_ddi_codebook <- function(dat) {
   
   ddi <- as_xml(cb)
 }
-
-dat <- yaml::read_yaml("/Users/danielwoulfin/Documents/Github/metadata_curation_tool/data/metadata_sample1.yml")
-cb <- generate_ddi_codebook(dat)

@@ -50,16 +50,10 @@ ui <- fluidPage(
     ),
     varGrp_ui("varGrp"),
         
-    tabPanel("Evaluation/Export",
-             p("This section will allow the researcher/s to export the existing 
-               metadata into a file using a .Rmd template. I might want them to 
-               be able to pick elements to include OR include elements from 
-               multiple projects. This way the metadata can serve as a resource 
-               for other writing."),
-             p("In addition, this section will evaluate the metadata 
-               programmatically according to a rubric so that we know the curation
-               quality of the metadata.")
-             )
+    navbarMenu(
+      "Evaluation/Export",
+      ddi_generation_ui("ddi")
+    )
   )
 )
 
@@ -100,6 +94,7 @@ server <- function(input, output, session) {
   deviat_server("deviat", dat, filepth)
   
   varGrp_server("varGrp", dat, filepth)
+  ddi_generation_server("ddi", dat)
 }
 
 shinyApp(server = server, ui = ui)

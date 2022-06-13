@@ -5,9 +5,7 @@ timeMeth_ui <- function(id) {
            tags$br(),
            actionButton(ns("save_timeMeth"), "Save time method"),
            tags$hr(),
-           p('The time method or time dimension of the data collection.'),
-           p('The txt element is there to provide a lengthier description 
-                 of the parent element that is more suitable for documentation.')
+           p('The time method or time dimension of the data collection.')
            )
 }
 
@@ -18,14 +16,12 @@ timeMeth_server <- function(id, dat, filepth) {
       req(dat())
       timeMeth <- tibble(
         value = character(),
-        lang = character(),
-        txt = character()
+        lang = character()
       )
       for (t in dat()$stdyDscr$method$dataColl$timeMeth) {
         timeMeth <- add_row(timeMeth, 
                             value = t$value, 
-                            lang = t$lang,
-                            txt = t$txt)
+                            lang = t$lang)
       }
       rht <- rhandsontable(timeMeth, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(100, 40, 40),
@@ -46,8 +42,7 @@ timeMeth_server <- function(id, dat, filepth) {
           new_timeMeth <- list()
           for(i in 1:length(updated_timeMeth$value)) {
             new <- list(value = updated_timeMeth$value[i],
-                        lang  = updated_timeMeth$lang[i],
-                        txt = updated_timeMeth$txt[i]
+                        lang  = updated_timeMeth$lang[i]
             )
             new_timeMeth <- c(new_timeMeth, list(new))
           }

@@ -55,7 +55,7 @@ varGrp_server <- function(id, dat, filepth) {
           varGrp <- add_row(varGrp,
                             name = name,
                             element = paste0("universe_", u$clusion),
-                            value = u$value,
+                            value = u$group,
                             lang = u$lang
           )
         }
@@ -136,12 +136,12 @@ varGrp_server <- function(id, dat, filepth) {
             if(length(new_universe$value) > 0) {
               for(u in 1:length(new_universe$value)) {
                 if(str_detect(new_universe$element[u], "_I$")) {
-                  universe <- list(value = new_universe$value[u],
+                  universe <- list(group = new_universe$value[u],
                                    level = "varGrp",
                                    clusion = "I",
                                    lang = new_universe$lang[u])
                 } else {
-                  universe <- list(value = new_universe$value[u],
+                  universe <- list(group = new_universe$value[u],
                                    level = "varGrp",
                                    clusion = "E",
                                    lang = new_universe$lang[u])

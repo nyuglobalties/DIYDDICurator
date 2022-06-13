@@ -80,7 +80,7 @@ stdyDscr:
         abbr: IRC
       prodPlac: New York
       prodDate: Jan 1, 2022
-      prodDate-date: 2022-01-01
+      prodDate-date: '2022-01-01'
       fundAg:
       - name: Funder1
         abbr: F1
@@ -124,19 +124,16 @@ stdyDscr:
       citReq: ~
   stdyInfo:
     sumDscr:
-      dataKind: 
+      dataKind:
       - value: survey
         lang: en
       anlyUnit:
       - group: individuals
         lang: en
-        txt: extended text
       - group: classrooms
         lang: en
-        txt: extended text
       - group: schools
         lang: en
-        txt: extended text
       universe:
       - group: individuals
         level: project
@@ -183,13 +180,6 @@ stdyDscr:
       - standardName: ~
         producer: ~
       complianceDescription: ~
-    abstract:
-    - value: adorjaifd
-      contentType: abstract
-      lang: en
-    - value: uykaurln
-      contentType: purpose
-      lang: fr
     subject:
     - keyword: Education in Emergencies
       vocab: .na.character
@@ -235,16 +225,19 @@ stdyDscr:
       vocab: .na.character
       vocabURI: .na.character
       lang: en
+    abstract:
+    - value: Lets see if this changes in the XML export section...
+      contentType: abstract
+      lang: en
+    - value: Blah blah blah
+      contentType: purpose
+      lang: fr
   method:
     dataColl:
       collectorTraining:
       - value: ~
         type: ~
         lang: en
-      timeMeth:
-      - value: ''
-        lang: en
-        txt: .na.character
       frequenc:
       - value: ''
         lang: en
@@ -272,11 +265,13 @@ stdyDscr:
       actMin:
       - value: ''
         lang: en
-      sampProc:
+      deviat:
       - value: ''
         lang: en
-        txt: ''
-      deviat:
+      timeMeth:
+      - value: ''
+        lang: en
+      sampProc:
       - value: ''
         lang: en
     stdyClas:
@@ -303,19 +298,20 @@ dataDscr:
     - value: ''
       lang: en
     universe:
-    - value: ''
+    - group: individuals
       level: varGrp
       clusion: I
       lang: en
     concept:
-    - value: 'concept1'
+    - value: concept1
       vocab: UNESCO
       vocabURI: http://vocabularies.unesco.org/thesaurus
       lang: en
-    - value: 'sel_concept1'
+    - value: sel_concept1
       vocab: exporeSEL
       vocabURI: http://exploresel.gse.harvard.edu/terms/
       lang: en
+  - name: varGrp2
   var:
     var-qstn: ~
     var-intrvl: ~

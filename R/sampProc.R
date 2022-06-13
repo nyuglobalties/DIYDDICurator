@@ -18,14 +18,12 @@ sampProc_server <- function(id, dat, filepth) {
       req(dat())
       sampProc <- tibble(
         value = character(),
-        lang = character(),
-        txt = character()
+        lang = character()
       )
       for (s in dat()$stdyDscr$method$dataColl$sampProc) {
         sampProc <- add_row(sampProc, 
                             value = s$value, 
-                            lang = s$lang,
-                            txt = s$txt)
+                            lang = s$lang)
       }
       rht <- rhandsontable(sampProc, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(100, 40, 100),
@@ -46,8 +44,7 @@ sampProc_server <- function(id, dat, filepth) {
           new_sampProc <- list()
           for(i in 1:length(updated_sampProc$value)) {
             new <- list(value = updated_sampProc$value[i],
-                        lang  = updated_sampProc$lang[i],
-                        txt  = updated_sampProc$txt[i]
+                        lang  = updated_sampProc$lang[i]
             )
             new_sampProc <- c(new_sampProc, list(new))
           }

@@ -32,15 +32,13 @@ universe_server <-  function(id, dat, filepth) {
       universe <- tibble(
         group = character(),
         clusion = factor(),
-        lang = character(),
-        txt = character()
+        lang = character()
       )
       for (u in dat()$stdyDscr$stdyInfo$sumDscr$universe) {
         universe <- add_row(universe, 
                             group = u$group, 
                             clusion = u$clusion,
-                            lang = u$lang,
-                            txt = u$txt)
+                            lang = u$lang)
       }
       rht <- rhandsontable(universe, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(100, 40, 40, 40),
@@ -64,8 +62,7 @@ universe_server <-  function(id, dat, filepth) {
             new <- list(group = updatedUniverse$group[i],
                         level = "project",
                         clusion = updatedUniverse$clusion[i],
-                        lang  = updatedUniverse$lang[i],
-                        txt = updatedUniverse$txt[i]
+                        lang  = updatedUniverse$lang[i]
             )
             newUniverse <- c(newUniverse, list(new))
           }
