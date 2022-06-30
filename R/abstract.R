@@ -27,6 +27,8 @@ abstract_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (a in dat()$stdyDscr$stdyInfo$abstract) {
+        if(is.null(a$contentType)) a$contentType <- NA_character_
+        if(is.null(a$lang)) a$lang <- NA_character_
         abstract <- add_row(abstract, value = a$value, contentType = a$contentType, lang = a$lang)
       }
       rht <- rhandsontable(abstract, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
@@ -55,6 +57,8 @@ abstract_server <- function(id, dat, filepth) {
             newAbstract <- c(newAbstract, list(new))
           }
           updatedData$stdyDscr$stdyInfo$abstract <- newAbstract
+          updatedData$stdyDscr$stdyInfo$abstract <- recurse_write(updatedData$stdyDscr$stdyInfo$abstract)
+          updatedData$stdyDscr$stdyInfo$abstract <- lapply(updatedData$stdyDscr$stdyInfo$abstract,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

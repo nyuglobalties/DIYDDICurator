@@ -22,15 +22,18 @@ subject_server <-  function(id, dat, filepth) {
       req(dat())
       subject <- tibble(
         keyword = character(),
-        vocab = character(),
-        vocabURI = character(),
+        vocabu = character(),
+        vocab_URI = character(),
         lang = character()
       )
       for (s in dat()$stdyDscr$stdyInfo$subject) {
+        if(is.null(s$vocabu)) s$vocabu <- NA_character_
+        if(is.null(s$vocab_URI)) s$vocab_URI <- NA_character_
+        if(is.null(s$lang)) s$lang <- NA_character_
         subject <- add_row(subject, 
                            keyword = s$keyword, 
-                           vocab = s$vocab,
-                           vocabURI = s$vocabURI,
+                           vocabu = s$vocabu,
+                           vocab_URI = s$vocab_URI,
                            lang = s$lang)
       }
       rht <- rhandsontable(subject, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
@@ -53,13 +56,15 @@ subject_server <-  function(id, dat, filepth) {
           newSubject <- list()
           for(i in 1:length(updatedSubjects$keyword)) {
             new <- list(keyword = updatedSubjects$keyword[i],
-                        vocab = updatedSubjects$vocab[i],
-                        vocabURI = updatedSubjects$vocabURI[i],
+                        vocabu = updatedSubjects$vocabu[i],
+                        vocab_URI = updatedSubjects$vocab_URI[i],
                         lang  = updatedSubjects$lang[i]
             )
             newSubject <- c(newSubject, list(new))
           }
           updatedData$stdyDscr$stdyInfo$subject <- newSubject
+          updatedData$stdyDscr$stdyInfo$subject <- recurse_write(updatedData$stdyDscr$stdyInfo$subject)
+          updatedData$stdyDscr$stdyInfo$subject <- lapply(updatedData$stdyDscr$stdyInfo$subject,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

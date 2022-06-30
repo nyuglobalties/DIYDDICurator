@@ -1,0 +1,545 @@
+docDscr:
+  citation: ~
+  guide: ~
+  docStatus: ~
+  controlledVocabUsed:
+    codeListName: ~
+    codeListID: ~
+    codeListAgencyName: ~
+    codeListURN: ~
+    usage:
+      attribute: ~
+      selector: ~
+      specificElements: ~
+stdyDscr:
+  citation:
+    biblCit:
+    - value: ~
+      format: APA
+    titlStmt:
+      titl:
+      - value: 'Data for "The Impact Of Attending A Remedial Support Program On Syrian
+          Children’s Reading Skills: Using Bart For Causal Inference"'
+        lang: en
+      parTitl:
+      - value: ''
+        lang: ar
+      altTitl: ~
+      altTitl-lang: ~
+      IDNo: ~
+    rspStmt:
+      AuthEnty:
+      - name: Mayari I. Montes de Oca
+        id: ~
+        affiliation: New York University
+      - name: Author 2
+        affiliation: New York University
+      othId:
+      - name: Patrick Anker
+        role: Data Manager
+        affiliation: New York University
+        id: 0000-0003-2302-0445
+      - name: Daniel Woulfin
+        role: Curator
+        affiliation: New York University
+        id: 0000-0001-5502-9861
+    prodStmt:
+      producer:
+      - name: Global TIES for Children
+        abbr: TIES-NYU
+        affiliation: New York University
+        role: ~
+      - name: International Rescue Committee
+        abbr: IRC
+      prodPlac:
+      - value: New York
+      prodDate:
+      - value: July 1, 2022
+        date: '2022-07-01'
+      fundAg:
+      - name: Spencer Foundation
+        role: data collection and processing
+      - name: Dubai Cares
+        role: data collection and processing
+      - name: E-cubed Research Fund
+        role: data  collection and processing
+      - name: E-cubed Research Fund
+        role: scientific analysis and write up
+      - name: New York University Abu Dhabi
+    distStmt:
+      distrbtr: ~
+      distrbtr-abbr: ~
+      distrbtr-affiliation: ~
+      distrbtr-URI: ~
+      distDate: ~
+      distDate-date: ~
+      depDate: ~
+      depDate-date: ~
+      depositor: ~
+      depositor-abbr: ~
+      depositor-affiliation: ~
+      contact: ~
+      contact-affiliation: ~
+      contact-email: ~
+  dataAccs:
+    useStmt:
+      contact:
+      - value: ''
+        affilation: ''
+        email: ''
+      conditions:
+      - value: This dataset is held under a Creative Commons Attribution-NonCommercial-ShareAlike
+          2.0 Generic (CC BY-NC-SA 2.0) license, https:creativecommons.org/licenses/by-nc-sa/2.0/legalcode.
+        lang: en
+      citReq:
+      - value: Publications based on this dataset should acknowledge this source by
+          means of bibliographic citations. To ensure that such source attributions
+          are captured for social science bibliographic utilities, citations should
+          appear in footnotes or in the reference section of publications.
+        lang: en
+  stdyInfo:
+    sumDscr:
+      dataKind:
+      - value: survey
+        lang: en
+      anlyUnit:
+      - group: individuals
+        lang: en
+      - group: classrooms
+        lang: en
+      - group: schools
+        lang: en
+      universe:
+      - group: students
+        level: project
+        clusion: I
+        lang: en
+      - group: teachers
+        level: project
+        clusion: I
+        lang: en
+      - group: classrooms
+        level: project
+        clusion: I
+        lang: en
+      nation:
+      - value: Lebanon
+        abbr: LB
+        lang: en
+      timePrd:
+      - value: November 2016
+        date: '2016-11-01'
+        event: start
+      - value: June 2017
+        date: '2017-06-30'
+        event: end
+      collDate:
+      - value: November 2016
+        date: '2016-11-01'
+        event: start
+        cycle: baseline
+        id: collDate_wave1_start
+      - value: December 2016
+        date: '2016-12-31'
+        event: end
+        cycle: baseline
+        id: collDate_wave1_end
+      - value: March 2017
+        date: '2017-03-01'
+        event: start
+        cycle: midline
+        id: collDate_wave2_start
+      - value: March 2017
+        date: '2017-03-21'
+        event: end
+        cycle: midline
+        id: collDate_wave2_end
+      - value: May 2017
+        date: '2017-05-15'
+        event: start
+        cycle: endline
+        id: collDate_wave3_start
+      - value: June 2017
+        date: '2017-06-15'
+        event: end
+        cycle: endline
+        id: collDate_wave3_end
+    abstract:
+    - value: 'This dataset serves as a replication/verification dataset for the article
+        "The Impact Of Attending A Remedial Support Program On Syrian Children’s Reading
+        Skills: Using Bart For Causal Inference"'
+      contentType: purpose
+      lang: en
+    subject:
+    - keyword: Education in Emergencies
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Social Emotional Learning
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Refugee Education
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Cluster Randomized Trial
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Mental Health
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Learning in a Healing Classroom
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Tutoring in a Healing Classroom
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Mindfulness
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Brain Games
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Middle East
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+    - keyword: Primary Education
+      vocab: .na.character
+      vocabURI: .na.character
+      lang: en
+  method:
+    dataColl:
+      collMode:
+      - value: 'Face-to-face interview: Computer-assisted(CAPI/CAMI)'
+        lang: en
+      collSitu:
+      - value: Data collectors conducted one-on-one verbal assessments with each child
+          in a quiet, but not secluded, area near tutoring classes (for children attending
+          tutoring) or at children’s homes (for children not attending tutoring at
+          baseline or who were absent on assessment days). Performance-based measures,
+          including EGRA, EGMA, and RACER, were conducted using tablets. All other
+          measures were collected via paper-and-pencil forms. Each child assessment
+          lasted about 45 minutes to an hour. Each day, data collectors digitized
+          the paper-and- pencil survey forms and uploaded the data collected via tablets.
+          Children’s demographic and family characteristics were collected at baseline
+          through structured interviews with parents or guardians.
+        lang: en
+      resInstru:
+      - value: structured
+        type: ~
+        lang: en
+      ConOps:
+      - value: Following each assessment, enumerators were required to complete tracking
+          sheets to provide a physical record of which student(s) were assessed, when,
+          and by whom. Enumerators reported any known aberrant entries — such as incorrect
+          student IDs, student substitutions, or assessment issues — to the Research
+          Officers, who supervised a team of 20 enumerators each. After each day of
+          data collection, each Research Officer aggregated enumerator tracking sheets
+          and checked each field-reported assessment against the assessments that
+          had been uploaded to the servers. Any inconsistencies between tracking sheets
+          and the data uploads were investigated with enumerators and reported to
+          IRC’s senior research officers, who recorded any data entry errors and problems
+          as well as corrected data entries. For the RACER data, automated scans were
+          run regularly during the data collection period to detect any discrepancies
+          between the data collected and the tracking sheet. The generated error cases
+          were also communicated back to the senior research officer who tracks all
+          the changes that needed to be made in the final dataset.
+        agency: ''
+        lang: en
+      deviat:
+      - value: All 87 research sites were retained for the implementation period and
+          included in the analytic sample. At the student level, all children who
+          had any student-level data collected at either Time 1 or Time 2 were retained
+          as the ITT and analytic sample, excluding 5% (n = 186) students missing
+          data in both waves (PS = 1%; PS+HCT = 5%; PS+HCT+Mind = 4%). Of the students
+          included in the final sample, 5% were missing from Time 1 data but had Time
+          2 data. As might be expected with a highly mobile population in a crisis
+          context, 23% were missing all data at Time 2. Specifically, missing data
+          among children in the public school only condition was relatively low (6%),
+          largely due to the fact that data collectors went door-to-door to administer
+          assessments in home settings. In contrast, 26% were missing all data at
+          Time 2 in each of the two treatment conditions. Assessments were largely
+          administered in the treatment conditions during the remedial classroom sessions;
+          and when absent children were not assessed due to limited resources and
+          time.
+        lang: en
+      timeMeth:
+      - value: 'Longitudinal: Cohort/Event Based'
+        lang: en
+      sampProc:
+      - value: Cluster Randomized Controlled Trial
+        lang: en
+      frequenc:
+      - value: Baseline data collection occurred for three weeks from mid-November
+          to early December 2016. Midline data collection was conducted in the first
+          three weeks of March 2017. Endline data collection was from mid-May to early
+          June 2017.
+        lang: en
+      collectorTraining:
+      - value: Trainings for data collectors were led by IRC M&E and Research managers,
+          with extensive support from research officers. The training lasted for a
+          total of five days. Prior to initiating the fieldwork, the data surveyors
+          received a thorough training on the measures to administer and the tools
+          to use. The baseline training lasted for seven days, and was later reduced
+          to five days in the Midline and Endline, based on feedback from the surveyors
+          and Research Officers. Training in the administration of each measure began
+          with an introduction to the structure of the tool, a description of the
+          skills being assessed, and the rules for administering the assessment. It
+          was followed by staff demonstrations and role plays by volunteer enumerators.
+          When enumerators demonstrated mastery of the content in whole-group, they
+          transitioned to paired practice for fluency. Translations from written to
+          spoken Arabic were discussed and agreed upon by the group. IRC and NYU team
+          members from the two locations debriefed each night to ensure consistency
+          between the two regions.
+        type: ~
+        lang: en
+      dataCollector:
+      - value: International Rescue Committee
+        abbr: IRC
+        lang: en
+    codingInstructions:
+      attributes:
+      - relatedProcesses: ~
+        type: ~
+      txt:
+      - value: ~
+        level: ~
+      command:
+      - value: ~
+        formalLangauge: ~
+    dataProcessing:
+    - value: Maybe use this for imputation information
+      type: ~
+      lang: ~
+  othrStdyMat:
+    relStdy:
+    - value: add in lebanon Y1 citation here
+dataDscr:
+  varGrp:
+  - name:
+    - value: ST_ACAD
+    var:
+    - value: LTRC_1 LTRC_2 LTRC_3 GRPM_1 GRPM_2 GRPM_3 DCLT_1 DCLT_2 DCLT_3 OPR_1
+        OPR_2 OPR_3 INV_1 INV_2 INV_3 DCWD_1 DCWD_2 DCWD_3 RDCP_1 RDCP_2 RDCP_3 VOC_1
+        VOC_2 VOC_3 BODY_1 BODY_2 BODY_3 LTRCT_1 LTRCT_2 LTRCT_3 OPRT_1 OPRT_2 OPRT_3
+        ASER_AR1 ASER_AR3 ASER_AR1_1 ASER_AR3_1 ASER_SL1_1 ASER_SL3_1
+    varGrp:
+    - value: SRA_AR
+    labl:
+    - value: Student-level academic
+      lang: en
+      level: varGrp
+    universe:
+    - group: students
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: SRA_AR
+    var:
+    - value: PSRA1_1 PSRA1_2 PSRA1_3 PSRA2_1 PSRA2_2 PSRA2_3 PSRA3_1 PSRA3_2 PSRA3_3
+        PSRA4_1 PSRA4_2 PSRA4_3 PSRA5_1 PSRA5_2 PSRA5_3 PSRA6_1 PSRA6_2 PSRA6_3 PSRA7_1
+        PSRA7_2 PSRA7_3 PSRA8_1 PSRA8_2 PSRA8_3 PSRA9_1 PSRA9_2 PSRA9_3 PSRA10_1 PSRA10_2
+        PSRA10_3 PSRA11_1 PSRA11_2 PSRA11_3 PSRA12_1 PSRA12_2 PSRA12_3 PSRA13_1 PSRA13_2
+        PSRA13_3
+    labl:
+    - value: Self-Regulation Assessment (Assessor Report)
+      lang: en
+      level: varGrp
+    universe:
+    - group: students
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: ST_DEMO
+    var:
+    - value: GRADE_1 AGE_1 MISSING FEMALE NOWKCH_1 CHWK_HOME_1 SCHTIME_1 SCHMIN_1
+        OSCH_N_1 PR_LIT_1 PLT_EN_1 PLT_OT_1 C_LBAG_1 C_SRYR_1 MV_RN5_1
+    labl:
+    - value: Student-level demographics
+      lang: en
+      level: varGrp
+    universe:
+    - group: students
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: PROG_ST
+    var:
+    - value: RLVC1_1
+    labl:
+    - value: 'Program: Student-level'
+      lang: en
+      level: varGrp
+    universe:
+    - group: students
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: PROG_TCH
+    var:
+    - value: MISSING MISSING TATNC1_1 TATNC2_1 TMENATC1_1 TMENATC2_1 TMENTEE TLCATNC1_1
+        TLCATNC2_1 TRAIN_LIHC_1 TDBLSFT_1 TPAYF_2
+    labl:
+    - value: 'Program: Teacher-level'
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TCH_DEMO
+    var:
+    - value: TAGE_1 TNATION TLN_FR_1 THLTH2_1 THLTH1_1 THHINC_1 TASSET_1 T_HOUS_1
+        TNEED2_1 TNEED1_1 THHWK1_1
+    labl:
+    - value: Teacher-level demographics
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: T_CAREER
+    var:
+    - value: TPAY_1 TEXYRS_1 TMCASUB_C1_1 TMCASUB_C2_1 TEX1_1 TEX4_1 TEDU_1
+    labl:
+    - value: Teacher-level career
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: T_INSTRU
+    varGrp:
+    - value: TACATEA
+    labl:
+    - value: Teacher-level career
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TACATEA
+    var:
+    - value: TACATEA1_1 TACATEA1_2 TACATEA1_3 TACATEA2R_1 TACATEA2R_2 TACATEA2R_3
+        TACATEA3_1 TACATEA3_2 TACATEA3_3 TACATEA4_1 TACATEA4_2 TACATEA4_3 TACATEA5_1
+        TACATEA5_2 TACATEA5_3 TACATEA6_1 TACATEA6_2 TACATEA6_3 TACATEA7_1 TACATEA7_2
+        TACATEA7_3 TACATEA8_1 TACATEA8_2 TACATEA8_3 TACATEA9_1 TACATEA9_2 TACATEA9_3
+        TACATEA10_1 TACATEA10_2 TACATEA10_3
+    labl:
+    - value: Teacher perception on students' academic emphasis
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TDIFFT
+    var:
+    - value: TDIFFT1_1 TDIFFT1_2 TDIFFT1_3 TDIFFT2_1 TDIFFT2_2 TDIFFT2_3 TDIFFT TDIFFT3_1
+        TDIFFT3_2 TDIFFT3_3 TDIFFT4_1 TDIFFT4_2 TDIFFT4_3 TDIFFT5_2 TDIFFT5_3
+    labl:
+    - value: Teacher use of differentiated instruction/methods
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TEFFT
+    var:
+    - value: TEFFT1_1 TEFFT1_2 TEFFT1_3 TEFFT2_1 TEFFT2_2 TEFFT2_3 TEFFT3_1 TEFFT3_2
+        TEFFT3_3 TEFFT4_1 TEFFT4_2 TEFFT4_3 TEFFT5_1 TEFFT5_2 TEFFT5_3 TEFFT6_1 TEFFT6_2
+        TEFFT6_3
+    labl:
+    - value: Teacher-perceived effectiveness for student engagement
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TCOLLT
+    var:
+    - value: TCOLLT1_1 TCOLLT2_1 TCOLLT3_1 TCOLLT4_1 TCOLLT5_1
+    labl:
+    - value: Teacher "collaboration" items
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TSETEA
+    var:
+    - value: TSETEA1_1 TSETEA1_2 TSETEA1_3 TSETEA2_1 TSETEA2_2 TSETEA2_3 TSETEA3_1
+        TSETEA3_2 TSETEA3_3 TSETEA4_1 TSETEA4_2 TSETEA4_3 TSETEA5_1 TSETEA5_2 TSETEA5_3
+        TSETEA6_1 TSETEA6_2 TSETEA6_3 TSETEA7_1 TSETEA7_2 TSETEA73 TSETEA8_1 TSETEA8_2
+        TSETEA8_3 TSETEA9_1 TSETEA9_2 TSETEA9_3 TSETEA10_1 TSETEA10_2 TSETEA10_3
+    labl:
+    - value: Teacher "engaging" strategies
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: TBARTEA
+    var:
+    - value: TBARTEA1_1 TBARTEA1_2 TBARTEA1_3 TBARTEA2_1 TBARTEA2_2 TBARTEA2_3 TBARTEA3_1
+        TBARTEA3_2 TBARTEA3_3 TBARTEA4_1 TBARTEA4_2 TBARTEA4_3 TBARTEA5_1 TBARTEA5_2
+        TBARTEA5_3 TBARTEA6_1 TBARTEA6_2 TBARTEA6_3
+    labl:
+    - value: Teacher limitations/barriers
+      lang: en
+      level: varGrp
+    universe:
+    - group: teachers
+      level: varGrp
+      clusion: I
+      lang: en
+  - name:
+    - value: PROGSITE
+    var:
+    - value: MISSING TENT_1 MISSING
+    labl:
+    - value: 'Program: Site-level'
+      lang: en
+      level: varGrp
+    universe:
+    - group: classroom
+      level: varGrp
+      clusion: I
+      lang: en

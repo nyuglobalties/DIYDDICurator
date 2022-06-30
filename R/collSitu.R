@@ -22,6 +22,7 @@ collSitu_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (c in dat()$stdyDscr$method$dataColl$collSitu) {
+        if(is.null(c$lang)) c$lang <- NA_character_
         collSitu <- add_row(collSitu, 
                             value = c$value, 
                             lang = c$lang)
@@ -50,6 +51,8 @@ collSitu_server <- function(id, dat, filepth) {
             new_collSitu <- c(new_collSitu, list(new))
           }
           updatedData$stdyDscr$method$dataColl$collSitu <- new_collSitu
+          updatedData$stdyDscr$method$dataColl$collSitu <- recurse_write(updatedData$stdyDscr$method$dataColl$collSitu)
+          updatedData$stdyDscr$method$dataColl$collSitu <- lapply(updatedData$stdyDscr$method$dataColl$collSitu,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

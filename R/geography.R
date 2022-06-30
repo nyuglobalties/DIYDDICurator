@@ -32,6 +32,8 @@ geography_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (v in dat()$stdyDscr$stdyInfo$sumDscr$nation) {
+        if(is.null(v$abbr)) v$abbr <- NA_character_
+        if(is.null(v$lang)) v$lang <- NA_character_
         geog <- add_row(geog,
                         field = "nation",
                         value = v$value,
@@ -40,6 +42,7 @@ geography_server <- function(id, dat, filepth) {
         )
       }
       for (v in dat()$stdyDscr$stdyInfo$sumDscr$geogCover) {
+        if(is.null(v$lang)) v$lang <- NA_character_
         geog <- add_row(geog,
                         field = "geogCover",
                         value = v$value, 
@@ -48,6 +51,7 @@ geography_server <- function(id, dat, filepth) {
         )
       }
       for (v in dat()$stdyDscr$stdyInfo$sumDscr$geogUnit) {
+        if(is.null(v$lang)) v$lang <- NA_character_
         geog <- add_row(geog,
                         field = "geogUnit",
                         value = v$value, 
@@ -97,8 +101,14 @@ geography_server <- function(id, dat, filepth) {
             }
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$nation <- new_nation
+          updatedData$stdyDscr$stdyInfo$sumDscr$nation <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$nation)
+          updatedData$stdyDscr$stdyInfo$sumDscr$nation <- lapply(updatedData$stdyDscr$stdyInfo$sumDscr$nation,function(x) x[!is.na(x)])
           updatedData$stdyDscr$stdyInfo$sumDscr$geogCover <- new_geogCover
+          updatedData$stdyDscr$stdyInfo$sumDscr$geogCover <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$geogCover)
+          updatedData$stdyDscr$stdyInfo$sumDscr$geogCover <- lapply(updatedData$stdyDscr$stdyInfo$sumDscr$geogCover,function(x) x[!is.na(x)])
           updatedData$stdyDscr$stdyInfo$sumDscr$geogUnit <- new_geogUnit
+          updatedData$stdyDscr$stdyInfo$sumDscr$geogUnit <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$geogUnit)
+          updatedData$stdyDscr$stdyInfo$sumDscr$geogUnit <- lapply(updatedData$stdyDscr$stdyInfo$sumDscr$geogUnit,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

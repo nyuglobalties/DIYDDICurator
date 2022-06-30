@@ -21,6 +21,7 @@ deviat_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (d in dat()$stdyDscr$method$dataColl$deviat) {
+        if(is.null(d$lang)) d$lang <- NA_character_
         deviat <- add_row(deviat, 
                           value = d$value, 
                           lang = d$lang)
@@ -49,6 +50,8 @@ deviat_server <- function(id, dat, filepth) {
             new_deviat <- c(new_deviat, list(new))
           }
           updatedData$stdyDscr$method$dataColl$deviat <- new_deviat
+          updatedData$stdyDscr$method$dataColl$deviat <- recurse_write(updatedData$stdyDscr$method$dataColl$deviat)
+          updatedData$stdyDscr$method$dataColl$deviat <- lapply(updatedData$stdyDscr$method$dataColl$deviat,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

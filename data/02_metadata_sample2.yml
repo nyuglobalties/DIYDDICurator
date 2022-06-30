@@ -39,10 +39,12 @@ stdyDscr:
     biblCit: ~
     biblCit-format: ~
     titlStmt:
-      titl: Sample Project 1
-      subTitl: ~
-      altTitl: ~
-      altTitl-lang: ~
+      titl:
+        value: 'Sample title #2: testing'
+        lang: en
+      parTitl:
+      - value: ''
+        lang: fr
       IDNo: ~
     rspStmt:
       AuthEnty:
@@ -50,17 +52,19 @@ stdyDscr:
         affiliation: New York University
       - name: Author 2
         affiliation: New York University
+      - name: Author 3
+        affiliation: International Rescue Committee
       othId:
-      - name: Data Manager name
+      - name: Patrick
         role: Data Manager
         affiliation: New York University
-      - name: Data Curator name
-        role: Curator
+      - name: Dan
+        role: Data Curator
         affiliation: New York University
     serStmt:
       serName:
-      - value: Series Name
-        abbr: SN
+      - value: 'Education in Emergencies: Evidence for Action'
+        abbr: 3EA
         lang: en
       serInfo:
       - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
@@ -75,16 +79,23 @@ stdyDscr:
       - name: Global TIES for Children
         abbr: TIES-NYU
         affiliation: New York University
-        role: ~
+        role: ''
       - name: International Rescue Committee
         abbr: IRC
-      prodPlac: New York
-      prodDate: Jan 1, 2022
-      prodDate-date: '2022-01-01'
+        affiliation: ''
+        role: ''
+      prodPlac:
+      - value: New York
+      prodDate:
+      - value: January 1, 2022
+        date: '2022-01-01'
       fundAg:
       - name: Funder1
         abbr: F1
-        role: Funding
+        role: data collection
+      - name: 'Funder #2'
+        abbr: F2
+        role: analysis
     distStmt:
       distrbtr: ~
       distrbtr-abbr: ~
@@ -100,6 +111,12 @@ stdyDscr:
       contact: ~
       contact-affiliation: ~
       contact-email: ~
+    titleStmt:
+      titl:
+        value: 'New title: Just a test'
+      parTitl:
+      - value: ''
+        lang: .na.character
   dataAccs:
     setAvail:
       avlStatus: ~
@@ -229,9 +246,6 @@ stdyDscr:
     - value: Lets see if this changes in the XML export section...
       contentType: abstract
       lang: en
-    - value: Blah blah blah
-      contentType: purpose
-      lang: fr
   method:
     dataColl:
       collectorTraining:
@@ -239,40 +253,49 @@ stdyDscr:
         type: ~
         lang: en
       frequenc:
-      - value: ''
+      - value: weekly
         lang: en
       dataCollector:
       - value: International Rescue Committee
         lang: en
       collMode:
-      - value: ''
+      - value: Mode of collection
         lang: en
       collSitu:
-      - value: ''
+      - value: Many many characteristics
         lang: en
       resInstru:
-      - value: ''
+      - value: Questionnaire
         type: structured
         lang: en
       instrumentDevelopment:
-      - value: ''
+      - value: alsdkrjdomfadiormf
         type: ''
         lang: en
       ConOps:
-      - value: ''
+      - value: Ten percent of data entry forms were reentered to check for accuracy.
         agency: ''
         lang: en
       actMin:
-      - value: ''
+      - value: To minimize the number of unresolved cases and reduce the potential
+          nonresponse bias, four follow-up contacts were made with agencies that had
+          not responded by various stages of the data collection process.
         lang: en
       deviat:
-      - value: ''
+      - value: The suitability of Ohio as a research site reflected its similarity
+          to the United States as a whole. The evidence extended by Tuchfarber (1988)
+          shows that Ohio is representative of the United States in several ways:/
+          percent urban and rural, percent of the population that is African American,
+          median age, per capita income, percent living below the poverty level, and
+          unemployment rate. Although results generated from an Ohio sample are not
+          empirically generalizable to the United States, they may be suggestive of
+          what might be expected nationally.
         lang: en
       timeMeth:
-      - value: ''
+      - value: panel survey
         lang: en
       sampProc:
-      - value: ''
+      - value: weekly
         lang: en
     stdyClas:
       value: ~
@@ -291,11 +314,11 @@ dataDscr:
   varGrp:
   - name: varGrp1
     labl:
-    - value: ''
+    - value: Longer description of varGrp
       lang: en
       level: varGrp
     defntn:
-    - value: ''
+    - value: Definition of VarGrp
       lang: en
     universe:
     - group: individuals
@@ -312,6 +335,10 @@ dataDscr:
       vocabURI: http://exploresel.gse.harvard.edu/terms/
       lang: en
   - name: varGrp2
+    labl:
+    - value: adsorjmfcdioar
+      lang: en
+      level: varGrp
   var:
     var-qstn: ~
     var-intrvl: ~

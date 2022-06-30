@@ -22,15 +22,25 @@ dataCollector_server <- function(id, dat, filepth) {
       req(dat())
       dataCollector <- tibble(
         value = character(),
+        abbr = character(),
+        affiliation = character(),
+        role = character(),
         lang = character()
       )
       for (d in dat()$stdyDscr$method$dataColl$dataCollector) {
+        if(is.null(d$abbr)) d$abbr <- NA_character_
+        if(is.null(d$affiliation)) d$affiliation <- NA_character_
+        if(is.null(d$role)) d$role <- NA_character_
+        if(is.null(d$lang)) d$lang <- NA_character_
         dataCollector <- add_row(dataCollector, 
                                  value = d$value, 
+                                 abbr = d$abbr,
+                                 affiliation = d$affiliation,
+                                 role = d$role,
                                  lang = d$lang)
       }
       rht <- rhandsontable(dataCollector, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
-        hot_cols(colWidths = c(100, 40),
+        hot_cols(colWidths = c(40, 10, 40, 40, 10),
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
@@ -49,11 +59,16 @@ dataCollector_server <- function(id, dat, filepth) {
           new_dataCollector <- list()
           for(i in 1:length(updated_dataCollector$value)) {
             new <- list(value = updated_dataCollector$value[i],
+                        abbr = updated_dataCollector$abbr[i],
+                        affiliation = updated_dataCollector$affiliation[i],
+                        role = updated_dataCollector$role[i],
                         lang  = updated_dataCollector$lang[i]
             )
             new_dataCollector <- c(new_dataCollector, list(new))
           }
           updatedData$stdyDscr$method$dataColl$dataCollector <- new_dataCollector
+          updatedData$stdyDscr$method$dataColl$dataCollector <- recurse_write(updatedData$stdyDscr$method$dataColl$dataCollector)
+          updatedData$stdyDscr$method$dataColl$dataCollector <- lapply(updatedData$stdyDscr$method$dataColl$dataCollector, function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

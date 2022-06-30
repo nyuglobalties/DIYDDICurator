@@ -56,3 +56,53 @@ hot.addHook('afterLoadData', loadfn);
 
 
 }"
+
+# function to remove markup
+remove_markup <- function(s) {
+  s <- str_replace_all(s, "\\\\href\\{[A-Za-z0-9:.\\/]*\\}", "")
+  s <- str_replace_all(s, "\\{|\\}", "")
+  s <- str_replace_all(s, ":\\\\", ":")
+  s <- str_replace_all(s, "doi: ", "doi:")
+  s <- str_replace_all(s, "\\\\&amp;", "&")
+  s <- str_replace_all(s, "\\\\&;", "&")
+  s <- str_replace_all(s, "\\\\url", "")
+  s <- str_replace_all(s, "\\\\par ", "")
+  s <- str_replace_all(s, "\\\\%", "%")
+  s <- str_replace_all(s, ":/ ", ": ")
+  s <- str_replace_all(s, "\\\\textbf", "")
+  s <- str_replace_all(s, "\\n", "")
+  s
+}
+
+recurse_read <- function(x) {
+  # base case
+  if (is.character(x)) {
+    x <- remove_markup(x)
+  }
+  else if (is.list(x)) {
+    x <- lapply(x, recurse_read)
+  }
+  
+  x
+}
+
+# function to remove markup
+add_markup <- function(s) {
+  s <- str_replace_all(s, "&", "\\\\&amp;")
+  s <- str_replace_all(s, "%", "\\\\%")
+  s <- str_replace_all(s, ": ", ":/ ")
+  if(nchar(s) == 0 | is.na(s)) s <- NA_character_
+  s
+}
+
+recurse_write <- function(x) {
+  # base case
+  if (is.character(x)) {
+    x <- add_markup(x)
+  }
+  else if (is.list(x)) {
+    x <- lapply(x, recurse_write)
+  }
+  
+  x
+}

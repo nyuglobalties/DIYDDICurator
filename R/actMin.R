@@ -21,6 +21,7 @@ actMin_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (a in dat()$stdyDscr$method$dataColl$actMin) {
+        if(is.null(a$lang)) a$lang <- NA_character_
         actMin <- add_row(actMin, 
                           value = a$value, 
                           lang = a$lang)
@@ -49,6 +50,8 @@ actMin_server <- function(id, dat, filepth) {
             new_actMin <- c(new_actMin, list(new))
           }
           updatedData$stdyDscr$method$dataColl$actMin <- new_actMin
+          updatedData$stdyDscr$method$dataColl$actMin <- recurse_write(updatedData$stdyDscr$method$dataColl$actMin)
+          updatedData$stdyDscr$method$dataColl$actMin <- lapply(updatedData$stdyDscr$method$dataColl$actMin,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

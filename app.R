@@ -20,11 +20,16 @@ ui <- fluidPage(
              tags$hr(), 
              radioButtons("proj",
                           "Select Project",
-                          choices = c("Sample - Project 1" = "samp1", 
-                                      "Sample - Project 2" = "samp2"),
-                          selected = "samp1")
+                          choices = list.files("data/"))
              ),
-    projectInformation_ui("projInfo"),
+    navbarMenu(
+      "Project Information",
+      title_ui("titles"),
+      authors_ui("authors"),
+      series_ui("series"),
+      producers_ui("producers"),
+      funders_ui("funders")
+    ),
     navbarMenu(
       "Study Information",
       abstract_ui("abstract"),
@@ -41,6 +46,7 @@ ui <- fluidPage(
       dataCollector_ui("dataCollector"),
       collMode_ui("collMode"),
       collSitu_ui("collSitu"),
+      collectorTraining_ui("collectorTraining"),
       resInstru_ui("resInstru"),
       instrumentDevelopment_ui("instrumentDevelopment"),
       ConOps_ui("ConOps"),
@@ -52,6 +58,7 @@ ui <- fluidPage(
         
     navbarMenu(
       "Evaluation/Export",
+      readme_generation_ui("readme"),
       ddi_generation_ui("ddi")
     )
   )
@@ -60,19 +67,25 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   filepth <- reactive({
-    r <- switch(input$proj,
-                samp1 = "data/metadata_sample1.yml",
-                samp2 = "data/metadata_sample2.yml")
+    r <- paste0("data/", input$proj)
     return(r)
   })
   
-  dat <- reactiveFileReader(intervalMillis = 1000, 
+  init_dat <- reactiveFileReader(intervalMillis = 1000, 
                             session, 
                             filePath = filepth,
                             readFunc = yaml::read_yaml
                           )
   
-  projectInformation_server("projInfo", dat)
+  dat <- reactive(recurse_read(init_dat()))
+
+  
+  # add projectinformation servers here
+  title_server("titles", dat, filepth)
+  authors_server("authors", dat, filepth)
+  series_server("series", dat, filepth)
+  producers_server("producers", dat, filepth)
+  funders_server("funders", dat, filepth)
   
   abstract_server("abstract", dat, filepth)
   subject_server("subject", dat, filepth)
@@ -84,6 +97,7 @@ server <- function(input, output, session) {
   timeMeth_server("timeMeth", dat, filepth)  
   frequenc_server("frequenc", dat, filepth)
   dataCollector_server("dataCollector", dat, filepth)  
+  collectorTraining_server("collectorTraining", dat, filepth)
   collMode_server("collMode", dat, filepth)
   collSitu_server("collSitu", dat, filepth)
   resInstru_server("resInstru", dat, filepth)
@@ -95,6 +109,7 @@ server <- function(input, output, session) {
   
   varGrp_server("varGrp", dat, filepth)
   ddi_generation_server("ddi", dat)
+  readme_generation_server("readme", dat)
 }
 
 shinyApp(server = server, ui = ui)

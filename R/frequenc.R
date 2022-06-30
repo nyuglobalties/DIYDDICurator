@@ -20,6 +20,7 @@ frequenc_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (f in dat()$stdyDscr$method$dataColl$frequenc) {
+        if(is.null(f$lang)) f$lang <- NA_character_
         frequenc <- add_row(frequenc, 
                             value = f$value, 
                             lang = f$lang)
@@ -48,6 +49,8 @@ frequenc_server <- function(id, dat, filepth) {
             new_frequenc <- c(new_frequenc, list(new))
           }
           updatedData$stdyDscr$method$dataColl$frequenc <- new_frequenc
+          updatedData$stdyDscr$method$dataColl$frequenc <- recurse_write(updatedData$stdyDscr$method$dataColl$frequenc)
+          updatedData$stdyDscr$method$dataColl$frequenc <- lapply(updatedData$stdyDscr$method$dataColl$frequenc,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

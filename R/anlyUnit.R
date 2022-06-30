@@ -21,6 +21,7 @@ anlyUnit_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (a in dat()$stdyDscr$stdyInfo$sumDscr$anlyUnit) {
+        if(is.null(a$lang)) a$lang <- NA_character_
         anlyUnit <- add_row(anlyUnit, 
                             group = a$group, 
                             lang = a$lang)
@@ -49,6 +50,8 @@ anlyUnit_server <- function(id, dat, filepth) {
             new_anlyUnit <- c(new_anlyUnit, list(new))
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit <- new_anlyUnit
+          updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit)
+          updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit <- lapply(updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

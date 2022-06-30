@@ -19,6 +19,7 @@ timeMeth_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (t in dat()$stdyDscr$method$dataColl$timeMeth) {
+        if(is.null(t$lang)) t$lang <- NA_character_
         timeMeth <- add_row(timeMeth, 
                             value = t$value, 
                             lang = t$lang)
@@ -47,6 +48,8 @@ timeMeth_server <- function(id, dat, filepth) {
             new_timeMeth <- c(new_timeMeth, list(new))
           }
           updatedData$stdyDscr$method$dataColl$timeMeth <- new_timeMeth
+          updatedData$stdyDscr$method$dataColl$timeMeth <- recurse_write(updatedData$stdyDscr$method$dataColl$timeMeth)
+          updatedData$stdyDscr$method$dataColl$timeMeth <- lapply(updatedData$stdyDscr$method$dataColl$timeMeth,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

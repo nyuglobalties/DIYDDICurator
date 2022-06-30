@@ -27,6 +27,9 @@ resInstru_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (r in dat()$stdyDscr$method$dataColl$resInstru) {
+        if(is.null(r$type)) r$type <- NA_character_
+        if(is.null(r$lang)) r$lang <- NA_character_
+        
         resInstru <- add_row(resInstru, 
                              value = r$value, 
                              type = r$type,
@@ -57,6 +60,8 @@ resInstru_server <- function(id, dat, filepth) {
             new_resInstru <- c(new_resInstru, list(new))
           }
           updatedData$stdyDscr$method$dataColl$resInstru <- new_resInstru
+          updatedData$stdyDscr$method$dataColl$resInstru <- recurse_write(updatedData$stdyDscr$method$dataColl$resInstru)
+          updatedData$stdyDscr$method$dataColl$resInstru <- lapply(updatedData$stdyDscr$method$dataColl$resInstru,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

@@ -24,6 +24,8 @@ ConOps_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (c in dat()$stdyDscr$method$dataColl$ConOps) {
+        if(is.null(c$agency)) c$agency <- NA_character_
+        if(is.null(c$lang)) c$lang <- NA_character_
         ConOps <- add_row(ConOps, 
                           value = c$value, 
                           agency = c$agency,    
@@ -54,6 +56,8 @@ ConOps_server <- function(id, dat, filepth) {
             new_ConOps <- c(new_ConOps, list(new))
           }
           updatedData$stdyDscr$method$dataColl$ConOps <- new_ConOps
+          updatedData$stdyDscr$method$dataColl$ConOps <- recurse_write(updatedData$stdyDscr$method$dataColl$ConOps)
+          updatedData$stdyDscr$method$dataColl$ConOps <- lapply(updatedData$stdyDscr$method$dataColl$ConOps,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

@@ -28,20 +28,21 @@ universe_server <-  function(id, dat, filepth) {
     
     output$universe <- renderRHandsontable({
       req(dat())
-      clusionOptions <- c("I", "E")
+      clusionOptions <- c(NA_character_, "I", "E")
       universe <- tibble(
         group = character(),
         clusion = factor(),
         lang = character()
       )
       for (u in dat()$stdyDscr$stdyInfo$sumDscr$universe) {
+        if(is.null(u$lang)) u$lang <- NA_character_
         universe <- add_row(universe, 
                             group = u$group, 
                             clusion = u$clusion,
                             lang = u$lang)
       }
       rht <- rhandsontable(universe, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
-        hot_cols(colWidths = c(100, 40, 40, 40),
+        hot_cols(colWidths = c(30, 20, 20, 20),
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
@@ -67,6 +68,8 @@ universe_server <-  function(id, dat, filepth) {
             newUniverse <- c(newUniverse, list(new))
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$universe <- newUniverse
+          updatedData$stdyDscr$stdyInfo$sumDscr$universe <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$universe)
+          updatedData$stdyDscr$stdyInfo$sumDscr$universe <- lapply(updatedData$stdyDscr$stdyInfo$sumDscr$universe,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

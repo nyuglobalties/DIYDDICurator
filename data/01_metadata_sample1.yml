@@ -39,52 +39,46 @@ stdyDscr:
     biblCit: ~
     biblCit-format: ~
     titlStmt:
-      titl: Sample Project 1
-      subTitl: ~
-      altTitl: ~
-      altTitl-lang: ~
+      titl:
+      - value: 'Sample title: testing'
+        lang: en
+      parTitl:
+      - value: .na.character
+        lang: fr
       IDNo: ~
     rspStmt:
       AuthEnty:
       - name: Author 1
         affiliation: New York University
       - name: Author 2
-        affiliation: New York University
+        affiliation: International Rescue Committee
+      - name: Author 3
       othId:
-      - name: Data Manager name
+      - name: Patrick
         role: Data Manager
         affiliation: New York University
-      - name: Data Curator name
-        role: Curator
+      - name: Dan
+        role: Data Curator
         affiliation: New York University
-    serStmt:
-      serName:
-      - value: Series Name
-        abbr: SN
-        lang: en
-      serInfo:
-      - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-          non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        lang: en
+      - name: Hillary
+        affiliation: New York University
     prodStmt:
       producer:
       - name: Global TIES for Children
         abbr: TIES-NYU
         affiliation: New York University
-        role: ~
       - name: International Rescue Committee
-        abbr: IRC
-      prodPlac: New York
-      prodDate: Jan 1, 2022
-      prodDate-date: 2022-01-01
+        role: data collector
+      prodPlac:
+      - value: New York
+      prodDate:
+      - value: January 1, 2022
+        date: '2022-01-01'
       fundAg:
       - name: Funder1
         abbr: F1
-        role: Funding
+        role: data collection
+      - name: 'Funder #2'
     distStmt:
       distrbtr: ~
       distrbtr-abbr: ~
@@ -100,6 +94,20 @@ stdyDscr:
       contact: ~
       contact-affiliation: ~
       contact-email: ~
+    serStmt:
+    - ID: series1
+      serName:
+      - value: 'Education in Emergencies: Evidence for Action'
+        abbr: 3EA
+        lang: en
+      serInfo:
+      - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+          non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        lang: en
   dataAccs:
     setAvail:
       avlStatus: ~
@@ -124,35 +132,16 @@ stdyDscr:
       citReq: ~
   stdyInfo:
     sumDscr:
-      dataKind: 
+      dataKind:
       - value: survey
         lang: en
       anlyUnit:
       - group: individuals
         lang: en
-        txt: extended text
       - group: classrooms
         lang: en
-        txt: extended text
       - group: schools
         lang: en
-        txt: extended text
-      universe:
-      - group: individuals
-        level: project
-        clusion: I
-        lang: en
-        txt: .na.character
-      - group: classrooms
-        level: project
-        clusion: I
-        lang: en
-        txt: .na.character
-      - group: schools
-        level: project
-        clusion: I
-        lang: en
-        txt: ''
       nation:
       - value: Lebanon
         abbr: LB
@@ -164,19 +153,40 @@ stdyDscr:
       - value: city
         lang: en
       timePrd:
-      - date: '2019-01-01'
+      - value: January 1, 2019
+        date: '2019-01-01'
         event: start
-        cycle: Wave1
-      - date: '2019-04-30'
+        cycle: baseline
+        lang: en
+      - value: April 30, 2019
+        date: '2019-04-30'
         event: end
-        cycle: Wave1
+        cycle: baseline
+        lang: en
       collDate:
-      - date: '2019-01-01'
+      - value: January 1, 2019
+        date: '2019-01-01'
         event: start
-        cycle: Wave3
-      - date: '2019-04-30'
+        cycle: endline
+        lang: en
+      - value: April 30, 2019
+        date: '2019-04-30'
         event: end
-        cycle: Wave3
+        cycle: endline
+        lang: en
+      universe:
+      - group: individuals
+        level: project
+        clusion: I
+        lang: en
+      - group: classrooms
+        level: project
+        clusion: I
+        lang: en
+      - group: schools
+        level: project
+        clusion: I
+        lang: en
     qualityStatement:
     - standardsCompliance: ~
       standard:
@@ -184,100 +194,85 @@ stdyDscr:
         producer: ~
       complianceDescription: ~
     abstract:
-    - value: adorjaifd
+    - value: Lets see if this changes in the XML export section...
       contentType: abstract
       lang: en
-    - value: uykaurln
+    - value: Blah blah blah
       contentType: purpose
       lang: fr
     subject:
     - keyword: Education in Emergencies
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Social Emotional Learning
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Refugee Education
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Cluster Randomized Trial
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Mental Health
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Learning in a Healing Classroom
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Tutoring in a Healing Classroom
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Mindfulness
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Brain Games
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Middle East
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
     - keyword: Primary Education
-      vocab: .na.character
-      vocabURI: .na.character
       lang: en
   method:
     dataColl:
+      actMin:
+      - value: To minimize the number of unresolved cases and reduce the potential
+          nonresponse bias, four follow-up contacts were made with agencies that had
+          not responded by various stages of the data collection process.
+        lang: en
       collectorTraining:
-      - value: ~
-        type: ~
+      - value: Describe research project, describe population and sample, suggest
+          methods and language for approaching subjects, explain questions and key
+          terms of survey instrument.
         lang: en
-      timeMeth:
-      - value: ''
+      collMode:
+      - value: Mode of collection
         lang: en
-        txt: .na.character
-      frequenc:
-      - value: ''
+      collSitu:
+      - value: Many many characteristics
+        lang: en
+      ConOps:
+      - value: Ten percent of data entry forms were reentered to check for accuracy.
         lang: en
       dataCollector:
       - value: International Rescue Committee
+        abbr: IRC
         lang: en
-      collMode:
-      - value: ''
+      deviat:
+      - value: 'The suitability of Ohio as a research site reflected its similarity
+          to the United States as a whole. The evidence extended by Tuchfarber (1988)
+          shows that Ohio is representative of the United States in several ways:
+          percent urban and rural, percent of the population that is African American,
+          median age, per capita income, percent living below the poverty level, and
+          unemployment rate. Although results generated from an Ohio sample are not
+          empirically generalizable to the United States, they may be suggestive of
+          what might be expected nationally.'
         lang: en
-      collSitu:
-      - value: ''
+      frequenc:
+      - value: weekly
         lang: en
       resInstru:
-      - value: ''
+      - value: Questionnaire
         type: structured
         lang: en
       instrumentDevelopment:
-      - value: ''
-        type: ''
-        lang: en
-      ConOps:
-      - value: ''
-        agency: ''
-        lang: en
-      actMin:
-      - value: ''
+      - value: alsdkrjdomfadiormf
         lang: en
       sampProc:
-      - value: ''
+      - value: weekly
         lang: en
-        txt: ''
-      deviat:
-      - value: ''
+      timeMeth:
+      - value: panel survey
         lang: en
     stdyClas:
       value: ~
@@ -296,73 +291,28 @@ dataDscr:
   varGrp:
   - name: varGrp1
     labl:
-    - value: ''
+    - value: Longer description of varGrp
       lang: en
       level: varGrp
     defntn:
-    - value: ''
+    - value: Definition of VarGrp
       lang: en
     universe:
-    - value: ''
+    - group: individuals
       level: varGrp
       clusion: I
       lang: en
     concept:
-    - value: 'concept1'
-      vocab: UNESCO
-      vocabURI: http://vocabularies.unesco.org/thesaurus
+    - value: concept1
+      vocabu: UNESCO
+      vocab_URI: http://vocabularies.unesco.org/thesaurus
       lang: en
-    - value: 'sel_concept1'
-      vocab: exporeSEL
-      vocabURI: http://exploresel.gse.harvard.edu/terms/
+    - value: sel_concept1
+      vocabu: exporeSEL
+      vocab_URI: http://exploresel.gse.harvard.edu/terms/
       lang: en
-  var:
-    var-qstn: ~
-    var-intrvl: ~
-    var-aggrMeth: ~
-    var-nature: ~
-    var-temporal: ~
-    var-geog: ~
-    var-geoVocab: ~
-    var-catQnty: ~
-    labl: ~
-    labl-sdatrefs: ~
-    labl-level: ~
-    imputation: ~
-    security: ~
-    security-date: ~
-    embargo: ~
-    embargo-date: ~
-    embargo-event: ~
-    concept: ~
-    concept-vocab: ~
-    concept-vocabURI: ~
-    anlysUnit: ~
-    respUnit: ~
-    qstn: ~
-    qstn-seqNo: ~
-    qstn-sdatrefs: ~
-    qstn-responseDomainType: ~
-    qstn-lang: ~
-    sumStat: ~
-    sumStat-wgtd: ~
-    sumStat-weight: ~
-    sumStat-type: ~
-    catgry: ~
-    catgry-missing: ~
-    catgry-missType: ~
-    catValu: ~
-    catLabl: ~
-    catLabl-level: ~
-    catStat: ~
-    catStat-type: ~
-    derivation: ~
-    derivation-var: ~
-    drvdesc: ~
-    drvmd: ~
-    drvmd-syntax: ~
-    codInstr: ~
-    universe: ~
-    universe-level: ~
-    universe-clusion: ~
-    undocCod: ~
+  - name: varGrp2
+    labl:
+    - value: raidsf;moadr
+      lang: en
+      level: varGrp

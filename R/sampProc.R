@@ -21,6 +21,7 @@ sampProc_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (s in dat()$stdyDscr$method$dataColl$sampProc) {
+        if(is.null(s$lang)) s$lang <- NA_character_
         sampProc <- add_row(sampProc, 
                             value = s$value, 
                             lang = s$lang)
@@ -49,6 +50,8 @@ sampProc_server <- function(id, dat, filepth) {
             new_sampProc <- c(new_sampProc, list(new))
           }
           updatedData$stdyDscr$method$dataColl$sampProc <- new_sampProc
+          updatedData$stdyDscr$method$dataColl$sampProc <- recurse_write(updatedData$stdyDscr$method$dataColl$sampProc)
+          updatedData$stdyDscr$method$dataColl$sampProc <- lapply(updatedData$stdyDscr$method$dataColl$sampProc,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

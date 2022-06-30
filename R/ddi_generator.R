@@ -10,6 +10,36 @@ splat <- function(x, f) {
 
 # element functions to put into splat...
 
+generate_titlStmt <- function(dat) {
+  if(!is.na(dat$stdyDscr$citation$titlStmt$titl[[1]]$lang)) {
+    r <- ddi_titlStmt(ddi_titl(dat$stdyDscr$citation$titlStmt$titl[[1]]$value, lang = dat$stdyDscr$citation$titlStmt$titl[[1]]$lang))
+  } else {
+    r <- ddi_titlStmt(ddi_titl(dat$stdyDscr$citation$titlStmt$titl[[1]]$value))
+  }
+
+  if(length(dat$stdyDscr$citation$titlStmt$parTitl) > 1 | !is.na(dat$stdyDscr$citation$titlStmt$parTitl[[1]]$value)) {
+    r$content <- append(r$content, descr_parTitl(dat))
+  }
+  r
+}
+
+descr_parTitl <- function(dat) {
+  ds <- tibble(value = character(), lang = character())
+  for(pt in dat$stdyDscr$citation$titlStmt$parTitl) {
+    ds <- add_row(ds, value = pt$value, lang = pt$lang)
+  }
+  pmap(
+    .l = list(value = ds$value, lang = ds$lang),
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_parTitl(value, lang = lang)
+      } else {
+        ddi_parTitl(value)
+      }
+    }
+  )
+}
+
 descr_AuthEnty <- function(dat) {
   ds <- tibble(name = character(), affiliation = character())
   for(auth in dat$stdyDscr$citation$rspStmt$AuthEnty) {
@@ -18,7 +48,14 @@ descr_AuthEnty <- function(dat) {
   pmap(
     .l = list(name = ds$name, 
               affiliation = ds$affiliation),
-    .f = function(name, affiliation) ddi_AuthEnty(name, affiliation = affiliation)
+    .f = function(name, affiliation) {
+      if(!is.na(affiliation)) {
+        ddi_AuthEnty(name, affiliation = affiliation)  
+      } else {
+        ddi_AuthEnty(name)
+      }
+      
+    }
   )
 }
 
@@ -33,32 +70,89 @@ descr_othId <- function(dat) {
     .l = list(name = ds$name, 
               role = ds$role,
               affiliation = ds$affiliation),
-    .f = function(name, role, affiliation) ddi_othId(name, role = role, affiliation = affiliation)
+    .f = function(name, role, affiliation) {
+      if(!is.na(role) & !is.na(affiliation)) {
+        ddi_othId(name, role = role, affiliation = affiliation)
+      } else if (is.na(role) & !is.na(affiliation)) {
+        ddi_othId(name, affiliation = affiliation)
+      } else if (!is.na(role) & is.na(affiliation)) {
+        ddi_othId(name, role = role)
+      } else {
+        ddi_othId(name)
+      }
+    }
+  )
+}
+
+descr_serStmt <- function(dat) {
+  ds <- tibble(ID = character(), 
+               URI = character(),
+               serName = list(), 
+               serInfo = list())
+  for(s in dat$stdyDscr$citation$serStmt) {
+    ds <- add_row(ds, 
+                  ID = s$ID, 
+                  URI = s$URI, 
+                  serName = list(descr_serName(s$serName)),
+                  serInfo = list(descr_serInfo(s$serInfo)))
+  }
+  pmap(
+    .l = list(ID = ds$ID, URI = ds$URI, serName = ds$serName, serInfo = ds$serInfo),
+    .f = function(ID, URI, serName, serInfo) {
+      if(!is.na(URI) & length(serName) > 0 & length(serInfo) > 0){
+        r <- splat(c(ID = ID, URI = URI, serName, serInfo), ddi_serStmt)
+      } else if(is.na(URI) & length(serName) > 0 & length(serInfo) > 0){
+        r <- splat(c(ID = ID, serName, serInfo), ddi_serStmt)
+      } else if(!is.na(URI) & length(serName) == 0 & length(serInfo) > 0){
+        r <- splat(c(ID = ID, URI = URI, serInfo), ddi_serStmt)
+      } else if(!is.na(URI) & length(serName) > 0 & length(serInfo) == 0){
+        r <- splat(c(ID = ID, URI = URI, serName), ddi_serStmt)
+      } else if(is.na(URI) & length(serName) == 0 & length(serInfo) > 0){
+        r <- splat(c(ID = ID, serInfo), ddi_serStmt)
+      } else if(is.na(URI) & length(serName) > 0 & length(serInfo) == 0){
+        r <- splat(c(ID = ID, serName), ddi_serStmt)
+      } 
+      r
+    }
   )
 }
 
 descr_serName <- function(dat) {
   ds <- tibble(value = character(), abbr = character(), lang = character())
-  for(n in dat$stdyDscr$citation$serStmt$serName) {
+  for(n in dat) {
     ds <- add_row(ds, value = n$value, abbr = n$abbr, lang = n$lang)
   }
   pmap(
-    .l = list(value = ds$value, 
-              abbr = ds$abbr,
-              lang = ds$lang),
-    .f = function(value, abbr, lang) ddi_serName(value, abbr = abbr, lang = lang)
+    .l = list(value = ds$value, abbr = ds$abbr, lang = ds$lang),
+    .f = function(value, abbr, lang) {
+      if(!is.na(abbr) & !is.na(lang)) {
+        ddi_serName(value, abbr = abbr, lang = lang)        
+      } else if(is.na(abbr) & !is.na(lang)) {
+        ddi_serName(value, lang = lang)        
+      } else if(!is.na(abbr) & is.na(lang)) {
+        ddi_serName(value, abbr = abbr)        
+      } else {
+        ddi_serName(value)        
+      }
+    }
   )
 }
 
 descr_serInfo <- function(dat) {
   ds <- tibble(value = character(), lang = character())
-  for(n in dat$stdyDscr$citation$serStmt$serInfo) {
+  for(n in dat) {
     ds <- add_row(ds, value = n$value, lang = n$lang)
   }
   pmap(
     .l = list(value = ds$value, 
               lang = ds$lang),
-    .f = function(value, abbr, lang) ddi_serInfo(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_serInfo(value, lang = lang)
+      } else {
+        ddi_serInfo(value)
+      }
+    }
   )
 }
 
@@ -79,7 +173,57 @@ descr_producer <- function(dat) {
               abbr = ds$abbr,
               affiliation = ds$affiliation,
               role = ds$role),
-    .f = function(name, abbr, affiliation, role) ddi_producer(name, abbr = abbr, affiliation = affiliation, role = role)
+    .f = function(name, abbr, affiliation, role) {
+      if(!is.na(abbr) & !is.na(affiliation) & !is.na(role)) {
+        ddi_producer(name, abbr = abbr, affiliation = affiliation, role = role)  
+      } else if (!is.na(abbr) & !is.na(affiliation) & is.na(role)) {
+        ddi_producer(name, abbr = abbr, affiliation = affiliation)  
+      } else if (!is.na(abbr) & is.na(affiliation) & !is.na(role)) {
+        ddi_producer(name, abbr = abbr, role = role)  
+      } else if (is.na(abbr) & !is.na(affiliation) & !is.na(role)) {
+        ddi_producer(name, affiliation = affiliation, role = role)  
+      } else if (!is.na(abbr) & is.na(affiliation) & is.na(role)) {
+        ddi_producer(name, abbr = abbr)  
+      } else if (is.na(abbr) & !is.na(affiliation) & is.na(role)) {
+        ddi_producer(name, affiliation = affiliation)  
+      } else if(is.na(abbr) & is.na(affiliation) & !is.na(role)) {
+        ddi_producer(name, role = role)  
+      } else {
+        ddi_producer(name)
+      }
+    }
+  )
+}
+
+descr_prodPlac <- function(dat) {
+  ds <- tibble(value = character())
+  for(n in dat$stdyDscr$citation$prodStmt$prodPlac) {
+    ds <- add_row(ds, 
+                  value = n$value)
+  }
+  pmap(
+    .l = list(value = ds$value),
+    .f = function(value) ddi_prodPlac(value)
+  )
+}
+
+descr_prodDate <- function(dat) {
+  ds <- tibble(value = character(),
+               date = character())
+  for(n in dat$stdyDscr$citation$prodStmt$prodDate) {
+    ds <- add_row(ds, 
+                  value = n$value,
+                  date = n$date)
+  }
+  pmap(
+    .l = list(value = ds$value, date = ds$date),
+    .f = function(value, date) {
+      if(!is.na(date)) {
+        ddi_prodDate(value, date = date)
+      } else {
+        ddi_prodDate(value)
+      }
+    }
   )
 }
 
@@ -97,7 +241,17 @@ descr_fundAg <- function(dat) {
     .l = list(name = ds$name, 
               abbr = ds$abbr,
               role = ds$role),
-    .f = function(name, abbr, role) ddi_fundAg(name, abbr = abbr, role = role)
+    .f = function(name, abbr, role) {
+      if(!is.na(abbr) & !is.na(role)) {
+        ddi_fundAg(name, abbr = abbr, role = role)
+      } else if(is.na(abbr) & !is.na(role)) {
+        ddi_fundAg(name, role = role)
+      } else if(!is.na(abbr) & is.na(role)) {
+        ddi_fundAg(name, abbr = abbr)
+      } else {
+        ddi_fundAg(name)
+      }
+    }
   )
 }
 
@@ -112,7 +266,13 @@ descr_anlyUnit <- function(dat) {
   pmap(
     .l = list(group = ds$group, 
               lang = ds$lang),
-    .f = function(group, lang) ddi_anlyUnit(group, lang = lang)
+    .f = function(group, lang) {
+      if(is.na(lang)) {
+        ddi_anlyUnit(group)
+      } else {
+        ddi_anlyUnit(group, lang = lang)  
+      }
+    }
   )
 }
 
@@ -137,7 +297,25 @@ descr_universe <- function(dat) {
               level = ds$level,
               clusion = ds$clusion,
               lang = ds$lang),
-    .f = function(group, level, clusion, lang) ddi_universe(group, level = level, clusion = clusion, lang = lang)
+    .f = function(group, level, clusion, lang) {
+      if(!is.na(level) & !is.na(clusion) & !is.na(lang)) {
+        ddi_universe(group, level = level, clusion = clusion, lang = lang)  
+      } else if(!is.na(level) & !is.na(clusion) & is.na(lang)) {
+        ddi_universe(group, level = level, clusion = clusion)  
+      } else if(!is.na(level) & is.na(clusion) & !is.na(lang)) {
+        ddi_universe(group, level = level, lang = lang)  
+      } else if(!is.na(level) & is.na(clusion) & is.na(lang)) {
+        ddi_universe(group, level = level)  
+      } else if(is.na(level) & !is.na(clusion) & !is.na(lang)) {
+        ddi_universe(group, clusion = clusion, lang = lang)  
+      } else if(is.na(level) & !is.na(clusion) & is.na(lang)) {
+        ddi_universe(group, clusion = clusion)  
+      } else if(is.na(level) & is.na(clusion) & !is.na(lang)) {
+        ddi_universe(group, lang = lang)  
+      } else {
+        ddi_universe(group)
+      }
+    }
   )
 }
 
@@ -153,7 +331,17 @@ descr_nation <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, abbr = ds$abbr, lang = ds$lang),
-    .f = function(value, abbr, lang) ddi_nation(value, abbr = abbr, lang = lang)
+    .f = function(value, abbr, lang) {
+      if(!is.na(abbr) & !is.na(lang)) {
+        ddi_nation(value, abbr = abbr, lang = lang)  
+      } else if(is.na(abbr) & !is.na(lang)) {
+        ddi_nation(value, lang = lang)  
+      } else if(!is.na(abbr) & is.na(lang)) {
+        ddi_nation(value, abbr = abbr)  
+      } else {
+        ddi_nation(value)  
+      }
+    }
   )
 }
 
@@ -167,7 +355,13 @@ descr_geogCover <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_geogCover(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_geogCover(value, lang = lang)
+      } else {
+        ddi_geogCover(value)
+      }
+    }
   )
 }
 
@@ -181,7 +375,13 @@ descr_geogUnit <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_geogUnit(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_geogUnit(value, lang = lang)
+      } else {
+        ddi_geogUnit(value)
+      }
+    }
   )
 }
 
@@ -202,40 +402,112 @@ descr_dataKind <- function(dat) {
 # The goal would be to autogenerate the date in a specific format depending on the language 
 # which also isn't taken into account in the app
 descr_timePrd <- function(dat) {
-  ds <- tibble(date = character(), 
+  ds <- tibble(value = character(),
+               date = character(), 
                event = character(),
                cycle = character(),
-               value = character())
+               lang = character())
   for(n in dat$stdyDscr$stdyInfo$sumDscr$timePrd) {
     ds <- add_row(ds, 
+                  value = n$value,
                   date = n$date,
                   event = n$event,
                   cycle = n$cycle,
-                  value = format(lubridate::ymd(n$date), format = "%B %d, %Y")
+                  lang = n$lang
     )
   }
   pmap(
-    .l = list(date = ds$date, event = ds$event, cycle = ds$cycle, value = ds$value),
-    .f = function(date, event, cycle, value) ddi_timePrd(value, date = date, event = event, cycle = cycle, lang = "en")
+    .l = list(value = ds$value, date = ds$date, event = ds$event, cycle = ds$cycle, lang = ds$lang),
+    .f = function(value, date, event, cycle, lang) {
+      if(!is.na(date) & !is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, date = date, event = event, cycle = cycle, lang = lang)  
+      } else if(!is.na(date) & !is.na(event) & !is.na(cycle) & is.na(lang)) {
+        ddi_timePrd(value, date = date, event = event, cycle = cycle)  
+      } else if(!is.na(date) & !is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, date = date, event = event, lang = lang)  
+      } else if(!is.na(date) & !is.na(event) & is.na(cycle) & is.na(lang)) {
+        ddi_timePrd(value, date = date, event = event)  
+      } else if(!is.na(date) & is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, date = date, cycle = cycle, lang = lang)  
+      } else if(!is.na(date) & is.na(event) & !is.na(cycle) & is.na(lang)) {
+        ddi_timePrd(value, date = date, cycle = cycle)  
+      } else if(!is.na(date) & is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, date = date, lang = lang)  
+      } else if(!is.na(date) & is.na(event) & is.na(cycle) & is.na(lang)) {
+        ddi_timePrd(value, date = date)  
+      } else if(is.na(date) & !is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, event = event, cycle = cycle, lang = lang)  
+      } else if(is.na(date) & !is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, event = event, cycle = cycle)  
+      } else if(is.na(date) & !is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, event = event, lang = lang)  
+      } else if(is.na(date) & !is.na(event) & is.na(cycle) & is.na(lang)) {
+        ddi_timePrd(value, event = event)  
+      } else if(is.na(date) & is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, cycle = cycle, event = event)  
+      } else if(is.na(date) & is.na(event) & !is.na(cycle) & is.na(lang)) {
+        ddi_timePrd(value, cycle = cycle)  
+      } else if(is.na(date) & is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_timePrd(value, lang = lang)  
+      } else {
+        ddi_timePrd(value)
+      }
+    }
   )
 }
 
 descr_collDate <- function(dat) {
-  ds <- tibble(date = character(), 
+  ds <- tibble(value = character(),
+               date = character(), 
                event = character(),
                cycle = character(),
-               value = character())
+               lang = character())
   for(n in dat$stdyDscr$stdyInfo$sumDscr$collDate) {
     ds <- add_row(ds, 
+                  value = n$value,
                   date = n$date,
                   event = n$event,
                   cycle = n$cycle,
-                  value = format(lubridate::ymd(n$date), format = "%B %d, %Y")
+                  lang = n$lang
     )
   }
   pmap(
-    .l = list(date = ds$date, event = ds$event, cycle = ds$cycle, value = ds$value),
-    .f = function(date, event, cycle, value) ddi_collDate(value, date = date, event = event, cycle = cycle, lang = "en")
+    .l = list(value = ds$value, date = ds$date, event = ds$event, cycle = ds$cycle, lang = ds$lang),
+    .f = function(value, date, event, cycle, lang) {
+      if(!is.na(date) & !is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, date = date, event = event, cycle = cycle, lang = lang)  
+      } else if(!is.na(date) & !is.na(event) & !is.na(cycle) & is.na(lang)) {
+        ddi_collDate(value, date = date, event = event, cycle = cycle)  
+      } else if(!is.na(date) & !is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, date = date, event = event, lang = lang)  
+      } else if(!is.na(date) & !is.na(event) & is.na(cycle) & is.na(lang)) {
+        ddi_collDate(value, date = date, event = event)  
+      } else if(!is.na(date) & is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, date = date, cycle = cycle, lang = lang)  
+      } else if(!is.na(date) & is.na(event) & !is.na(cycle) & is.na(lang)) {
+        ddi_collDate(value, date = date, cycle = cycle)  
+      } else if(!is.na(date) & is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, date = date, lang = lang)  
+      } else if(!is.na(date) & is.na(event) & is.na(cycle) & is.na(lang)) {
+        ddi_collDate(value, date = date)  
+      } else if(is.na(date) & !is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, event = event, cycle = cycle, lang = lang)  
+      } else if(is.na(date) & !is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, event = event, cycle = cycle)  
+      } else if(is.na(date) & !is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, event = event, lang = lang)  
+      } else if(is.na(date) & !is.na(event) & is.na(cycle) & is.na(lang)) {
+        ddi_collDate(value, event = event)  
+      } else if(is.na(date) & is.na(event) & !is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, cycle = cycle, event = event)  
+      } else if(is.na(date) & is.na(event) & !is.na(cycle) & is.na(lang)) {
+        ddi_collDate(value, cycle = cycle)  
+      } else if(is.na(date) & is.na(event) & is.na(cycle) & !is.na(lang)) {
+        ddi_collDate(value, lang = lang)  
+      } else {
+        ddi_collDate(value)
+      }
+    }
   )
 }
 
@@ -252,7 +524,17 @@ descr_abstract <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, contentType = ds$contentType, lang = ds$lang),
-    .f = function(value, contentType, lang) ddi_abstract(value, contentType = contentType, lang = lang)
+    .f = function(value, contentType, lang) {
+      if(!is.na(contentType) & !is.na(lang)) {
+        ddi_abstract(value, contentType = contentType, lang = lang)
+      } else if(is.na(contentType) & !is.na(lang)) {
+        ddi_abstract(value, lang = lang)
+      } else if(!is.na(contentType) & is.na(lang)) {
+        ddi_abstract(value, contentType = contentType)
+      } else {
+        ddi_abstract(value)
+      }
+    }
   )
 }
 
@@ -264,14 +546,32 @@ descr_keyword <- function(dat) {
   for(n in dat$stdyDscr$stdyInfo$subject) {
     ds <- add_row(ds, 
                   keyword = n$keyword,
-                  vocab = n$vocab,
-                  vocabURI = n$vocabURI,
+                  vocab = n$vocabu,
+                  vocabURI = n$vocab_URI,
                   lang = n$lang
     )
   }
   pmap(
     .l = list(keyword = ds$keyword, vocab = ds$vocab, vocabURI = ds$vocabURI, lang = ds$lang),
-    .f = function(keyword, vocab, vocabURI, lang) ddi_keyword(keyword, vocab = vocab, vocabURI = vocabURI, lang = lang)
+    .f = function(keyword, vocab, vocabURI, lang) {
+      if(!is.na(vocab) & !is.na(vocabURI) & !is.na(lang)) {
+        ddi_keyword(keyword, vocab = vocab, vocabURI = vocabURI, lang = lang)  
+      } else if(!is.na(vocab) & !is.na(vocabURI) & is.na(lang)) {
+        ddi_keyword(keyword, vocab = vocab, vocabURI = vocabURI)  
+      } else if(is.na(vocab) & !is.na(vocabURI) & !is.na(lang)) {
+        ddi_keyword(keyword, vocabURI = vocabURI, lang = lang)  
+      } else if(!is.na(vocab) & is.na(vocabURI) & !is.na(lang)) {
+        ddi_keyword(keyword, vocab = vocab, lang = lang)  
+      } else if(!is.na(vocab) & is.na(vocabURI) & is.na(lang)) {
+        ddi_keyword(keyword, vocab = vocab)  
+      } else if(is.na(vocab) & !is.na(vocabURI) & is.na(lang)) {
+        ddi_keyword(keyword, vocabURI = vocabURI)  
+      } else if(is.na(vocab) & is.na(vocabURI) & !is.na(lang)) {
+        ddi_keyword(keyword, lang = lang)  
+      } else {
+        ddi_keyword(keyword)
+      }
+    }
   )
 }
 
@@ -288,7 +588,17 @@ descr_collectorTraining <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, type = ds$type, lang = ds$lang),
-    .f = function(value, type, lang) ddi_collectorTraining(value, type = type, lang = lang)
+    .f = function(value, type, lang) {
+      if(is.na(type) & is.na(lang)) {
+        ddi_collectorTraining(value)
+      } else if(is.na(type) & !is.na(lang)) {
+        ddi_collectorTraining(value, lang = lang)
+      } else if(!is.na(type) & is.na(lang)) {
+        ddi_collectorTraining(value, type = type)
+      } else {
+        ddi_collectorTraining(value, type = type, lang = lang)  
+      }
+    }
   )
 }
 
@@ -303,7 +613,14 @@ descr_timeMeth<- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_timeMeth(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_timeMeth(value, lang = lang)  
+      } else {
+        ddi_timeMeth(value)
+      }
+      
+    }
   )
 }
 
@@ -318,22 +635,73 @@ descr_frequenc <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_frequenc(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_frequenc(value, lang = lang)
+      } else {
+        ddi_frequenc(value)
+      }
+    }
   )
 }
 
 descr_dataCollector <- function(dat) {
   ds <- tibble(value = character(),
+               abbr = character(),
+               affiliation = character(),
+               role = character(),
                lang = character())
   for(n in dat$stdyDscr$method$dataColl$dataCollector) {
     ds <- add_row(ds, 
                   value = n$value,
+                  abbr = n$abbr,
+                  affiliation = n$affiliation,
+                  role = n$role,
                   lang = n$lang
     )
   }
   pmap(
-    .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_dataCollector(value, lang = lang)
+    .l = list(value = ds$value, abbr = ds$abbr, affiliation = ds$affiliation, role = ds$role, lang = ds$lang),
+    .f = function(value, abbr, affiliation, role, lang) {
+      # all and no attributes
+      if(!is.na(abbr) & !is.na(affiliation) & !is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, affiliation = affiliation, role = role, lang = lang)
+      } else if(is.na(abbr) & is.na(affiliation) & is.na(role) & is.na(lang)) {
+        ddi_dataCollector(value)
+      # cases that include abbr
+      } else if(!is.na(abbr) & is.na(affiliation) & is.na(role) & is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr)
+      } else if(!is.na(abbr) & !is.na(affiliation) & is.na(role) & is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, affiliation = affiliation)
+      } else if(!is.na(abbr) & !is.na(affiliation) & !is.na(role) & is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, affiliation = affiliation, role = role)
+      } else if(!is.na(abbr) & is.na(affiliation) & !is.na(role) & is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, role = role)
+      } else if(!is.na(abbr) & is.na(affiliation) & !is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, role = role, lang = lang)
+      } else if(!is.na(abbr) & !is.na(affiliation) & is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, affiliation = affiliation, lang = lang)
+      } else if(!is.na(abbr) & is.na(affiliation) & is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, abbr = abbr, lang = lang)
+      } else if(is.na(abbr) & !is.na(affiliation) & is.na(role) & is.na(lang)) {
+      #affiliation cases  
+        ddi_dataCollector(value, affiliation = affiliation)
+      } else if(is.na(abbr) & !is.na(affiliation) & !is.na(role) & is.na(lang)) {
+        ddi_dataCollector(value, affiliation = affiliation, role = role)
+      } else if(is.na(abbr) & !is.na(affiliation) & !is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, affiliation = affiliation, role = role, lang = lang)
+      } else if(is.na(abbr) & !is.na(affiliation) & is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, affiliation = affiliation, lang = lang)
+      } else if(is.na(abbr) & is.na(affiliation) & !is.na(role) & is.na(lang)) {
+      #role cases
+        ddi_dataCollector(value, role = role)
+      } else if (is.na(abbr) & is.na(affiliation) & !is.na(role) & !is.na(lang)) {
+        ddi_dataCollector(value, role = role, lang = lang)
+      } else if(is.na(abbr) & is.na(affiliation) & is.na(role) & !is.na(lang)) {
+        #lang case
+        ddi_dataCollector(value, lang = lang)
+      }
+    }
   )
 }
 
@@ -348,7 +716,13 @@ descr_collMode <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_collMode(value, lang = lang)
+    .f = function(value, lang) {
+      if(is.na(lang)) {
+        ddi_collMode(value)
+      } else {
+        ddi_collMode(value, lang = lang)
+      }
+    }
   )
 }
 
@@ -363,7 +737,13 @@ descr_collSitu <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_collSitu(value, lang = lang)
+    .f = function(value, lang) {
+      if(is.na(lang)) {
+        ddi_collSitu(value)
+      } else {
+        ddi_collSitu(value, lang = lang)  
+      }
+    }
   )
 }
 
@@ -380,7 +760,17 @@ descr_resInstru <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, type = ds$type, lang = ds$lang),
-    .f = function(value, type, lang) ddi_resInstru(value, type = type, lang = lang)
+    .f = function(value, type, lang) {
+      if(!is.na(type) & !is.na(lang)) {
+        ddi_resInstru(value, type = type, lang = lang)
+      } else if(is.na(type) & !is.na(lang)) {
+        ddi_resInstru(value, lang = lang)
+      } else if(!is.na(type) & is.na(lang)) {
+        ddi_resInstru(value, type = type)
+      } else {
+        ddi_resInstru(value)
+      }
+    }
   )
 }
 
@@ -397,7 +787,17 @@ descr_instrumentDevelopment <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, type = ds$type, lang = ds$lang),
-    .f = function(value, type, lang) ddi_instrumentDevelopment(value, type = type, lang = lang)
+    .f = function(value, type, lang) {
+      if(!is.na(lang) & !is.na(type)) {
+        ddi_instrumentDevelopment(value, type = type, lang = lang)  
+      } else if(!is.na(lang) & is.na(type)) {
+        ddi_instrumentDevelopment(value, lang = lang)  
+      } else if(is.na(lang) & !is.na(type)) {
+        ddi_instrumentDevelopment(value, type = type)  
+      } else {
+        ddi_instrumentDevelopment(value)  
+      }
+    }
   )
 }
 
@@ -414,7 +814,17 @@ descr_ConOps <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, agency = ds$agency, lang = ds$lang),
-    .f = function(value, agency, lang) ddi_ConOps(value, agency = agency, lang = lang)
+    .f = function(value, agency, lang) {
+      if(is.na(agency) & is.na(lang)) {
+        ddi_ConOps(value)
+      } else if (!is.na(agency) & is.na(lang)) {
+        ddi_ConOps(value, agency = agency)
+      } else if (is.na(agency) & !is.na(lang)) {
+        ddi_ConOps(value, lang = lang)
+      } else {
+        ddi_ConOps(value, agency = agency, lang = lang)
+      }
+    }
   )
 }
 
@@ -429,7 +839,13 @@ descr_actMin <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_actMin(value, lang = lang)
+    .f = function(value, lang) {
+      if(is.na(lang)) {
+        ddi_actMin(value)
+      } else {
+        ddi_actMin(value, lang = lang)
+      }
+    }
   )
 }
 
@@ -443,7 +859,13 @@ descr_sampProc <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_sampProc(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_sampProc(value, lang = lang)  
+      } else {
+        ddi_sampProc(value)
+      }
+    }
   )
 }
 
@@ -457,7 +879,13 @@ descr_deviat <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_sampProc(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)){
+        ddi_deviat(value, lang = lang)
+      } else {
+        ddi_deviat(value)
+      }
+    }
   )
 }
 
@@ -481,7 +909,17 @@ descr_labl <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang, level = ds$level),
-    .f = function(value, lang, level) ddi_labl(value, lang = lang, level = level)
+    .f = function(value, lang, level) {
+      if(!is.na(lang) & !is.na(level)) {
+        ddi_labl(value, lang = lang, level = level)
+      } else if(is.na(lang) & !is.na(level)) {
+        ddi_labl(value, level = level)
+      } else if(!is.na(lang) & is.na(level)) {
+        ddi_labl(value, lang = lang)
+      } else {
+        ddi_labl(value)
+      }
+    }
   )
 }
 
@@ -500,7 +938,13 @@ descr_defntn <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_defntn(value, lang = lang)
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_defntn(value, lang = lang)
+      } else {
+        ddi_defntn(value)
+      }
+    }
   )
 }
 
@@ -513,8 +957,8 @@ descr_concept <- function(dat) {
     for(n in dat) {
       ds <- add_row(ds,
                     value = n$value,
-                    vocab = n$vocab,
-                    vocabURI = n$vocabURI,
+                    vocab = n$vocabu,
+                    vocabURI = n$vocab_URI,
                     lang = n$lang
       )
     }
@@ -523,7 +967,27 @@ descr_concept <- function(dat) {
   }
   pmap(
     .l = list(value = ds$value, vocab = ds$vocab, vocabURI = ds$vocabURI, lang = ds$lang),
-    .f = function(value, lang, vocab, vocabURI) ddi_concept(value, vocab = vocab, vocabURI = vocabURI, lang = lang)
+    .f = function(value, vocab, vocabURI, lang) {
+      if(!is.na(vocab) & !is.na(vocabURI) & !is.na(lang)) {
+        ddi_concept(value, vocab = vocab, vocabURI = vocabURI, lang = lang)  
+      } else if(!is.na(vocab) & !is.na(vocabURI) & is.na(lang)) {
+        ddi_concept(value, vocab = vocab, vocabURI = vocabURI)  
+      } else if(!is.na(vocab) & is.na(vocabURI) & !is.na(lang)) {
+        ddi_concept(value, vocab = vocab, lang = lang)  
+      } else if(!is.na(vocab) & is.na(vocabURI) & !is.na(lang)) {
+        ddi_concept(value, vocab = vocab, lang = lang)  
+      } else if(is.na(vocab) & !is.na(vocabURI) & !is.na(lang)) {
+        ddi_concept(value, vocabURI = vocabURI, lang = lang)  
+      } else if(!is.na(vocab) & is.na(vocabURI) & is.na(lang)) {
+        ddi_concept(value, vocab = vocab)  
+      } else if(is.na(vocab) & !is.na(vocabURI) & is.na(lang)) {
+        ddi_concept(value, vocabURI = vocabURI)  
+      } else if(is.na(vocab) & is.na(vocabURI) & !is.na(lang)) {
+        ddi_concept(value, lang = lang)  
+      } else {
+        ddi_concept(value)
+      }
+    }
   )
 }
 
@@ -537,17 +1001,17 @@ descr_varGrp <- function(dat) {
   #problem with below...this loop adds a new row for every list
   for(n in dat$dataDscr$varGrp) {
     ds <- add_row(ds, 
-                  name = n$name, 
+                  name = n$name[[1]], 
                   labl = list(n$labl),
                   defntn = list(n$defntn),
                   universe = list(n$universe),
                   concept = list(n$concept))
   }
   pmap(
-    .l = list(name = ds$name, labl = ds$labl, 
+    .l = list(name = ds$name, labl = ds$labl, ds$defntn,
               universe = ds$universe, concept = ds$concept),
-    .f = function(name, labl, universe, concept) {
-      splat(c(name = name, descr_labl(labl), descr_universe(universe), descr_concept(concept)), ddi_varGrp) 
+    .f = function(name, labl, universe, defntn, concept) {
+      splat(c(name = name, descr_labl(labl), descr_universe(universe), descr_defntn(defntn), descr_concept(concept)), ddi_varGrp) 
     }
   ) # need to add back in defntn after fixing the function
 }
@@ -566,31 +1030,56 @@ generate_stdyInfo <- function(dat) {
   stdyInfo
 }
 
+generate_citation <- function(dat) {
+  citation <- ddi_citation(
+    generate_titlStmt(dat),
+    # for rspStmt I have to append the authors and other contributors together...
+    splat(append(descr_AuthEnty(dat), descr_othId(dat)), ddi_rspStmt)
+  )
+  
+  citation$content <- append(citation$content, descr_serStmt(dat))
+  citation$content <- append(citation$content,
+                             list(descr_prodStmt(dat)))
+  citation
+}
+
+descr_prodStmt <- function(dat) {
+  prodStmt <- ddi_prodStmt()
+  producer <- descr_producer(dat)
+  prodPlac <- descr_prodPlac(dat)
+  prodDate <- descr_prodDate(dat)
+  fundAg <- descr_fundAg(dat)
+  if(length(producer) > 0) {
+    prodStmt$content <- producer
+  }
+  if(length(prodPlac) > 0 & is.null(prodStmt$content)) {
+    prodStmt$content <- prodPlac
+  } else {
+    prodStmt$content <- append(prodStmt$content, prodPlac)
+  }
+  if(length(prodDate) > 0 & is.null(prodStmt$content)) {
+    prodStmt$content <- prodDate
+  } else {
+    prodStmt$content <- append(prodStmt$content, prodDate)
+  }
+  if(length(fundAg) > 0 & is.null(prodStmt$content)) {
+    prodStmt$content <- fundAg
+  } else {
+    prodStmt$content <- append(prodStmt$content, fundAg)
+  }
+  prodStmt
+}
+
 #-------------------------------------------
 
 generate_ddi_codebook <- function(dat) {
   cb <- ddi_codeBook(
     ddi_stdyDscr(
-      ddi_citation(
-        
-        ddi_titlStmt(
-          ddi_titl(dat$stdyDscr$citation$titlStmt$titl)
-        ),
-        # for rspStmt I have to append the authors and other contributors together...
-        splat(append(descr_AuthEnty(dat), descr_othId(dat)), ddi_rspStmt),
-        splat(append(descr_serName(dat), descr_serInfo(dat)), ddi_serStmt),
-        splat(append(append(descr_producer(dat),descr_fundAg(dat)),
-                     list(ddi_prodPlac(dat$stdyDscr$citation$prodStmt$prodPlac),
-                          ddi_prodDate(dat$stdyDscr$citation$prodStmt$prodDate, 
-                                       date = dat$stdyDscr$citation$prodStmt$`prodDate-date`)
-                     )
-        ), 
-        ddi_prodStmt)
-      ),
+      generate_citation(dat),
       generate_stdyInfo(dat),
       ddi_method(splat(
-        c(descr_collectorTraining(dat), descr_timeMeth(dat),
-          descr_frequenc(dat), descr_dataCollector(dat),
+        c(descr_dataCollector(dat), descr_collectorTraining(dat), 
+          descr_timeMeth(dat),descr_frequenc(dat), 
           descr_collMode(dat), descr_collSitu(dat),
           descr_resInstru(dat), descr_instrumentDevelopment(dat),
           descr_ConOps(dat), descr_actMin(dat),

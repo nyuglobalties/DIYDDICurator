@@ -23,6 +23,8 @@ instrumentDevelopment_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (i in dat()$stdyDscr$method$dataColl$instrumentDevelopment) {
+        if(is.null(i$lang)) i$lang <- NA_character_
+        if(is.null(i$type)) i$type <- NA_character_
         instrumentDevelopment <- add_row(instrumentDevelopment, 
                                          value = i$value, 
                                          type = i$type,
@@ -53,6 +55,8 @@ instrumentDevelopment_server <- function(id, dat, filepth) {
             new_instrumentDevelopment <- c(new_instrumentDevelopment, list(new))
           }
           updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- new_instrumentDevelopment
+          updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- recurse_write(updatedData$stdyDscr$method$dataColl$instrumentDevelopment)
+          updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- lapply(updatedData$stdyDscr$method$dataColl$instrumentDevelopment,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

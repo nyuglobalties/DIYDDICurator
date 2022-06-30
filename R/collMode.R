@@ -21,6 +21,7 @@ collMode_server <- function(id, dat, filepth) {
         lang = character()
       )
       for (c in dat()$stdyDscr$method$dataColl$collMode) {
+        if(is.null(c$lang)) c$lang <- NA_character_
         collMode <- add_row(collMode, 
                             value = c$value, 
                             lang = c$lang)
@@ -49,6 +50,8 @@ collMode_server <- function(id, dat, filepth) {
             new_collMode <- c(new_collMode, list(new))
           }
           updatedData$stdyDscr$method$dataColl$collMode <- new_collMode
+          updatedData$stdyDscr$method$dataColl$collMode <- recurse_write(updatedData$stdyDscr$method$dataColl$collMode)
+          updatedData$stdyDscr$method$dataColl$collMode <- lapply(updatedData$stdyDscr$method$dataColl$collMode,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })
