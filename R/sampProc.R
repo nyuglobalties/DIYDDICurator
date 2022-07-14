@@ -20,6 +20,10 @@ sampProc_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$sampProc) == 0) {
+        sampProc <- add_row(sampProc, value = NA_character_)
+      }
+      
       for (s in dat()$stdyDscr$method$dataColl$sampProc) {
         if(is.null(s$lang)) s$lang <- NA_character_
         sampProc <- add_row(sampProc, 
@@ -44,10 +48,14 @@ sampProc_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$sampProc <- NULL
           new_sampProc <- list()
           for(i in 1:length(updated_sampProc$value)) {
-            new <- list(value = updated_sampProc$value[i],
-                        lang  = updated_sampProc$lang[i]
-            )
-            new_sampProc <- c(new_sampProc, list(new))
+            if(!is.na(updated_sampProc$value[i])) {
+              if(updated_sampProc$value[i] != "") {
+                new <- list(value = updated_sampProc$value[i],
+                            lang  = updated_sampProc$lang[i]
+                )
+                new_sampProc <- c(new_sampProc, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$sampProc <- new_sampProc
           updatedData$stdyDscr$method$dataColl$sampProc <- recurse_write(updatedData$stdyDscr$method$dataColl$sampProc)

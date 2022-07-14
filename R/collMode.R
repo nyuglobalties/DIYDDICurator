@@ -20,6 +20,10 @@ collMode_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$collMode) == 0) {
+        collMode <- add_row(collMode, value = NA_character_, lang = "")
+      }
+      
       for (c in dat()$stdyDscr$method$dataColl$collMode) {
         if(is.null(c$lang)) c$lang <- NA_character_
         collMode <- add_row(collMode, 
@@ -44,10 +48,14 @@ collMode_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$collMode <- NULL
           new_collMode <- list()
           for(i in 1:length(updated_collMode$value)) {
-            new <- list(value = updated_collMode$value[i],
-                        lang  = updated_collMode$lang[i]
-            )
-            new_collMode <- c(new_collMode, list(new))
+            for(i in 1:length(updated_collMode$value)) {
+              if(!is.na(updated_collMode$value[i])) {
+                new <- list(value = updated_collMode$value[i],
+                            lang  = updated_collMode$lang[i]
+                )
+                new_collMode <- c(new_collMode, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$collMode <- new_collMode
           updatedData$stdyDscr$method$dataColl$collMode <- recurse_write(updatedData$stdyDscr$method$dataColl$collMode)

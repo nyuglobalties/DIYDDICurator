@@ -21,6 +21,10 @@ collSitu_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$collSitu) == 0) {
+        collSitu <- add_row(collSitu, value = NA_character_, lang = "")
+      }
+      
       for (c in dat()$stdyDscr$method$dataColl$collSitu) {
         if(is.null(c$lang)) c$lang <- NA_character_
         collSitu <- add_row(collSitu, 
@@ -45,10 +49,14 @@ collSitu_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$collSitu <- NULL
           new_collSitu <- list()
           for(i in 1:length(updated_collSitu$value)) {
-            new <- list(value = updated_collSitu$value[i],
+            if(!is.na(updated_collSitu$value[i])) {
+              if(updated_collSitu$value[i] != "") {
+                new <- list(value = updated_collSitu$value[i],
                         lang  = updated_collSitu$lang[i]
-            )
-            new_collSitu <- c(new_collSitu, list(new))
+                )
+                new_collSitu <- c(new_collSitu, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$collSitu <- new_collSitu
           updatedData$stdyDscr$method$dataColl$collSitu <- recurse_write(updatedData$stdyDscr$method$dataColl$collSitu)

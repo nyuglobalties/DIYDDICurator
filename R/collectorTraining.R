@@ -24,6 +24,11 @@ collectorTraining_server <- function(id, dat, filepth) {
         type = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$collectorTraining) == 0) {
+        collectorTraining <- add_row(collectorTraining, value = NA_character_, type = "", lang = "")
+      }
+      
+      
       for (c in dat()$stdyDscr$method$dataColl$collectorTraining) {
         if(is.null(c$type)) c$type <- NA_character_
         if(is.null(c$lang)) c$lang <- NA_character_
@@ -50,11 +55,15 @@ collectorTraining_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$collectorTraining <- NULL
           new_collectorTraining <- list()
           for(i in 1:length(updated_collectorTraining$value)) {
-            new <- list(value = updated_collectorTraining$value[i],
-                        type = updated_collectorTraining$type[i],
-                        lang  = updated_collectorTraining$lang[i]
-            )
-            new_collectorTraining <- c(new_collectorTraining, list(new))
+            if(!is.na(updated_collectorTraining$value[i])) {
+              if(updated_collectorTraining$value[i] != "") {
+                new <- list(value = updated_collectorTraining$value[i],
+                            type = updated_collectorTraining$type[i],
+                            lang  = updated_collectorTraining$lang[i]
+                )
+                new_collectorTraining <- c(new_collectorTraining, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$collectorTraining <- new_collectorTraining
           updatedData$stdyDscr$method$dataColl$collectorTraining <- recurse_write(updatedData$stdyDscr$method$dataColl$collectorTraining)

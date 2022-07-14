@@ -23,6 +23,11 @@ ConOps_server <- function(id, dat, filepth) {
         agency = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$ConOps) == 0) {
+        ConOps <- add_row(ConOps, value = NA_character_, agency = "", lang = "")
+      }
+      
+      
       for (c in dat()$stdyDscr$method$dataColl$ConOps) {
         if(is.null(c$agency)) c$agency <- NA_character_
         if(is.null(c$lang)) c$lang <- NA_character_
@@ -49,11 +54,15 @@ ConOps_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$ConOps <- NULL
           new_ConOps <- list()
           for(i in 1:length(updated_ConOps$value)) {
-            new <- list(value = updated_ConOps$value[i],
+            if(!is.na(updated_ConOps$value[i])) {
+              if(updated_ConOps$value[i] != "") {
+                new <- list(value = updated_ConOps$value[i],
                         agency = updated_ConOps$agency[i],
                         lang  = updated_ConOps$lang[i]
-            )
-            new_ConOps <- c(new_ConOps, list(new))
+                )
+                new_ConOps <- c(new_ConOps, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$ConOps <- new_ConOps
           updatedData$stdyDscr$method$dataColl$ConOps <- recurse_write(updatedData$stdyDscr$method$dataColl$ConOps)

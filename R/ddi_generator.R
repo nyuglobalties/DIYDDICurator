@@ -17,9 +17,10 @@ generate_titlStmt <- function(dat) {
     r <- ddi_titlStmt(ddi_titl(dat$stdyDscr$citation$titlStmt$titl[[1]]$value))
   }
 
-  if(length(dat$stdyDscr$citation$titlStmt$parTitl) > 1 | !is.na(dat$stdyDscr$citation$titlStmt$parTitl[[1]]$value)) {
+  if(length(dat$stdyDscr$citation$titlStmt$parTitl) > 0) {
     r$content <- append(r$content, descr_parTitl(dat))
-  }
+  }  
+
   r
 }
 
@@ -386,16 +387,28 @@ descr_geogUnit <- function(dat) {
 }
 
 descr_dataKind <- function(dat) {
-  ds <- tibble(value = character(), 
+  ds <- tibble(value = character(),
+               type = character(),
                lang = character())
   for(n in dat$stdyDscr$stdyInfo$sumDscr$dataKind) {
     ds <- add_row(ds, 
                   value = n$value,
+                  type = n$type,
                   lang = n$lang)
   }
   pmap(
-    .l = list(value = ds$value, lang = ds$lang),
-    .f = function(value, lang) ddi_dataKind(value, lang = lang)
+    .l = list(value = ds$value, type = ds$type, lang = ds$lang),
+    .f = function(value, type, lang) {
+      if(!is.na(type) & !is.na(lang)) {
+        ddi_dataKind(value, type = type, lang = lang)
+      } else if (is.na(type) & !is.na(lang)) {
+        ddi_dataKind(value, lang = lang)
+      } else if (!is.na(type) & is.na(lang)) {
+        ddi_dataKind(value, type = type)
+      } else {
+        ddi_dataKind(value)
+      }
+    }
   )
 }
 
@@ -1011,35 +1024,43 @@ descr_varGrp <- function(dat) {
     .l = list(name = ds$name, labl = ds$labl, ds$defntn,
               universe = ds$universe, concept = ds$concept),
     .f = function(name, labl, universe, defntn, concept) {
-      splat(c(name = name, descr_labl(labl), descr_universe(universe), descr_defntn(defntn), descr_concept(concept)), ddi_varGrp) 
+      splat(c(name = name, descr_labl(labl), descr_concept(concept), descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
     }
-  ) # need to add back in defntn after fixing the function
+  ) 
 }
 #-------------------------------------------
 generate_stdyInfo <- function(dat) {
-  stdyInfo <- ddi_stdyInfo(
-    splat(
-      c(descr_dataKind(dat), descr_anlyUnit(dat), descr_universe(dat$stdyDscr$stdyInfo$sumDscr$universe),
-        descr_nation(dat), descr_geogCover(dat),descr_geogUnit(dat),
-        descr_timePrd(dat), descr_collDate(dat)),
-      ddi_sumDscr),
-    splat(descr_keyword(dat), ddi_subject)
-  )
-  
-  stdyInfo$content <- append(stdyInfo$content, descr_abstract(dat))
+  stdyInfo <- ddi_stdyInfo()
+  keyword <- descr_keyword(dat)
+  abstract <- descr_abstract(dat)
+  sumDscr <- splat(
+    c(descr_timePrd(dat), descr_collDate(dat), descr_nation(dat),
+      descr_geogCover(dat), descr_geogUnit(dat), 
+      descr_anlyUnit(dat),
+      descr_universe(dat$stdyDscr$stdyInfo$sumDscr$universe), 
+      descr_dataKind(dat)),
+    ddi_sumDscr)
+  if(!is.null(keyword$content)) stdyInfo$content <- append(splat(descr_keyword(dat), ddi_subject))
+  if(length(abstract) > 0) stdyInfo$content <- append(stdyInfo$content, abstract)
+  if(!is.null(sumDscr$content)) stdyInfo$content <- append(stdyInfo$content, list(sumDscr))
   stdyInfo
 }
 
 generate_citation <- function(dat) {
-  citation <- ddi_citation(
-    generate_titlStmt(dat),
-    # for rspStmt I have to append the authors and other contributors together...
-    splat(append(descr_AuthEnty(dat), descr_othId(dat)), ddi_rspStmt)
-  )
-  
+  citation <- ddi_citation(generate_titlStmt(dat))
+  if(length(dat$stdyDscr$citation$rspStmt$AuthEnty) > 0 | length(dat$stdyDscr$citation$rspStmt$othId) > 0) {
+    citation$content <- append(citation$content,
+                               list(splat(append(descr_AuthEnty(dat), descr_othId(dat)), ddi_rspStmt)))
+  }
+  if(length(dat$stdyDscr$citation$prodStmt$producer) > 0 |
+     length(dat$stdyDscr$citation$prodStmt$prodPlac) > 0 |
+     length(dat$stdyDscr$citation$prodStmt$prodDate) > 0 |
+     length(dat$stdyDscr$citation$prodStmt$fundAg) > 0) {
+       citation$content <- append(citation$content,
+                                  list(descr_prodStmt(dat)))
+     }
   citation$content <- append(citation$content, descr_serStmt(dat))
-  citation$content <- append(citation$content,
-                             list(descr_prodStmt(dat)))
+  
   citation
 }
 
@@ -1052,15 +1073,15 @@ descr_prodStmt <- function(dat) {
   if(length(producer) > 0) {
     prodStmt$content <- producer
   }
-  if(length(prodPlac) > 0 & is.null(prodStmt$content)) {
-    prodStmt$content <- prodPlac
-  } else {
-    prodStmt$content <- append(prodStmt$content, prodPlac)
-  }
   if(length(prodDate) > 0 & is.null(prodStmt$content)) {
     prodStmt$content <- prodDate
   } else {
     prodStmt$content <- append(prodStmt$content, prodDate)
+  }
+  if(length(prodPlac) > 0 & is.null(prodStmt$content)) {
+    prodStmt$content <- prodPlac
+  } else {
+    prodStmt$content <- append(prodStmt$content, prodPlac)
   }
   if(length(fundAg) > 0 & is.null(prodStmt$content)) {
     prodStmt$content <- fundAg
@@ -1070,25 +1091,37 @@ descr_prodStmt <- function(dat) {
   prodStmt
 }
 
+generate_method <- function(dat) {
+  dataColl <- splat(
+    c(descr_timeMeth(dat), descr_dataCollector(dat), 
+      descr_collectorTraining(dat), descr_frequenc(dat), 
+      descr_sampProc(dat), descr_deviat(dat),
+      descr_collMode(dat), descr_resInstru(dat), 
+      descr_instrumentDevelopment(dat), descr_collSitu(dat),
+      descr_actMin(dat), descr_ConOps(dat)
+    ), 
+    ddi_dataColl)
+  if(!is.null(dataColl$content)) {
+    method <- ddi_method(dataColl)
+  } else {
+    method <- ddi_method()
+  }
+  
+  method
+}
+
+
 #-------------------------------------------
 
 generate_ddi_codebook <- function(dat) {
-  cb <- ddi_codeBook(
-    ddi_stdyDscr(
-      generate_citation(dat),
-      generate_stdyInfo(dat),
-      ddi_method(splat(
-        c(descr_dataCollector(dat), descr_collectorTraining(dat), 
-          descr_timeMeth(dat),descr_frequenc(dat), 
-          descr_collMode(dat), descr_collSitu(dat),
-          descr_resInstru(dat), descr_instrumentDevelopment(dat),
-          descr_ConOps(dat), descr_actMin(dat),
-          descr_sampProc(dat), descr_deviat(dat)), 
-        ddi_dataColl)
-      )
-    ),
-    splat(descr_varGrp(dat), ddi_dataDscr)
-  )
-  
+  citation <- generate_citation(dat)
+  stdyInfo <- generate_stdyInfo(dat)
+  method <- generate_method(dat)
+  varGrp <- descr_varGrp(dat)
+  cb <- ddi_codeBook(ddi_stdyDscr(generate_citation(dat)))
+  if(!is.null(stdyInfo$content)) cb$content <- append(cb$content, list(stdyInfo))
+  if(!is.null(method$content)) cb$content <- append(cb$content, list(method))
+  if(length(varGrp) > 0) cb$content <- append(cb$content, list(splat(varGrp, ddi_dataDscr)))
+
   ddi <- as_xml(cb)
 }

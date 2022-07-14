@@ -20,6 +20,10 @@ actMin_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$actMin) == 0) {
+        actMin <- add_row(actMin, value = NA_character_, lang = "")
+      }
+      
       for (a in dat()$stdyDscr$method$dataColl$actMin) {
         if(is.null(a$lang)) a$lang <- NA_character_
         actMin <- add_row(actMin, 
@@ -44,10 +48,14 @@ actMin_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$actMin <- NULL
           new_actMin <- list()
           for(i in 1:length(updated_actMin$value)) {
-            new <- list(value = updated_actMin$value[i],
-                        lang  = updated_actMin$lang[i]
-            )
-            new_actMin <- c(new_actMin, list(new))
+            if(!is.na(updated_actMin$value[i])) {
+              if(updated_actMin$value[i] != "") {
+                new <- list(value = updated_actMin$value[i],
+                            lang  = updated_actMin$lang[i]
+                )
+                new_actMin <- c(new_actMin, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$actMin <- new_actMin
           updatedData$stdyDscr$method$dataColl$actMin <- recurse_write(updatedData$stdyDscr$method$dataColl$actMin)

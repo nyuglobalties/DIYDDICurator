@@ -19,6 +19,10 @@ frequenc_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$frequenc) == 0) {
+        frequenc <- add_row(frequenc, value = NA_character_, lang = "")
+      }
+      
       for (f in dat()$stdyDscr$method$dataColl$frequenc) {
         if(is.null(f$lang)) f$lang <- NA_character_
         frequenc <- add_row(frequenc, 
@@ -43,10 +47,14 @@ frequenc_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$frequenc <- NULL
           new_frequenc <- list()
           for(i in 1:length(updated_frequenc$value)) {
-            new <- list(value = updated_frequenc$value[i],
-                        lang  = updated_frequenc$lang[i]
-            )
-            new_frequenc <- c(new_frequenc, list(new))
+            if(!is.na(updated_frequenc$value[i])) {
+              if(updated_frequenc$value[i] != "") {
+                new <- list(value = updated_frequenc$value[i],
+                            lang  = updated_frequenc$lang[i]
+                            )
+                new_frequenc <- c(new_frequenc, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$frequenc <- new_frequenc
           updatedData$stdyDscr$method$dataColl$frequenc <- recurse_write(updatedData$stdyDscr$method$dataColl$frequenc)

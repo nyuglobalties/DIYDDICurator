@@ -27,7 +27,7 @@ timePeriods_server <- function(id, dat, filepth) {
   
     output$timePrd <- renderRHandsontable({
       req(dat())
-      fieldOptions <- c(NA_character_, "timePrd", "collDate")
+      fieldOptions <- c("timePrd", "collDate")
       eventOptions <- c(NA_character_, "start", "end", "single")
       prds <- tibble(
         field = factor(),
@@ -37,6 +37,10 @@ timePeriods_server <- function(id, dat, filepth) {
         cycle = factor(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$stdyInfo$sumDscr$timePrd) == 0 & length(dat()$stdyDscr$stdyInfo$sumDscr$collDat) == 0) {
+        prds <- add_row(prds, field = "timePrd", value = NA_character_)
+      }
+      
       for (tp in dat()$stdyDscr$stdyInfo$sumDscr$timePrd) {
         if(is.null(tp$date)) tp$date <- NA_character_
         if(is.null(tp$event)) tp$event <- NA_character_
@@ -88,21 +92,29 @@ timePeriods_server <- function(id, dat, filepth) {
           new_collDate <- list()
           for(i in 1:length(updated_prds$field)) {
             if(updated_prds$field[i] == "timePrd") {
-              new_tp <- list(value = updated_prds$value[i],
-                             date = as.character(updated_prds$date[i]),
-                             event = updated_prds$event[i],
-                             cycle = updated_prds$cycle[i],
-                             lang = updated_prds$lang[i]
-              )
-              new_timePrd <- c(new_timePrd, list(new_tp))
+              if(!is.na(updated_prds$value[i])) {
+                if(updated_prds$value[i] != "") {
+                  new_tp <- list(value = updated_prds$value[i],
+                                 date = as.character(updated_prds$date[i]),
+                                 event = updated_prds$event[i],
+                                 cycle = updated_prds$cycle[i],
+                                 lang = updated_prds$lang[i]
+                  )
+                  new_timePrd <- c(new_timePrd, list(new_tp))
+                }
+              }
             } else {
-              new_cd <- list(value = updated_prds$value[i],
-                             date = as.character(updated_prds$date[i]),
-                             event = updated_prds$event[i],
-                             cycle = updated_prds$cycle[i],
-                             lang = updated_prds$lang[i]
-              )
-              new_collDate <- c(new_collDate, list(new_cd))
+              if(!is.na(updated_prds$value[i])) {
+                if(updated_prds$value[i] != "") {
+                  new_cd <- list(value = updated_prds$value[i],
+                                 date = as.character(updated_prds$date[i]),
+                                 event = updated_prds$event[i],
+                                 cycle = updated_prds$cycle[i],
+                                 lang = updated_prds$lang[i]
+                  )
+                  new_collDate <- c(new_collDate, list(new_cd))
+                }
+              }
             }
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$timePrd <- new_timePrd

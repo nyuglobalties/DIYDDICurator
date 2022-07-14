@@ -36,6 +36,7 @@ ui <- fluidPage(
       subject_ui("subject"),
       universe_ui("universe"),
       anlyUnit_ui("anlyUnit"),
+      dataKind_ui("dataKind"),
       geography_ui("geog"),
       timePeriods_ui("timePrd")
     ),
@@ -91,6 +92,7 @@ server <- function(input, output, session) {
   subject_server("subject", dat, filepth)
   universe_server("universe", dat, filepth)
   anlyUnit_server("anlyUnit", dat, filepth)
+  dataKind_server("dataKind", dat, filepth)
   geography_server("geog", dat, filepth)
   timePeriods_server("timePrd", dat, filepth)
 

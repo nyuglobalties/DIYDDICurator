@@ -20,6 +20,10 @@ deviat_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$deviat) == 0) {
+        deviat <- add_row(deviat, value = NA_character_, lang = "")
+      }
+      
       for (d in dat()$stdyDscr$method$dataColl$deviat) {
         if(is.null(d$lang)) d$lang <- NA_character_
         deviat <- add_row(deviat, 
@@ -44,10 +48,14 @@ deviat_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$deviat <- NULL
           new_deviat <- list()
           for(i in 1:length(updated_deviat$value)) {
-            new <- list(value = updated_deviat$value[i],
+            if(!is.na(updated_deviat$value[i])) {
+              if(updated_deviat$value[i] != "") {
+                new <- list(value = updated_deviat$value[i],
                         lang  = updated_deviat$lang[i]
-            )
-            new_deviat <- c(new_deviat, list(new))
+                )
+                new_deviat <- c(new_deviat, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$deviat <- new_deviat
           updatedData$stdyDscr$method$dataColl$deviat <- recurse_write(updatedData$stdyDscr$method$dataColl$deviat)

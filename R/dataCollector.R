@@ -27,6 +27,15 @@ dataCollector_server <- function(id, dat, filepth) {
         role = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$dataCollector) == 0) {
+        dataCollector <- add_row(dataCollector, 
+                                 value = NA_character_, 
+                                 abbr = "",
+                                 affiliation = "",
+                                 role = "",
+                                 lang = "")
+      }
+      
       for (d in dat()$stdyDscr$method$dataColl$dataCollector) {
         if(is.null(d$abbr)) d$abbr <- NA_character_
         if(is.null(d$affiliation)) d$affiliation <- NA_character_
@@ -58,13 +67,17 @@ dataCollector_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$dataCollector <- NULL
           new_dataCollector <- list()
           for(i in 1:length(updated_dataCollector$value)) {
-            new <- list(value = updated_dataCollector$value[i],
+            if(!is.na(updated_dataCollector$value[i])) {
+              if(updated_dataCollector$value[i] != "") {
+                new <- list(value = updated_dataCollector$value[i],
                         abbr = updated_dataCollector$abbr[i],
                         affiliation = updated_dataCollector$affiliation[i],
                         role = updated_dataCollector$role[i],
                         lang  = updated_dataCollector$lang[i]
-            )
-            new_dataCollector <- c(new_dataCollector, list(new))
+                )
+                new_dataCollector <- c(new_dataCollector, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$dataCollector <- new_dataCollector
           updatedData$stdyDscr$method$dataColl$dataCollector <- recurse_write(updatedData$stdyDscr$method$dataColl$dataCollector)

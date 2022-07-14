@@ -36,9 +36,17 @@ varGrp_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      
+      if(length(dat()$dataDscr$varGrp) == 0) {
+        varGrp <- add_row(varGrp, name = "varGrp1", element = "labl")
+      }
+      
       elementOptions <- c("labl", "defntn", "universe_I", "universe_E")
       for (vg in dat()$dataDscr$varGrp) {
         name <- vg$name
+        if(length(dat()$dataDscr$varGrp) == 1 & is.null(vg$labl) & is.null(vg$defntn) & is.null(vg$universe)) {
+          varGrp <- add_row(varGrp, name = name, element = "labl")
+        }
         for (l in vg$labl) {
           if(is.null(l$lang)) l$lang <- NA_character_
           varGrp <- add_row(varGrp,
@@ -85,6 +93,12 @@ varGrp_server <- function(id, dat, filepth) {
         vocab_URI = character(),
         lang = character()
       )
+      if(length(dat()$dataDscr$varGrp) == 0) {
+        varGrp <- add_row(varGrp, name = "varGrp1")
+      } else if(length(sapply(dat()$dataDscr$varGrp, "[[", "concept")) > 0 & 
+                is.null(sapply(dat()$dataDscr$varGrp, "[[", "concept")[[1]])) {
+        varGrp <- add_row(varGrp, name = dat()$dataDscr$varGrp[[1]]$name)
+      }
       
       for (vg in dat()$dataDscr$varGrp) {
         name <- vg$name
@@ -101,7 +115,6 @@ varGrp_server <- function(id, dat, filepth) {
                             lang = con$lang)
         }
       }
-      
       rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(20, 20, 20, 20, 20, 20),
                  manualColumnMove = FALSE,
@@ -132,34 +145,48 @@ varGrp_server <- function(id, dat, filepth) {
             type <- new_df$type[[1]]
             if(length(new_labl$value) > 0) {
               for(l in 1:length(new_labl$value)) {
-                labl <- list(value = new_labl$value[l], lang = new_labl$lang[l], level = "varGrp")
-                new_l <- c(new_l, list(labl))
+                if(!is.na(new_labl$value[l])) {
+                  if(new_labl$value[l] != "") {
+                    labl <- list(value = new_labl$value[l], lang = new_labl$lang[l], level = "varGrp")
+                    new_l <- c(new_l, list(labl))
+                  }
+                }
               }
               new_l <- recurse_write(new_l)
               new_l <- lapply(new_l,function(x) x[!is.na(x)])
             }
             if(length(new_defntn$value) > 0) {
               for(d in 1:length(new_defntn$value)) {
-                defntn <- list(value = new_defntn$value[d], lang = new_defntn$lang[d])
-                new_d <- c(new_d, list(defntn))
+                if(!is.na(new_defntn$value[d])) {
+                  if(new_defntn$value[d] != "") {
+                    if(!is.na(new_defntn$value[d])) {
+                      defntn <- list(value = new_defntn$value[d], lang = new_defntn$lang[d])
+                      new_d <- c(new_d, list(defntn))
+                    }
+                  }
+                }
               }
               new_d <- recurse_write(new_d)
               new_d <- lapply(new_d,function(x) x[!is.na(x)])
             }
             if(length(new_universe$value) > 0) {
               for(u in 1:length(new_universe$value)) {
-                if(str_detect(new_universe$element[u], "_I$")) {
-                  universe <- list(group = new_universe$value[u],
-                                   level = "varGrp",
-                                   clusion = "I",
-                                   lang = new_universe$lang[u])
-                } else {
-                  universe <- list(group = new_universe$value[u],
-                                   level = "varGrp",
-                                   clusion = "E",
-                                   lang = new_universe$lang[u])
+                if(!is.na(new_universe$value[u])) {
+                  if(new_universe$value[u] != "") {
+                    if(str_detect(new_universe$element[u], "_I$")) {
+                      universe <- list(group = new_universe$value[u],
+                                       level = "varGrp",
+                                       clusion = "I",
+                                       lang = new_universe$lang[u])
+                    } else {
+                      universe <- list(group = new_universe$value[u],
+                                       level = "varGrp",
+                                       clusion = "E",
+                                       lang = new_universe$lang[u])
+                    }
+                    new_u <- c(new_u, list(universe))
+                  }
                 }
-                new_u <- c(new_u, list(universe))
               }
               new_u <- recurse_write(new_u)
               new_u <- lapply(new_u,function(x) x[!is.na(x)])
@@ -168,11 +195,15 @@ varGrp_server <- function(id, dat, filepth) {
             new_co <- list()
             if(length(new_conc$value) > 0) {
               for(c in 1:length(new_conc$value)) {
-                concept <- list(value = new_conc$value[c], 
-                                vocabu = new_conc$vocabu[c],
-                                vocab_URI = new_conc$vocab_URI[c],
-                                lang = new_conc$lang[c])
-                new_co <- c(new_co, list(concept))
+                if(!is.na(new_conc$value[c])) {
+                  if(new_conc$value[c] != "") {
+                    concept <- list(value = new_conc$value[c], 
+                                    vocabu = new_conc$vocabu[c],
+                                    vocab_URI = new_conc$vocab_URI[c],
+                                    lang = new_conc$lang[c])
+                    new_co <- c(new_co, list(concept))
+                  }
+                }
               }
               new_co <- recurse_write(new_co)
               new_co <- lapply(new_co,function(x) x[!is.na(x)])
@@ -184,7 +215,9 @@ varGrp_server <- function(id, dat, filepth) {
             if(length(new_d) > 0) new$defntn <- new_d
             if(length(new_u) > 0) new$universe <- new_u
             if(length(new_co) > 0) new$concept <- new_co
-            new_varGrp <- c(new_varGrp, list(new))
+            if (!is.null(new$lab) | !is.null(new$defntn) | !is.null(new$universe) | !is.null(new$concept)) {
+              new_varGrp <- c(new_varGrp, list(new))  
+            }
           }
           updatedData$dataDscr$varGrp <- new_varGrp
           yaml::write_yaml(updatedData, filepth())

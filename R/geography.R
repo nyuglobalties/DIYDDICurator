@@ -31,6 +31,12 @@ geography_server <- function(id, dat, filepth) {
         abbr = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$stdyInfo$sumDscr$nation) == 0 &
+         length(dat()$stdyDscr$stdyInfo$sumDscr$geogCover) == 0 &
+         length(dat()$stdyDscr$stdyInfo$sumDscr$geogUnit) == 0) {
+        geog <- add_row(geog, field = "nation", value = NA_character_, abbr = "", lang = "")
+      }
+      
       for (v in dat()$stdyDscr$stdyInfo$sumDscr$nation) {
         if(is.null(v$abbr)) v$abbr <- NA_character_
         if(is.null(v$lang)) v$lang <- NA_character_
@@ -82,22 +88,26 @@ geography_server <- function(id, dat, filepth) {
           new_geogCover <- list()
           new_geogUnit <- list()
           for(i in 1:length(updated_geog$field)) {
-            if(updated_geog$field[i] == "nation") {
-              new_n <- list(value = updated_geog$value[i],
-                            abbr = updated_geog$abbr[i],
-                            lang = updated_geog$lang[i]
-              )
-              new_nation <- c(new_nation, list(new_n))
-            } else if(updated_geog$field[i] == "geogCover"){
-              new_gc <- list(value = updated_geog$value[i],
-                             lang = updated_geog$lang[i]
-              )
-              new_geogCover <- c(new_geogCover, list(new_gc))
-            } else {
-              new_gu <- list(value = updated_geog$value[i],
-                             lang = updated_geog$lang[i]
-              )
-              new_geogUnit <- c(new_geogUnit, list(new_gu))
+            if(!is.na(updated_geog$value[i])) {
+              if(updated_geog$value[i] != "") {
+                if(updated_geog$field[i] == "nation") {
+                  new_n <- list(value = updated_geog$value[i],
+                                abbr = updated_geog$abbr[i],
+                                lang = updated_geog$lang[i]
+                  )
+                  new_nation <- c(new_nation, list(new_n))
+                } else if(updated_geog$field[i] == "geogCover"){
+                  new_gc <- list(value = updated_geog$value[i],
+                                 lang = updated_geog$lang[i]
+                  )
+                  new_geogCover <- c(new_geogCover, list(new_gc))
+                } else {
+                  new_gu <- list(value = updated_geog$value[i],
+                                 lang = updated_geog$lang[i]
+                  )
+                  new_geogUnit <- c(new_geogUnit, list(new_gu))
+                }
+              }
             }
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$nation <- new_nation

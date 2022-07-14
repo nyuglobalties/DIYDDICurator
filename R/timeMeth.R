@@ -18,6 +18,9 @@ timeMeth_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$timeMeth) == 0) {
+        timeMeth <- add_row(timeMeth, value = NA_character_)
+      }
       for (t in dat()$stdyDscr$method$dataColl$timeMeth) {
         if(is.null(t$lang)) t$lang <- NA_character_
         timeMeth <- add_row(timeMeth, 
@@ -42,10 +45,14 @@ timeMeth_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$timeMeth <- NULL
           new_timeMeth <- list()
           for(i in 1:length(updated_timeMeth$value)) {
-            new <- list(value = updated_timeMeth$value[i],
-                        lang  = updated_timeMeth$lang[i]
-            )
-            new_timeMeth <- c(new_timeMeth, list(new))
+            if(!is.na(updated_timeMeth$value[i])) {
+              if(updated_timeMeth$value[i] != "") {
+                new <- list(value = updated_timeMeth$value[i],
+                            lang  = updated_timeMeth$lang[i]
+                )
+                new_timeMeth <- c(new_timeMeth, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$timeMeth <- new_timeMeth
           updatedData$stdyDscr$method$dataColl$timeMeth <- recurse_write(updatedData$stdyDscr$method$dataColl$timeMeth)

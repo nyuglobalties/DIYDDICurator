@@ -22,6 +22,10 @@ instrumentDevelopment_server <- function(id, dat, filepth) {
         type = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$instrumentDevelopment) == 0) {
+        instrumentDevelopment <- add_row(instrumentDevelopment, value = NA_character_, type = "", lang = "")
+      }
+      
       for (i in dat()$stdyDscr$method$dataColl$instrumentDevelopment) {
         if(is.null(i$lang)) i$lang <- NA_character_
         if(is.null(i$type)) i$type <- NA_character_
@@ -48,11 +52,15 @@ instrumentDevelopment_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- NULL
           new_instrumentDevelopment <- list()
           for(i in 1:length(updated_instrumentDevelopment$value)) {
-            new <- list(value = updated_instrumentDevelopment$value[i],
-                        type = updated_instrumentDevelopment$type[i],
-                        lang  = updated_instrumentDevelopment$lang[i]
-            )
-            new_instrumentDevelopment <- c(new_instrumentDevelopment, list(new))
+            if(!is.na(updated_instrumentDevelopment$value[i])) {
+              if(updated_instrumentDevelopment$value[i] != "") {
+                new <- list(value = updated_instrumentDevelopment$value[i],
+                            type = updated_instrumentDevelopment$type[i],
+                            lang  = updated_instrumentDevelopment$lang[i]
+                        )
+                new_instrumentDevelopment <- c(new_instrumentDevelopment, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- new_instrumentDevelopment
           updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- recurse_write(updatedData$stdyDscr$method$dataColl$instrumentDevelopment)

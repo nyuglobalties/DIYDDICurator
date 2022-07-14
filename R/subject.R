@@ -26,6 +26,10 @@ subject_server <-  function(id, dat, filepth) {
         vocab_URI = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$stdyInfo$subject) == 0) {
+        subject <- add_row(subject, keyword = NA_character_)
+      }
+      
       for (s in dat()$stdyDscr$stdyInfo$subject) {
         if(is.null(s$vocabu)) s$vocabu <- NA_character_
         if(is.null(s$vocab_URI)) s$vocab_URI <- NA_character_
@@ -55,12 +59,16 @@ subject_server <-  function(id, dat, filepth) {
           updatedData$stdyDscr$stdyInfo$subject <- NULL
           newSubject <- list()
           for(i in 1:length(updatedSubjects$keyword)) {
-            new <- list(keyword = updatedSubjects$keyword[i],
-                        vocabu = updatedSubjects$vocabu[i],
-                        vocab_URI = updatedSubjects$vocab_URI[i],
-                        lang  = updatedSubjects$lang[i]
-            )
-            newSubject <- c(newSubject, list(new))
+            if(!is.na(updatedSubjects$keyword[i])) {
+              if(updatedSubjects$keyword[i] != "") {
+                new <- list(keyword = updatedSubjects$keyword[i],
+                            vocabu = updatedSubjects$vocabu[i],
+                            vocab_URI = updatedSubjects$vocab_URI[i],
+                            lang  = updatedSubjects$lang[i]
+                )
+                newSubject <- c(newSubject, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$stdyInfo$subject <- newSubject
           updatedData$stdyDscr$stdyInfo$subject <- recurse_write(updatedData$stdyDscr$stdyInfo$subject)

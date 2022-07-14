@@ -20,6 +20,10 @@ anlyUnit_server <- function(id, dat, filepth) {
         group = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$stdyInfo$sumDscr$anlyUnit) == 0) {
+        anlyUnit <- add_row(anlyUnit, group = NA_character_, lang = "")
+      }
+      
       for (a in dat()$stdyDscr$stdyInfo$sumDscr$anlyUnit) {
         if(is.null(a$lang)) a$lang <- NA_character_
         anlyUnit <- add_row(anlyUnit, 
@@ -44,10 +48,14 @@ anlyUnit_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$sumDscr$anlyUnit <- NULL
           new_anlyUnit <- list()
           for(i in 1:length(updated_anlyUnit$group)) {
-            new <- list(group = updated_anlyUnit$group[i],
-                        lang  = updated_anlyUnit$lang[i]
-            )
-            new_anlyUnit <- c(new_anlyUnit, list(new))
+            if(!is.na(updated_anlyUnit$group[i])) {
+              if(updated_anlyUnit$group[i] != "") {
+                new <- list(group = updated_anlyUnit$group[i],
+                            lang  = updated_anlyUnit$lang[i]
+                )
+                new_anlyUnit <- c(new_anlyUnit, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit <- new_anlyUnit
           updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$anlyUnit)

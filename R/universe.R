@@ -34,6 +34,9 @@ universe_server <-  function(id, dat, filepth) {
         clusion = factor(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$stdyInfo$sumDscr$universe) == 0) {
+        universe <- add_row(universe, group = NA_character_)
+      }
       for (u in dat()$stdyDscr$stdyInfo$sumDscr$universe) {
         if(is.null(u$lang)) u$lang <- NA_character_
         universe <- add_row(universe, 
@@ -60,12 +63,16 @@ universe_server <-  function(id, dat, filepth) {
           updatedData$stdyDscr$stdyInfo$sumDscr$universe <- NULL
           newUniverse <- list()
           for(i in 1:length(updatedUniverse$group)) {
-            new <- list(group = updatedUniverse$group[i],
-                        level = "project",
-                        clusion = updatedUniverse$clusion[i],
-                        lang  = updatedUniverse$lang[i]
-            )
-            newUniverse <- c(newUniverse, list(new))
+            if(!is.na(updatedUniverse$group[i])) {
+              if(updatedUniverse$group[i] != "") {
+                new <- list(group = updatedUniverse$group[i],
+                            level = "project",
+                            clusion = updatedUniverse$clusion[i],
+                            lang  = updatedUniverse$lang[i]
+                )
+                newUniverse <- c(newUniverse, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$stdyInfo$sumDscr$universe <- newUniverse
           updatedData$stdyDscr$stdyInfo$sumDscr$universe <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$universe)

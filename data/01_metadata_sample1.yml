@@ -39,46 +39,19 @@ stdyDscr:
     biblCit: ~
     biblCit-format: ~
     titlStmt:
-      titl:
-      - value: 'Sample title: testing'
-        lang: en
-      parTitl:
-      - value: .na.character
-        lang: fr
+      parTitl: []
       IDNo: ~
+      titl:
+      - value: Placeholder title
+        lang: .na.character
     rspStmt:
-      AuthEnty:
-      - name: Author 1
-        affiliation: New York University
-      - name: Author 2
-        affiliation: International Rescue Committee
-      - name: Author 3
-      othId:
-      - name: Patrick
-        role: Data Manager
-        affiliation: New York University
-      - name: Dan
-        role: Data Curator
-        affiliation: New York University
-      - name: Hillary
-        affiliation: New York University
+      AuthEnty: []
+      othId: []
     prodStmt:
-      producer:
-      - name: Global TIES for Children
-        abbr: TIES-NYU
-        affiliation: New York University
-      - name: International Rescue Committee
-        role: data collector
-      prodPlac:
-      - value: New York
-      prodDate:
-      - value: January 1, 2022
-        date: '2022-01-01'
-      fundAg:
-      - name: Funder1
-        abbr: F1
-        role: data collection
-      - name: 'Funder #2'
+      producer: []
+      prodPlac: []
+      prodDate: []
+      fundAg: []
     distStmt:
       distrbtr: ~
       distrbtr-abbr: ~
@@ -94,20 +67,7 @@ stdyDscr:
       contact: ~
       contact-affiliation: ~
       contact-email: ~
-    serStmt:
-    - ID: series1
-      serName:
-      - value: 'Education in Emergencies: Evidence for Action'
-        abbr: 3EA
-        lang: en
-      serInfo:
-      - value: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-          cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-          non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        lang: en
+    serStmt: []
   dataAccs:
     setAvail:
       avlStatus: ~
@@ -132,148 +92,36 @@ stdyDscr:
       citReq: ~
   stdyInfo:
     sumDscr:
-      dataKind:
-      - value: survey
-        lang: en
-      anlyUnit:
-      - group: individuals
-        lang: en
-      - group: classrooms
-        lang: en
-      - group: schools
-        lang: en
-      nation:
-      - value: Lebanon
-        abbr: LB
-        lang: en
-      geogCover:
-      - value: Beirut
-        lang: en
-      geogUnit:
-      - value: city
-        lang: en
-      timePrd:
-      - value: January 1, 2019
-        date: '2019-01-01'
-        event: start
-        cycle: baseline
-        lang: en
-      - value: April 30, 2019
-        date: '2019-04-30'
-        event: end
-        cycle: baseline
-        lang: en
-      collDate:
-      - value: January 1, 2019
-        date: '2019-01-01'
-        event: start
-        cycle: endline
-        lang: en
-      - value: April 30, 2019
-        date: '2019-04-30'
-        event: end
-        cycle: endline
-        lang: en
-      universe:
-      - group: individuals
-        level: project
-        clusion: I
-        lang: en
-      - group: classrooms
-        level: project
-        clusion: I
-        lang: en
-      - group: schools
-        level: project
-        clusion: I
-        lang: en
+      anlyUnit: []
+      nation: []
+      geogCover: []
+      geogUnit: []
+      timePrd: []
+      collDate: []
+      universe: []
+      dataKind: []
     qualityStatement:
     - standardsCompliance: ~
       standard:
       - standardName: ~
         producer: ~
       complianceDescription: ~
-    abstract:
-    - value: Lets see if this changes in the XML export section...
-      contentType: abstract
-      lang: en
-    - value: Blah blah blah
-      contentType: purpose
-      lang: fr
-    subject:
-    - keyword: Education in Emergencies
-      lang: en
-    - keyword: Social Emotional Learning
-      lang: en
-    - keyword: Refugee Education
-      lang: en
-    - keyword: Cluster Randomized Trial
-      lang: en
-    - keyword: Mental Health
-      lang: en
-    - keyword: Learning in a Healing Classroom
-      lang: en
-    - keyword: Tutoring in a Healing Classroom
-      lang: en
-    - keyword: Mindfulness
-      lang: en
-    - keyword: Brain Games
-      lang: en
-    - keyword: Middle East
-      lang: en
-    - keyword: Primary Education
-      lang: en
+    subject: []
+    abstract: []
   method:
     dataColl:
-      actMin:
-      - value: To minimize the number of unresolved cases and reduce the potential
-          nonresponse bias, four follow-up contacts were made with agencies that had
-          not responded by various stages of the data collection process.
-        lang: en
-      collectorTraining:
-      - value: Describe research project, describe population and sample, suggest
-          methods and language for approaching subjects, explain questions and key
-          terms of survey instrument.
-        lang: en
-      collMode:
-      - value: Mode of collection
-        lang: en
-      collSitu:
-      - value: Many many characteristics
-        lang: en
-      ConOps:
-      - value: Ten percent of data entry forms were reentered to check for accuracy.
-        lang: en
-      dataCollector:
-      - value: International Rescue Committee
-        abbr: IRC
-        lang: en
-      deviat:
-      - value: 'The suitability of Ohio as a research site reflected its similarity
-          to the United States as a whole. The evidence extended by Tuchfarber (1988)
-          shows that Ohio is representative of the United States in several ways:
-          percent urban and rural, percent of the population that is African American,
-          median age, per capita income, percent living below the poverty level, and
-          unemployment rate. Although results generated from an Ohio sample are not
-          empirically generalizable to the United States, they may be suggestive of
-          what might be expected nationally.'
-        lang: en
-      frequenc:
-      - value: weekly
-        lang: en
-      resInstru:
-      - value: Questionnaire
-        type: structured
-        lang: en
-      instrumentDevelopment:
-      - value: alsdkrjdomfadiormf
-        lang: en
-      sampProc:
-      - value: weekly
-        lang: en
-      timeMeth:
-      - value: panel survey
-        lang: en
+      actMin: []
+      collectorTraining: []
+      collMode: []
+      collSitu: []
+      ConOps: []
+      dataCollector: []
+      deviat: []
+      frequenc: []
+      instrumentDevelopment: []
+      resInstru: []
+      sampProc: []
+      timeMeth: []
     stdyClas:
       value: ~
       type: ~
@@ -288,31 +136,4 @@ stdyDscr:
     relPubl: ~
     relMat: ~
 dataDscr:
-  varGrp:
-  - name: varGrp1
-    labl:
-    - value: Longer description of varGrp
-      lang: en
-      level: varGrp
-    defntn:
-    - value: Definition of VarGrp
-      lang: en
-    universe:
-    - group: individuals
-      level: varGrp
-      clusion: I
-      lang: en
-    concept:
-    - value: concept1
-      vocabu: UNESCO
-      vocab_URI: http://vocabularies.unesco.org/thesaurus
-      lang: en
-    - value: sel_concept1
-      vocabu: exporeSEL
-      vocab_URI: http://exploresel.gse.harvard.edu/terms/
-      lang: en
-  - name: varGrp2
-    labl:
-    - value: raidsf;moadr
-      lang: en
-      level: varGrp
+  varGrp: []

@@ -115,6 +115,7 @@ title_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      
       for (t in dat()$stdyDscr$citation$titlStmt$titl) {
         title <- add_row(title, 
                          value = t$value, 
@@ -135,6 +136,10 @@ title_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$citation$titlStmt$parTitl) == 0) {
+        parTitl <- add_row(parTitl, value = NA_character_, lang = "")
+      }
+      
       for (p in dat()$stdyDscr$citation$titlStmt$parTitl) {
         parTitl <- add_row(parTitl, 
                            value = p$value, 
@@ -155,7 +160,12 @@ title_server <- function(id, dat, filepth) {
           req(dat())
           updatedData <- dat()
           updated_title <- hot_to_r(input$titl)
-          new_titl <- list(list(value = updated_title$value, lang = updated_title$lang))
+          if(is.na(updated_title$value) |updated_title$value == "") {
+            new_titl <- list(list(value = "Placeholder title", lang = NA_character_))
+          } else {
+            new_titl <- list(list(value = updated_title$value, lang = updated_title$lang))
+          }
+          updatedData$stdyDscr$citation$titlStmt$titl <- NULL
           updatedData$stdyDscr$citation$titlStmt$titl <- new_titl
           updatedData$stdyDscr$citation$titlStmt$titl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$titl)
           
@@ -163,10 +173,14 @@ title_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$titlStmt$parTilt <- NULL
           new_parTitl <- list()
           for(i in 1:length(updated_parTitl$value)) {
-            new <- list(value = updated_parTitl$value[i],
-                        lang  = updated_parTitl$lang[i]
-            )
-            new_parTitl <- c(new_parTitl, list(new))
+            if(!is.na(updated_parTitl$value[i])) {
+              if(updated_parTitl$value[i] != "") {
+                new <- list(value = updated_parTitl$value[i],
+                            lang  = updated_parTitl$lang[i]
+                )
+                new_parTitl <- c(new_parTitl, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$titlStmt$parTitl <- new_parTitl
           updatedData$stdyDscr$citation$titlStmt$parTitl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$parTitl)
@@ -187,6 +201,9 @@ authors_server <- function(id, dat, filepth) {
         name = character(),
         affiliation = character()
       )
+      if(length(dat()$stdyDscr$citation$rspStmt$AuthEnty) == 0) {
+        authors <- add_row(authors, name = NA_character_, affiliation = NA_character_)
+      }
       
       for (a in dat()$stdyDscr$citation$rspStmt$AuthEnty) {
         if(is.null(a$affiliation)) a$contentType <- NA_character_
@@ -210,6 +227,9 @@ authors_server <- function(id, dat, filepth) {
         role = character(),
         affiliation = character()
       )
+      if(length(dat()$stdyDscr$citation$rspStmt$othId) == 0) {
+        contrib <- add_row(contrib, name = NA_character_, role = NA_character_, affiliation = NA_character_)
+      }
       
       for (a in dat()$stdyDscr$citation$rspStmt$othId) {
         if(is.null(a$role)) a$role <- NA_character_
@@ -237,10 +257,14 @@ authors_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$rspStmt$AuthEnty <- NULL
           new_authors <- list()
           for(i in 1:length(updated_authors$name)) {
-            new <- list(name = updated_authors$name[i],
-                        affiliation = updated_authors$affiliation[i]
-            )
-            new_authors <- c(new_authors, list(new))
+            if(!is.na(updated_authors$name[i])) {
+              if(updated_authors$name[i] != "") {
+                new <- list(name = updated_authors$name[i],
+                            affiliation = updated_authors$affiliation[i]
+                )
+                new_authors <- c(new_authors, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$rspStmt$AuthEnty <- new_authors
           updatedData$stdyDscr$citation$rspStmt$AuthEnty <- recurse_write(updatedData$stdyDscr$citation$rspStmt$AuthEnty)
@@ -250,11 +274,15 @@ authors_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$rspStmt$othId <- NULL
           new_contrib <- list()
           for(i in 1:length(updated_contrib$name)) {
-            new <- list(name = updated_contrib$name[i],
+            if(!is.na(updated_contrib$name[i])) {
+              if(updated_contrib$name[i] != "") {
+                new <- list(name = updated_contrib$name[i],
                         role = updated_contrib$role[i],
                         affiliation = updated_contrib$affiliation[i]
-            )
-            new_contrib <- c(new_contrib, list(new))
+                )
+                new_contrib <- c(new_contrib, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$rspStmt$othId <- new_contrib
           updatedData$stdyDscr$citation$rspStmt$othId <- recurse_write(updatedData$stdyDscr$citation$rspStmt$othId)
@@ -278,10 +306,23 @@ series_server <- function(id, dat, filepth) {
         abbr = character(),
         lang = character()
       )
+      no_series <- FALSE
+      if(length(dat()$stdyDscr$citation$serStmt) == 0) {
+        seriesName <- add_row(seriesName, 
+                              ID = "series1",
+                              value = NA_character_)
+        no_series <- TRUE
+      }
       
       for (s in dat()$stdyDscr$citation$serStmt) {
         if(is.null(s$ID)) s$ID <- "series1"
         if(is.null(s$URI)) s$URI <- NA_character_
+        
+        if(length(s$serName) == 0 & !no_series) {
+          seriesName <- add_row(seriesName, 
+                                ID = "series1",
+                                value = NA_character_)
+        }
         
         for(sn in s$serName) {
           if(is.null(sn$abbr)) sn$abbr <- NA_character_
@@ -310,8 +351,23 @@ series_server <- function(id, dat, filepth) {
         value = character(),
         lang = character()
       )
+      no_series <- FALSE
+      if(length(dat()$stdyDscr$citation$serStmt) == 0) {
+        serInfo <- add_row(serInfo, 
+                           ID = "series1",
+                           value = NA_character_)
+        no_series <- TRUE
+      }
+      
       for (s in dat()$stdyDscr$citation$serStmt) {
         if(is.null(s$ID)) s$ID <- "series1"
+        
+        if(length(s$serInfo) == 0 & !no_series) {
+          serInfo <- add_row(serInfo, 
+                             ID = "series1",
+                             value = NA_character_)
+        }
+        
         for (i in s$serInfo) {
           if(is.null(i$lang)) i$lang <- NA_character_
           serInfo <- add_row(serInfo, 
@@ -354,22 +410,30 @@ series_server <- function(id, dat, filepth) {
             URI <- filtered_serName[1,]$URI
           
             if(length(filtered_serName$value > 0)) {
-              name_check <- TRUE
               for(i in 1:length(filtered_serName$value)) {
-                new <- list(value = filtered_serName[i,]$value,
-                            abbr = filtered_serName[i,]$abbr,
-                            lang = filtered_serName[i,]$lang)
-                new_serName <- c(new_serName, list(new))
-              }  
+                if(!is.na(filtered_serName$value[i])) {
+                  if(filtered_serName$value[i] != "") {
+                    name_check <- TRUE
+                    new <- list(value = filtered_serName[i,]$value,
+                                abbr = filtered_serName[i,]$abbr,
+                                lang = filtered_serName[i,]$lang)
+                    new_serName <- c(new_serName, list(new))
+                  }  
+                }
+              }
             }
             
             if(length(filtered_serInfo$value) > 0) {
-              name_info <- TRUE
               for(i in 1:length(filtered_serInfo$value)) {
-                new <- list(value = filtered_serInfo[i,]$value,
-                            lang  = filtered_serInfo[i,]$lang
-                )
-                new_serInfo <- c(new_serInfo, list(new))
+                if(!is.na(filtered_serInfo$value[i])) {
+                  if(filtered_serInfo$value[i] != "") {
+                    info_check <- TRUE
+                    new <- list(value = filtered_serInfo[i,]$value,
+                                lang  = filtered_serInfo[i,]$lang
+                    )
+                    new_serInfo <- c(new_serInfo, list(new))
+                  }
+                }
               }
             }
             
@@ -378,11 +442,11 @@ series_server <- function(id, dat, filepth) {
             new_serInfo <- recurse_write(new_serInfo)
             new_serInfo <- lapply(new_serInfo,function(x) x[!is.na(x)])
             
-            if(name_check & name_info) {
+            if(name_check & info_check) {
               new_serStmt <- c(new_serStmt, list(list(ID = id, URI = URI, serName = new_serName, serInfo = new_serInfo)))  
-            } else if(name_check & !name_info) {
+            } else if(name_check & !info_check) {
               new_serStmt <- c(new_serStmt, list(list(ID = id, URI = URI, serName = new_serName)))  
-            } else if(!name_check & name_info) {
+            } else if(!name_check & info_check) {
               new_serStmt <- c(new_serStmt, list(list(ID = id, URI = URI, serInfo = new_serInfo)))  
             }
           }
@@ -407,6 +471,9 @@ producers_server <- function(id, dat, filepth) {
         affiliation = character(),
         role = character()
       )
+      if(length(dat()$stdyDscr$citation$prodStmt$producer) == 0) {
+        producers <- add_row(producers, name = NA_character_)
+      }
       
       for (a in dat()$stdyDscr$citation$prodStmt$producer) {
         if(is.null(a$abbr)) a$abbr <- NA_character_
@@ -433,6 +500,9 @@ producers_server <- function(id, dat, filepth) {
       prodPlac <- tibble(
         value = character()
       )
+      if(length(dat()$stdyDscr$citation$prodStmt$prodPlac) == 0) {
+        prodPlac <- add_row(prodPlac, value = NA_character_)
+      }
       
       for (a in dat()$stdyDscr$citation$prodStmt$prodPlac) {
         prodPlac <- add_row(prodPlac, 
@@ -453,6 +523,9 @@ producers_server <- function(id, dat, filepth) {
         value = character(),
         date = as.Date("")
       )
+      if(length(dat()$stdyDscr$citation$prodStmt$prodDate) == 0) {
+        prodDate <- add_row(prodDate, value = NA_character_)
+      }
       
       for (a in dat()$stdyDscr$citation$prodStmt$prodDate) {
         if(is.null(a$value)) a$value <- NA_character_
@@ -479,12 +552,16 @@ producers_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$prodStmt$producer <- NULL
           new_producers <- list()
           for(i in 1:length(updated_producers$name)) {
-            new <- list(name = updated_producers$name[i],
-                        abbr = updated_producers$abbr[i],
-                        affiliation = updated_producers$affiliation[i],
-                        role = updated_producers$role[i]
-            )
-            new_producers <- c(new_producers, list(new))
+            if(!is.na(updated_producers$name[i])) {
+              if(updated_producers$name[i] != "") {
+                new <- list(name = updated_producers$name[i],
+                            abbr = updated_producers$abbr[i],
+                            affiliation = updated_producers$affiliation[i],
+                            role = updated_producers$role[i]
+                )
+                new_producers <- c(new_producers, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$prodStmt$producer <- new_producers
           updatedData$stdyDscr$citation$prodStmt$producer <- recurse_write(updatedData$stdyDscr$citation$prodStmt$producer)
@@ -494,8 +571,12 @@ producers_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$prodStmt$prodPlac <- NULL
           new_prodPlac <- list()
           for(i in 1:length(updated_prodPlac$value)) {
-            new <- list(value = updated_prodPlac$value[i])
-            new_prodPlac <- c(new_prodPlac, list(new))
+            if(!is.na(updated_prodPlac$value[i])) {
+              if(updated_prodPlac$value[i] != "") {
+                new <- list(value = updated_prodPlac$value[i])
+                new_prodPlac <- c(new_prodPlac, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$prodStmt$prodPlac <- new_prodPlac
           updatedData$stdyDscr$citation$prodStmt$prodPlac <- recurse_write(updatedData$stdyDscr$citation$prodStmt$prodPlac)
@@ -505,9 +586,13 @@ producers_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$prodStmt$prodDate <- NULL
           new_prodDate <- list()
           for(i in 1:length(updated_prodDate$value)) {
-            new <- list(value = updated_prodDate$value[i],
-                        date = as.character(updated_prodDate$date[i]))
-            new_prodDate <- c(new_prodDate, list(new))
+            if(!is.na(updated_prodDate$value[i])) {
+              if(updated_prodDate$value[i] != "") {
+                new <- list(value = updated_prodDate$value[i],
+                            date = as.character(updated_prodDate$date[i]))
+                new_prodDate <- c(new_prodDate, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$prodStmt$prodDate <- new_prodDate
           updatedData$stdyDscr$citation$prodStmt$prodDate <- recurse_write(updatedData$stdyDscr$citation$prodStmt$prodDate)
@@ -528,6 +613,10 @@ funders_server <- function(id, dat, filepth) {
         abbr = character(),
         role = character()
       )
+      if(length(dat()$stdyDscr$citation$prodStmt$fundAg) == 0) {
+        funders <- add_row(funders, name = NA_character_)
+      }
+      
       for (i in dat()$stdyDscr$citation$prodStmt$fundAg) {
         if(is.null(i$abbr)) i$abbr <- NA_character_
         if(is.null(i$role)) i$role <- NA_character_
@@ -555,11 +644,15 @@ funders_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$citation$prodStmt$fundAg <- NULL
           new_funders <- list()
           for(i in 1:length(updated_funders$name)) {
-            new <- list(name = updated_funders$name[i],
-                        abbr = updated_funders$abbr[i],
-                        role = updated_funders$role[i]
-            )
-            new_funders <- c(new_funders, list(new))
+            if(!is.na(updated_funders$name[i])) {
+              if(updated_funders$name[i] != "") {
+                new <- list(name = updated_funders$name[i],
+                            abbr = updated_funders$abbr[i],
+                            role = updated_funders$role[i]
+                )
+                new_funders <- c(new_funders, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$citation$prodStmt$fundAg <- new_funders
           updatedData$stdyDscr$citation$prodStmt$fundAg <- recurse_write(updatedData$stdyDscr$citation$prodStmt$fundAg)

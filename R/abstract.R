@@ -26,6 +26,9 @@ abstract_server <- function(id, dat, filepth) {
         contentType = factor(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$stdyInfo$abstract) == 0) {
+        abstract <- add_row(abstract, value = NA_character_, contentType = NA_character_, lang = "")
+      }
       for (a in dat()$stdyDscr$stdyInfo$abstract) {
         if(is.null(a$contentType)) a$contentType <- NA_character_
         if(is.null(a$lang)) a$lang <- NA_character_
@@ -50,11 +53,15 @@ abstract_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$stdyInfo$abstract <- NULL
           newAbstract <- list()
           for(i in 1:length(updatedAbstracts$value)) {
-            new <- list(value = updatedAbstracts$value[i],
-                        contentType = updatedAbstracts$contentType[i],
-                        lang  = updatedAbstracts$lang[i]
-            )
-            newAbstract <- c(newAbstract, list(new))
+            if(!is.na(updatedAbstracts$value[i])) {
+              if(updatedAbstracts$value != "") {
+                new <- list(value = updatedAbstracts$value[i],
+                            contentType = updatedAbstracts$contentType[i],
+                            lang  = updatedAbstracts$lang[i]
+                )
+                newAbstract <- c(newAbstract, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$stdyInfo$abstract <- newAbstract
           updatedData$stdyDscr$stdyInfo$abstract <- recurse_write(updatedData$stdyDscr$stdyInfo$abstract)

@@ -26,6 +26,10 @@ resInstru_server <- function(id, dat, filepth) {
         type = character(),
         lang = character()
       )
+      if(length(dat()$stdyDscr$method$dataColl$resInstru) == 0) {
+        resInstru <- add_row(resInstru, value = NA_character_)
+      }
+      
       for (r in dat()$stdyDscr$method$dataColl$resInstru) {
         if(is.null(r$type)) r$type <- NA_character_
         if(is.null(r$lang)) r$lang <- NA_character_
@@ -53,11 +57,15 @@ resInstru_server <- function(id, dat, filepth) {
           updatedData$stdyDscr$method$dataColl$resInstru <- NULL
           new_resInstru <- list()
           for(i in 1:length(updated_resInstru$value)) {
-            new <- list(value = updated_resInstru$value[i],
-                        type = updated_resInstru$type[i],
-                        lang  = updated_resInstru$lang[i]
-            )
-            new_resInstru <- c(new_resInstru, list(new))
+            if(!is.na(updated_resInstru$value[i])) {
+              if(updated_resInstru$value[i] != "") {
+                new <- list(value = updated_resInstru$value[i],
+                            type = updated_resInstru$type[i],
+                            lang  = updated_resInstru$lang[i]
+                )
+                new_resInstru <- c(new_resInstru, list(new))
+              }
+            }
           }
           updatedData$stdyDscr$method$dataColl$resInstru <- new_resInstru
           updatedData$stdyDscr$method$dataColl$resInstru <- recurse_write(updatedData$stdyDscr$method$dataColl$resInstru)
