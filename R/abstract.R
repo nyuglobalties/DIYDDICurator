@@ -54,7 +54,7 @@ abstract_server <- function(id, dat, filepth) {
           newAbstract <- list()
           for(i in 1:length(updatedAbstracts$value)) {
             if(!is.na(updatedAbstracts$value[i])) {
-              if(updatedAbstracts$value != "") {
+              if(updatedAbstracts$value[i] != "") {
                 new <- list(value = updatedAbstracts$value[i],
                             contentType = updatedAbstracts$contentType[i],
                             lang  = updatedAbstracts$lang[i]

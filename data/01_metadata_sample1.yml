@@ -48,10 +48,10 @@ stdyDscr:
       AuthEnty: []
       othId: []
     prodStmt:
+      fundAg: []
       producer: []
       prodPlac: []
       prodDate: []
-      fundAg: []
     distStmt:
       distrbtr: ~
       distrbtr-abbr: ~
@@ -93,13 +93,13 @@ stdyDscr:
   stdyInfo:
     sumDscr:
       anlyUnit: []
+      dataKind: []
+      universe: []
+      timePrd: []
+      collDate: []
       nation: []
       geogCover: []
       geogUnit: []
-      timePrd: []
-      collDate: []
-      universe: []
-      dataKind: []
     qualityStatement:
     - standardsCompliance: ~
       standard:
@@ -110,18 +110,18 @@ stdyDscr:
     abstract: []
   method:
     dataColl:
-      actMin: []
-      collectorTraining: []
-      collMode: []
       collSitu: []
       ConOps: []
-      dataCollector: []
-      deviat: []
-      frequenc: []
       instrumentDevelopment: []
-      resInstru: []
-      sampProc: []
       timeMeth: []
+      frequenc: []
+      collectorTraining: []
+      resInstru: []
+      actMin: []
+      sampProc: []
+      deviat: []
+      collMode: []
+      dataCollector: []
     stdyClas:
       value: ~
       type: ~

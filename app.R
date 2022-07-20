@@ -110,7 +110,7 @@ server <- function(input, output, session) {
   deviat_server("deviat", dat, filepth)
   
   varGrp_server("varGrp", dat, filepth)
-  ddi_generation_server("ddi", dat)
+  ddi_generation_server("ddi", dat, filepth)
   readme_generation_server("readme", dat)
 }
 

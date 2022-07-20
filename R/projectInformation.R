@@ -317,7 +317,6 @@ series_server <- function(id, dat, filepth) {
       for (s in dat()$stdyDscr$citation$serStmt) {
         if(is.null(s$ID)) s$ID <- "series1"
         if(is.null(s$URI)) s$URI <- NA_character_
-        
         if(length(s$serName) == 0 & !no_series) {
           seriesName <- add_row(seriesName, 
                                 ID = "series1",
@@ -358,11 +357,11 @@ series_server <- function(id, dat, filepth) {
                            value = NA_character_)
         no_series <- TRUE
       }
-      
+      counter <- 1
       for (s in dat()$stdyDscr$citation$serStmt) {
         if(is.null(s$ID)) s$ID <- "series1"
         
-        if(length(s$serInfo) == 0 & !no_series) {
+        if(length(s$serInfo) == 0 & !no_series & counter == 1) {
           serInfo <- add_row(serInfo, 
                              ID = "series1",
                              value = NA_character_)
@@ -375,6 +374,7 @@ series_server <- function(id, dat, filepth) {
                              value = i$value, 
                              lang = i$lang)
         }
+        counter <- counter + 1
       }
       rht <- rhandsontable(serInfo, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(10, 40, 10),
