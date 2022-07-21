@@ -1,8 +1,10 @@
 ddi_generation_ui <- function(id) {
   ns <- NS(id)
   tabPanel("DDI Codebook",
-           htmltidy::xmlviewOutput(ns("XML")),
-           downloadButton(ns("download_DDI"), "Download codebook")
+           downloadButton(ns("download_DDI"), "Download codebook"),
+           tags$br(),
+           tags$br(),
+           htmltidy::xmlviewOutput(ns("XML"))
   )
 }
 

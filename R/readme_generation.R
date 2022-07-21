@@ -13,6 +13,7 @@ readme_generation_ui <- function(id) {
            htmlOutput(ns("keywords")),
            htmlOutput(ns("universes")),
            htmlOutput(ns("anlyUnits")),
+           htmlOutput(ns("kindOfData")),
            htmlOutput(ns("nation")),
            htmlOutput(ns("geogCoverage")),
            htmlOutput(ns("geogUnit")),
@@ -217,14 +218,15 @@ readme_generation_server <- function(id, dat) {
     
     output$abstract <- renderUI( {
       abstract <- ""
-      if(length(dat()$stdyDscr$stdyInfo$abstract > 0) | 
-         length(dat()$stdyDscr$stdyInfo$subject > 0) |
-         length(dat()$stdyDscr$stdyInfo$sumDscr$anlyUnit > 0) |
-         length(dat()$stdyDscr$stdyInfo$sumDscr$universe > 0) |
-         length(dat()$stdyDscr$stdyInfo$sumDscr$nation > 0) |
-         length(dat()$stdyDscr$stdyInfo$sumDscr$geogCover > 0) |
-         length(dat()$stdyDscr$stdyInfo$sumDscr$geogUnit > 0) |
-         length(dat()$stdyDscr$stdyInfo$sumDscr$timePrd > 0)) { 
+      if(length(dat()$stdyDscr$stdyInfo$abstract) > 0 | 
+         length(dat()$stdyDscr$stdyInfo$subject) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$anlyUnit) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$universe) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$nation) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$geogCover) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$geogUnit) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$timePrd) > 0 |
+         length(dat()$stdyDscr$stdyInfo$sumDscr$dataKind) > 0) { 
         abstract <- paste0(abstract, "<hr><h3>Study Information</h3></hr>")
       }
       
@@ -297,6 +299,22 @@ readme_generation_server <- function(id, dat) {
       }
       anlyUnit <- substr(anlyUnit, 1, nchar(anlyUnit)-2)
       HTML(anlyUnit)
+    })
+
+    output$kindOfData <- renderText( {
+      kindOfData <- ""
+      if(length(dat()$stdyDscr$stdyInfo$sumDscr$dataKind) > 0) {
+        if(length(dat()$stdyDscr$stdyInfo$sumDscr$dataKind) == 1) {
+          kindOfData <- "<h4>Kind of Data</h4> &nbsp; &nbsp;&nbsp; &nbsp;"  
+        } else {
+          kindOfData <- "<h4>Kinds of Data</h4> &nbsp; &nbsp;&nbsp; &nbsp;"            
+        }
+        for (n in dat()$stdyDscr$stdyInfo$sumDscr$dataKind) {
+          kindOfData <- paste0(kindOfData, n$value, ", ")
+        }
+      }
+      kindOfData <- substr(kindOfData, 1, nchar(kindOfData)-2)
+      HTML(kindOfData)
     })
     
     output$nation <- renderText( {
