@@ -15,7 +15,7 @@ dataCollector_ui <- function(id) {
                in the data collection process.'))
 }
 
-dataCollector_server <- function(id, dat, filepth) {
+dataCollector_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$dataCollector <- renderRHandsontable({
@@ -49,10 +49,11 @@ dataCollector_server <- function(id, dat, filepth) {
                                  lang = d$lang)
       }
       rht <- rhandsontable(dataCollector, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
-        hot_cols(colWidths = c(40, 10, 40, 40, 10),
+        hot_cols(colWidths = c(30, 10, 30, 30, 20),
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -73,7 +74,7 @@ dataCollector_server <- function(id, dat, filepth) {
                         abbr = updated_dataCollector$abbr[i],
                         affiliation = updated_dataCollector$affiliation[i],
                         role = updated_dataCollector$role[i],
-                        lang  = updated_dataCollector$lang[i]
+                        lang  = stringr::str_extract(updated_dataCollector$lang[i], "^[a-z]{2}")
                 )
                 new_dataCollector <- c(new_dataCollector, list(new))
               }

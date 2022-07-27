@@ -12,7 +12,7 @@ instrumentDevelopment_ui <- function(id) {
            )
 }
 
-instrumentDevelopment_server <- function(id, dat, filepth) {
+instrumentDevelopment_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$instrumentDevelopment <- renderRHandsontable({
@@ -39,6 +39,7 @@ instrumentDevelopment_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -56,7 +57,7 @@ instrumentDevelopment_server <- function(id, dat, filepth) {
               if(updated_instrumentDevelopment$value[i] != "") {
                 new <- list(value = updated_instrumentDevelopment$value[i],
                             type = updated_instrumentDevelopment$type[i],
-                            lang  = updated_instrumentDevelopment$lang[i]
+                            lang  = stringr::str_extract(updated_instrumentDevelopment$lang[i], "^[a-z]{2}")
                         )
                 new_instrumentDevelopment <- c(new_instrumentDevelopment, list(new))
               }

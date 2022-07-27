@@ -45,8 +45,7 @@ stdyDscr:
       - value: Placeholder title
         lang: .na.character
     rspStmt:
-      AuthEnty:
-      - name: Patrick
+      AuthEnty: []
       othId: []
     prodStmt:
       fundAg: []
@@ -94,37 +93,36 @@ stdyDscr:
   stdyInfo:
     sumDscr:
       anlyUnit: []
-      timePrd: []
-      collDate: []
+      dataKind: []
       nation: []
       geogCover: []
       geogUnit: []
+      timePrd: []
+      collDate: []
       universe: []
-      dataKind:
-      - value: survey data
     qualityStatement:
     - standardsCompliance: ~
       standard:
       - standardName: ~
         producer: ~
       complianceDescription: ~
-    subject: []
     abstract: []
+    subject: []
   method:
     dataColl:
+      actMin: []
+      collectorTraining: []
+      collMode:
+      - {}
       collSitu: []
       ConOps: []
-      instrumentDevelopment: []
-      timeMeth: []
-      frequenc: []
-      collectorTraining: []
-      resInstru: []
-      actMin: []
-      sampProc: []
+      dataCollector: []
       deviat: []
-      collMode: []
-      dataCollector:
-      - value: people
+      frequenc: []
+      instrumentDevelopment: []
+      resInstru: []
+      sampProc: []
+      timeMeth: []
     stdyClas:
       value: ~
       type: ~

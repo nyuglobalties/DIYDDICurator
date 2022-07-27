@@ -15,7 +15,7 @@ dataKind_ui <- function(id) {
   )
 }
 
-dataKind_server <- function(id, dat, filepth) {
+dataKind_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$dataKind <- renderRHandsontable({
@@ -42,6 +42,7 @@ dataKind_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -59,7 +60,7 @@ dataKind_server <- function(id, dat, filepth) {
               if(updated_dataKind$value[i] != "") {
                 new <- list(value = updated_dataKind$value[i],
                             type = updated_dataKind$type[i],
-                            lang = updated_dataKind$lang[i]
+                            lang = stringr::str_extract(updated_dataKind$lang[i], "^[a-z]{2}")
                 )
                 new_dataKind <- c(new_dataKind, list(new))
               }

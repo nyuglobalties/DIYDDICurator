@@ -15,7 +15,7 @@ abstract_ui <- function(id) {
   )
 }
 
-abstract_server <- function(id, dat, filepth) {
+abstract_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$abstract <- renderRHandsontable({
@@ -40,6 +40,7 @@ abstract_server <- function(id, dat, filepth) {
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
         hot_col("contentType", allowInvalid = FALSE, type = "dropdown", source = contentTypeOptions) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -57,7 +58,7 @@ abstract_server <- function(id, dat, filepth) {
               if(updatedAbstracts$value[i] != "") {
                 new <- list(value = updatedAbstracts$value[i],
                             contentType = updatedAbstracts$contentType[i],
-                            lang  = updatedAbstracts$lang[i]
+                            lang  = stringr::str_extract(updatedAbstracts$lang[i], "^[a-z]{2}")
                 )
                 newAbstract <- c(newAbstract, list(new))
               }

@@ -23,7 +23,7 @@ universe_ui <- function(id) {
            )
 }
 
-universe_server <-  function(id, dat, filepth) {
+universe_server <-  function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$universe <- renderRHandsontable({
@@ -50,6 +50,7 @@ universe_server <-  function(id, dat, filepth) {
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
         hot_col("clusion", allowInvalid = FALSE, type = "dropdown", source = clusionOptions) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -68,7 +69,7 @@ universe_server <-  function(id, dat, filepth) {
                 new <- list(group = updatedUniverse$group[i],
                             level = "project",
                             clusion = updatedUniverse$clusion[i],
-                            lang  = updatedUniverse$lang[i]
+                            lang  = stringr::str_extract(updatedUniverse$lang[i], "^[a-z]{2}")
                 )
                 newUniverse <- c(newUniverse, list(new))
               }

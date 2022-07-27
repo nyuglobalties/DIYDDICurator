@@ -11,7 +11,7 @@ anlyUnit_ui <- function(id) {
            )
 }
 
-anlyUnit_server <- function(id, dat, filepth) {
+anlyUnit_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$anlyUnit <- renderRHandsontable({
@@ -35,6 +35,7 @@ anlyUnit_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -51,7 +52,7 @@ anlyUnit_server <- function(id, dat, filepth) {
             if(!is.na(updated_anlyUnit$group[i])) {
               if(updated_anlyUnit$group[i] != "") {
                 new <- list(group = updated_anlyUnit$group[i],
-                            lang  = updated_anlyUnit$lang[i]
+                            lang  = stringr::str_extract(updated_anlyUnit$lang[i], "^[a-z]{2}")
                 )
                 new_anlyUnit <- c(new_anlyUnit, list(new))
               }

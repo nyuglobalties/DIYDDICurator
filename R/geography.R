@@ -19,7 +19,7 @@ geography_ui <- function(id) {
            )
 }
 
-geography_server <- function(id, dat, filepth) {
+geography_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$geog <- renderRHandsontable({
@@ -71,6 +71,7 @@ geography_server <- function(id, dat, filepth) {
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
         hot_col("field", allowInvalid = FALSE, type = "dropdown", source = fieldOptions) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -93,17 +94,17 @@ geography_server <- function(id, dat, filepth) {
                 if(updated_geog$field[i] == "nation") {
                   new_n <- list(value = updated_geog$value[i],
                                 abbr = updated_geog$abbr[i],
-                                lang = updated_geog$lang[i]
+                                lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
                   )
                   new_nation <- c(new_nation, list(new_n))
                 } else if(updated_geog$field[i] == "geogCover"){
                   new_gc <- list(value = updated_geog$value[i],
-                                 lang = updated_geog$lang[i]
+                                 lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
                   )
                   new_geogCover <- c(new_geogCover, list(new_gc))
                 } else {
                   new_gu <- list(value = updated_geog$value[i],
-                                 lang = updated_geog$lang[i]
+                                 lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
                   )
                   new_geogUnit <- c(new_geogUnit, list(new_gu))
                 }

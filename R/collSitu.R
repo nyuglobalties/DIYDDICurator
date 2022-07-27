@@ -12,7 +12,7 @@ collSitu_ui <- function(id) {
            )
 }
 
-collSitu_server <- function(id, dat, filepth) {
+collSitu_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$collSitu <- renderRHandsontable({
@@ -36,6 +36,7 @@ collSitu_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -52,7 +53,7 @@ collSitu_server <- function(id, dat, filepth) {
             if(!is.na(updated_collSitu$value[i])) {
               if(updated_collSitu$value[i] != "") {
                 new <- list(value = updated_collSitu$value[i],
-                        lang  = updated_collSitu$lang[i]
+                        lang  = stringr::str_extract(updated_collSitu$lang[i], "^[a-z]{2}")
                 )
                 new_collSitu <- c(new_collSitu, list(new))
               }

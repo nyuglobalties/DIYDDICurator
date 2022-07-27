@@ -11,7 +11,7 @@ sampProc_ui <- function(id) {
            )
 }
 
-sampProc_server <- function(id, dat, filepth) {
+sampProc_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$sampProc <- renderRHandsontable({
@@ -35,6 +35,7 @@ sampProc_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -51,7 +52,7 @@ sampProc_server <- function(id, dat, filepth) {
             if(!is.na(updated_sampProc$value[i])) {
               if(updated_sampProc$value[i] != "") {
                 new <- list(value = updated_sampProc$value[i],
-                            lang  = updated_sampProc$lang[i]
+                            lang  = stringr::str_extract(updated_sampProc$lang[i], "^[a-z]{2}")
                 )
                 new_sampProc <- c(new_sampProc, list(new))
               }

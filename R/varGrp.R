@@ -25,7 +25,7 @@ varGrp_ui <- function(id) {
           )
 }
 
-varGrp_server <- function(id, dat, filepth) {
+varGrp_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$varGrp <- renderRHandsontable({
@@ -79,6 +79,7 @@ varGrp_server <- function(id, dat, filepth) {
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
         hot_col("element", allowInvalid = FALSE, type = "dropdown", source = elementOptions) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
       
@@ -120,6 +121,7 @@ varGrp_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -147,7 +149,9 @@ varGrp_server <- function(id, dat, filepth) {
               for(l in 1:length(new_labl$value)) {
                 if(!is.na(new_labl$value[l])) {
                   if(new_labl$value[l] != "") {
-                    labl <- list(value = new_labl$value[l], lang = new_labl$lang[l], level = "varGrp")
+                    labl <- list(value = new_labl$value[l], 
+                                 lang = stringr::str_extract(new_labl$lang[l], "^[a-z]{2}"), 
+                                 level = "varGrp")
                     new_l <- c(new_l, list(labl))
                   }
                 }
@@ -160,7 +164,8 @@ varGrp_server <- function(id, dat, filepth) {
                 if(!is.na(new_defntn$value[d])) {
                   if(new_defntn$value[d] != "") {
                     if(!is.na(new_defntn$value[d])) {
-                      defntn <- list(value = new_defntn$value[d], lang = new_defntn$lang[d])
+                      defntn <- list(value = new_defntn$value[d], 
+                                     lang = stringr::str_extract(new_defntn$lang[d], "^[a-z]{2}"))
                       new_d <- c(new_d, list(defntn))
                     }
                   }
@@ -177,12 +182,12 @@ varGrp_server <- function(id, dat, filepth) {
                       universe <- list(group = new_universe$value[u],
                                        level = "varGrp",
                                        clusion = "I",
-                                       lang = new_universe$lang[u])
+                                       lang = stringr::str_extract(new_universe$lang[u], "^[a-z]{2}"))
                     } else {
                       universe <- list(group = new_universe$value[u],
                                        level = "varGrp",
                                        clusion = "E",
-                                       lang = new_universe$lang[u])
+                                       lang = stringr::str_extract(new_universe$lang[u], "^[a-z]{2}"))
                     }
                     new_u <- c(new_u, list(universe))
                   }
@@ -200,7 +205,7 @@ varGrp_server <- function(id, dat, filepth) {
                     concept <- list(value = new_conc$value[c], 
                                     vocabu = new_conc$vocabu[c],
                                     vocab_URI = new_conc$vocab_URI[c],
-                                    lang = new_conc$lang[c])
+                                    lang = stringr::str_extract(new_conc$lang[c], "^[a-z]{2}"))
                     new_co <- c(new_co, list(concept))
                   }
                 }

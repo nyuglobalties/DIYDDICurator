@@ -22,7 +22,7 @@ timePeriods_ui <- function(id) {
   )
 }
 
-timePeriods_server <- function(id, dat, filepth) {
+timePeriods_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
   
     output$timePrd <- renderRHandsontable({
@@ -76,6 +76,7 @@ timePeriods_server <- function(id, dat, filepth) {
         hot_rows(rowHeights = NULL) %>% 
         hot_col("field", allowInvalid = FALSE, type = "dropdown", source = fieldOptions) %>% 
         hot_col("event", allowInvalid = FALSE, type = "dropdown", source = eventOptions) %>%
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -98,7 +99,7 @@ timePeriods_server <- function(id, dat, filepth) {
                                  date = as.character(updated_prds$date[i]),
                                  event = updated_prds$event[i],
                                  cycle = updated_prds$cycle[i],
-                                 lang = updated_prds$lang[i]
+                                 lang = stringr::str_extract(updated_prds$lang[i], "^[a-z]{2}")
                   )
                   new_timePrd <- c(new_timePrd, list(new_tp))
                 }
@@ -110,7 +111,7 @@ timePeriods_server <- function(id, dat, filepth) {
                                  date = as.character(updated_prds$date[i]),
                                  event = updated_prds$event[i],
                                  cycle = updated_prds$cycle[i],
-                                 lang = updated_prds$lang[i]
+                                 lang = stringr::str_extract(updated_prds$lang[i], "^[a-z]{2}")
                   )
                   new_collDate <- c(new_collDate, list(new_cd))
                 }

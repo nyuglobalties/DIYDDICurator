@@ -106,7 +106,7 @@ funders_ui <- function(id) {
              production process, use the "role" attribute to distinguish them.'))
 }
 
-title_server <- function(id, dat, filepth) {
+title_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$titl <- renderRHandsontable({
@@ -126,6 +126,7 @@ title_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = FALSE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -150,6 +151,7 @@ title_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -163,7 +165,8 @@ title_server <- function(id, dat, filepth) {
           if(is.na(updated_title$value) |updated_title$value == "") {
             new_titl <- list(list(value = "Placeholder title", lang = NA_character_))
           } else {
-            new_titl <- list(list(value = updated_title$value, lang = updated_title$lang))
+            new_titl <- list(list(value = updated_title$value, 
+                                  lang = stringr::str_extract(updated_title$lang, "^[a-z]{2}")))
           }
           updatedData$stdyDscr$citation$titlStmt$titl <- NULL
           updatedData$stdyDscr$citation$titlStmt$titl <- new_titl
@@ -176,7 +179,7 @@ title_server <- function(id, dat, filepth) {
             if(!is.na(updated_parTitl$value[i])) {
               if(updated_parTitl$value[i] != "") {
                 new <- list(value = updated_parTitl$value[i],
-                            lang  = updated_parTitl$lang[i]
+                            lang  = stringr::str_extract(updated_parTitl$lang[i], "^[a-z]{2}")
                 )
                 new_parTitl <- c(new_parTitl, list(new))
               }
@@ -294,7 +297,7 @@ authors_server <- function(id, dat, filepth) {
   })
 }
 
-series_server <- function(id, dat, filepth) {
+series_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$seriesName <- renderRHandsontable({
@@ -339,6 +342,7 @@ series_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -381,6 +385,7 @@ series_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -416,7 +421,8 @@ series_server <- function(id, dat, filepth) {
                     name_check <- TRUE
                     new <- list(value = filtered_serName[i,]$value,
                                 abbr = filtered_serName[i,]$abbr,
-                                lang = filtered_serName[i,]$lang)
+                                lang = stringr::str_extract(filtered_serName[i,]$lang, "^[a-z]{2}")
+                                )
                     new_serName <- c(new_serName, list(new))
                   }  
                 }
@@ -429,7 +435,7 @@ series_server <- function(id, dat, filepth) {
                   if(filtered_serInfo$value[i] != "") {
                     info_check <- TRUE
                     new <- list(value = filtered_serInfo[i,]$value,
-                                lang  = filtered_serInfo[i,]$lang
+                                lang  = stringr::str_extract(filtered_serInfo[i,]$lang, "^[a-z]{2}")
                     )
                     new_serInfo <- c(new_serInfo, list(new))
                   }

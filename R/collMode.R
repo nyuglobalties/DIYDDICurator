@@ -11,7 +11,7 @@ collMode_ui <- function(id) {
   
 }
 
-collMode_server <- function(id, dat, filepth) {
+collMode_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$collMode <- renderRHandsontable({
@@ -35,6 +35,7 @@ collMode_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -51,7 +52,7 @@ collMode_server <- function(id, dat, filepth) {
             for(i in 1:length(updated_collMode$value)) {
               if(!is.na(updated_collMode$value[i])) {
                 new <- list(value = updated_collMode$value[i],
-                            lang  = updated_collMode$lang[i]
+                            lang  = stringr::str_extract(updated_collMode$lang[i], "^[a-z]{2}")
                 )
                 new_collMode <- c(new_collMode, list(new))
               }

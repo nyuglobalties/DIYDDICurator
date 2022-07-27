@@ -11,7 +11,7 @@ deviat_ui <- function(id) {
                  whole.'))
 }
 
-deviat_server <- function(id, dat, filepth) {
+deviat_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$deviat <- renderRHandsontable({
@@ -35,6 +35,7 @@ deviat_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -51,7 +52,7 @@ deviat_server <- function(id, dat, filepth) {
             if(!is.na(updated_deviat$value[i])) {
               if(updated_deviat$value[i] != "") {
                 new <- list(value = updated_deviat$value[i],
-                        lang  = updated_deviat$lang[i]
+                        lang  = stringr::str_extract(updated_deviat$lang[i], "^[a-z]{2}")
                 )
                 new_deviat <- c(new_deviat, list(new))
               }

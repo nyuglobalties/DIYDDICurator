@@ -14,7 +14,7 @@ collectorTraining_ui <- function(id) {
   
 }
 
-collectorTraining_server <- function(id, dat, filepth) {
+collectorTraining_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$collectorTraining <- renderRHandsontable({
@@ -42,6 +42,7 @@ collectorTraining_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -59,7 +60,7 @@ collectorTraining_server <- function(id, dat, filepth) {
               if(updated_collectorTraining$value[i] != "") {
                 new <- list(value = updated_collectorTraining$value[i],
                             type = updated_collectorTraining$type[i],
-                            lang  = updated_collectorTraining$lang[i]
+                            lang  = stringr::str_extract(updated_collectorTraining$lang[i], "^[a-z]{2}")
                 )
                 new_collectorTraining <- c(new_collectorTraining, list(new))
               }

@@ -13,7 +13,7 @@ ConOps_ui <- function(id) {
            )
 }
 
-ConOps_server <- function(id, dat, filepth) {
+ConOps_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$ConOps <- renderRHandsontable({
@@ -41,6 +41,7 @@ ConOps_server <- function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -58,7 +59,7 @@ ConOps_server <- function(id, dat, filepth) {
               if(updated_ConOps$value[i] != "") {
                 new <- list(value = updated_ConOps$value[i],
                         agency = updated_ConOps$agency[i],
-                        lang  = updated_ConOps$lang[i]
+                        lang  = stringr::str_extract(updated_ConOps$lang[i], "^[a-z]{2}")
                 )
                 new_ConOps <- c(new_ConOps, list(new))
               }

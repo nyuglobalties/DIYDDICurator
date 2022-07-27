@@ -15,7 +15,7 @@ subject_ui <- function(id) {
   )
 }
 
-subject_server <-  function(id, dat, filepth) {
+subject_server <-  function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$subject <- renderRHandsontable({
@@ -45,6 +45,7 @@ subject_server <-  function(id, dat, filepth) {
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
         hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
       htmlwidgets::onRender(rht, change_hook)
     })
@@ -64,7 +65,7 @@ subject_server <-  function(id, dat, filepth) {
                 new <- list(keyword = updatedSubjects$keyword[i],
                             vocabu = updatedSubjects$vocabu[i],
                             vocab_URI = updatedSubjects$vocab_URI[i],
-                            lang  = updatedSubjects$lang[i]
+                            lang  = stringr::str_extract(updatedSubjects$lang[i], "^[a-z]{2}")
                 )
                 newSubject <- c(newSubject, list(new))
               }

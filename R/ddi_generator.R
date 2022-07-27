@@ -1040,7 +1040,7 @@ generate_stdyInfo <- function(dat) {
       descr_universe(dat$stdyDscr$stdyInfo$sumDscr$universe), 
       descr_dataKind(dat)),
     ddi_sumDscr)
-  if(!is.null(keyword$content)) stdyInfo$content <- append(splat(descr_keyword(dat), ddi_subject))
+  if(length(keyword) > 0) stdyInfo$content <- append(stdyInfo$content, list(splat(descr_keyword(dat), ddi_subject)))
   if(length(abstract) > 0) stdyInfo$content <- append(stdyInfo$content, abstract)
   if(!is.null(sumDscr$content)) stdyInfo$content <- append(stdyInfo$content, list(sumDscr))
   stdyInfo
