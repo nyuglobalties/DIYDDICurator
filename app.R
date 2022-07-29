@@ -16,11 +16,18 @@ ui <- fluidPage(
              p('In addition, each table has the element definitions below it. In 
                some cases a table may represent more than one element in which 
                case a field column is added to the table.'),
-             p(strong('To begin, please pick the project you would like to edit below.')),
+             p(strong('To begin, please pick the project you would like to edit 
+                      below or create a new file.')),
              tags$hr(), 
-             radioButtons("proj",
-                          "Select Project",
-                          choices = list.files("data/"))
+             uiOutput("project"),
+             tags$hr(),
+             textInput("newFileName", label = "New file name", placeholder = "Type new file name here"),
+             tags$em('When creating a new file please use snake_case (dashes instead 
+               of blanks) or camelCase (no blanks but uppercase the first letter 
+               of the non-first word.'),
+             tags$br(),
+             tags$br(),
+             actionButton("createNewFile", "Create new file")
              ),
     navbarMenu(
       "Project Information",
@@ -68,7 +75,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   filepth <- reactive({
-    r <- paste0("data/", input$proj)
+    r <- paste0("data/", input$project)
     return(r)
   })
   
@@ -78,10 +85,35 @@ server <- function(input, output, session) {
                             readFunc = yaml::read_yaml
                           )
   
+  output$project <- renderUI(
+    radioButtons("project", 
+                 label = "Select Project",
+                 choices = list.files("data/")
+                 )
+  )
+  
   dat <- reactive(recurse_read(init_dat()))
   
   lang <- isolate(c("", "en - English", "fr - Français", "es - Español", 
                     "ar - عربى", "zh - 中国人", "ru - Русский"))
+  
+  observeEvent(
+    input$createNewFile, {
+      isolate({
+        req(input$newFileName) 
+        name <- str_replace_all(input$newFileName, " ", "_")
+        if(!stringr::str_detect(input$newFileName, "[.]yml$")) {
+          name <- paste0(name, ".yml")
+        }
+        file.copy("template.yml", "data/template.yml")
+        file.rename("data/template.yml", paste0("data/", name))
+        
+        updateRadioButtons(session = session,
+                           inputId = "project",
+                           label = "Select Project",
+                           choices = list.files("data/"))
+      })
+    })
   
   # add projectinformation servers here
   title_server("titles", dat, filepth, lang)
