@@ -6,7 +6,7 @@ collectorTraining_ui <- function(id) {
            actionButton(ns("save_collectorTraining"), "Save collector training"),
            tags$hr(),
            p('Describes the training provided to data collectors including 
-             internviewer training, process testing, compliance with standards 
+             interviewer training, process testing, compliance with standards 
              etc. This is repeatable for language and to capture different 
              aspects of the training process. The type attribute allows 
              specification of the type of training being described.')

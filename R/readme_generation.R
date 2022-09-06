@@ -1,6 +1,8 @@
 readme_generation_ui <- function(id) {
   ns <- NS(id)
   tabPanel("README",
+           downloadButton(ns("download_pdf"), "Download README as PDF"),
+           tags$br(), tags$br(),
            h1(textOutput(ns("title"))),
            htmlOutput(ns("authors")),
            htmlOutput(ns("contributors")),
@@ -33,12 +35,33 @@ readme_generation_ui <- function(id) {
            htmlOutput(ns("deviat")),
            htmlOutput(ns("frequenc")),
            
+           htmlOutput(ns("relMat")),
+           htmlOutput(ns("relStdy")),
+           htmlOutput(ns("relPubl")),
+           htmlOutput(ns("othRefs")),
+           
            htmlOutput(ns("varGrp"))
   )
 }
 
 readme_generation_server <- function(id, dat) {
   moduleServer(id, function(input, output, session) {
+    
+    output$download_pdf <- downloadHandler(
+      filename = "readme.pdf",
+      
+      content = function(file) {
+        tempReport <- file.path(tempdir(), "readme.Rmd")
+        file.copy("readme.Rmd", tempReport, overwrite = TRUE)
+        
+        params <- list(data = dat())
+    
+        rmarkdown::render(tempReport, output_file = file,
+                          params = params,
+                          envir = new.env(parent = globalenv()))
+      }
+    )
+    
     output$title <- renderText( {
       title <- dat()$stdyDscr$citation$titlStmt$titl[[1]]$value
     })
@@ -207,8 +230,19 @@ readme_generation_server <- function(id, dat) {
       if(length(dat()$stdyDscr$citation$prodStmt$fundAg) > 0) {
         funders <- "<b>Funded by:</b><br/>"
         for(a in dat()$stdyDscr$citation$prodStmt$fundAg) {
-          funders <- paste0(funders, "&nbsp; &nbsp;&nbsp; &nbsp;", a$name, 
-                            " (", a$abbr, ") - ", a$role, "<br/>")
+          if(!is.null(a$abbr) & !is.null(a$role)) {
+            funders <- paste0(funders, "&nbsp; &nbsp;&nbsp; &nbsp;", a$name, 
+                              " (", a$abbr, ") - ", a$role, "<br/>")
+          } else if(is.null(a$abbr) & !is.null(a$role)) {
+            funders <- paste0(funders, "&nbsp; &nbsp;&nbsp; &nbsp;", a$name, 
+                              " - ", a$role, "<br/>")
+          } else if(!is.null(a$abbr) & is.null(a$role)) {
+            funders <- paste0(funders, "&nbsp; &nbsp;&nbsp; &nbsp;", a$name, 
+                              " (", a$abbr, ") <br/>")
+          } else {
+            funders <- paste0(funders, "&nbsp; &nbsp;&nbsp; &nbsp;", a$name,
+                              "<br/>")
+          }
         }
       }
       funders <- substr(funders, 1, nchar(funders)-5)
@@ -377,24 +411,30 @@ readme_generation_server <- function(id, dat) {
     
     output$timePrd <- renderText( {
       timePrd <- ""
-      ds <- tibble(date = character(),
+      ds <- tibble(value = character(),
+                   date = character(),
                    event = character(),
                    cycle = character()
       )
       if(length(dat()$stdyDscr$stdyInfo$sumDscr$timePrd) > 0) {
         timePrd <- "<h4>Time periods</h4>"
         for (n in dat()$stdyDscr$stdyInfo$sumDscr$timePrd) {
-          ds <- add_row(ds, date = n$date, event = n$event, cycle = n$cycle)
+          ds <- add_row(ds, value = n$value, date = n$date, event = n$event, cycle = n$cycle)
         }
       }
       cycles = unique(ds$cycle)
       for(c in cycles) {
         subset <- ds %>% filter(cycle == c)
-        start <- subset %>% filter(event == "start") %>% select(date)
-        end <- subset %>% filter(event == "end") %>% select(date)
-        timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>", start, " to ", end, "<br/><br/>")
+        if(length(subset$event) == 1) {
+          timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>",
+                             subset$date[1], " (", subset$event[1], ") <br/>")
+        } else {
+          start <- subset %>% filter(event == "start") %>% select(value)
+          end <- subset %>% filter(event == "end") %>% select(value)
+          timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>", start, " to ", end, "<br/>")
+        }
       }
-      timePrd <- substr(timePrd, 1, nchar(timePrd)-10)
+      timePrd <- substr(timePrd, 1, nchar(timePrd)-5)
       HTML(timePrd)
     })
     
@@ -484,11 +524,16 @@ readme_generation_server <- function(id, dat) {
       cycles = unique(ds$cycle)
       for(c in cycles) {
         subset <- ds %>% filter(cycle == c)
-        start <- subset %>% filter(event == "start") %>% select(date)
-        end <- subset %>% filter(event == "end") %>% select(date)
-        collDate <- paste0(collDate, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>", start, " to ", end, "<br/><br/>")
+        if(length(subset$event) == 1) {
+          collDate <- paste0(collDate, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>",
+                             subset$date[1], " (", subset$event[1], ") <br/>")
+        } else {
+          start <- subset %>% filter(event == "start") %>% select(date)
+          end <- subset %>% filter(event == "end") %>% select(date)
+          collDate <- paste0(collDate, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>", start, " to ", end, "<br/>")
+        }
       }
-      collDate <- substr(collDate, 1, nchar(collDate)-10)
+      collDate <- substr(collDate, 1, nchar(collDate)-5)
       HTML(collDate)
     })
     
@@ -566,9 +611,9 @@ readme_generation_server <- function(id, dat) {
       }
       if(length(dat()$stdyDscr$method$dataColl$ConOps) > 0) {
         if(length(dat()$stdyDscr$method$dataColl$ConOps) == 1) {
-          ConOps <- paste0(conOps, "&nbsp; &nbsp;&nbsp; &nbsp;<b>Control Operation: </b>")  
+          ConOps <- paste0(ConOps, "&nbsp; &nbsp;&nbsp; &nbsp;<b>Control Operation: </b>")  
         } else {
-          ConOps <- paste0(conOps, "&nbsp; &nbsp;&nbsp; &nbsp;<b>Control Operations: </b>")
+          ConOps <- paste0(ConOps, "&nbsp; &nbsp;&nbsp; &nbsp;<b>Control Operations: </b>")
         }
         for (n in dat()$stdyDscr$method$dataColl$ConOps) {
           ConOps <- paste0(ConOps, n$value, ", ")
@@ -621,6 +666,105 @@ readme_generation_server <- function(id, dat) {
       HTML(deviat)
     })
     
+
+    output$relMat <- renderText( {
+      relMat <- ""
+      if(length(dat()$stdyDscr$othrStdyMat$relMat) > 0) {
+        relMat <- "<h4>Bibliography / Other Study Materials</h4>"
+      }
+      if(length(dat()$stdyDscr$othrStdyMat$relMat) > 0) {
+        relMat <- paste0(relMat, "<b>Related Materials: </b><br><br>")
+      }
+      for (n in dat()$stdyDscr$othrStdyMat$relMat) {
+        if(!is.null(n$biblCit)) {
+          relMat <- paste0(relMat, n$biblCit, "<br><br>")
+          if(!is.null(n$description)) {
+            relMat <- paste0(relMat, "&nbsp; &nbsp;&nbsp; &nbsp;<em>", n$description, 
+                             "</em><br><br>")
+          }
+        } else if(is.null(n$biblCit) & !is.null(n$description)) {
+          relMat <- paste0(relMat, "<em>", n$description, 
+                           "</em><br><br>")
+        }  
+      }
+      HTML(relMat)
+    })
+
+    output$relStdy <- renderText( {
+      relStdy <- ""
+      if(length(dat()$stdyDscr$othrStdyMat$relStdy) > 0 &
+         length(dat()$stdyDscr$othrStdyMat$relMat) == 0) {
+        relStdy <- "<h4>Bibliography / Other Study Materials</h4>"
+      }
+      if(length(dat()$stdyDscr$othrStdyMat$relStdy) > 0) {
+        relStdy <- paste0(relStdy, "<b>Related Studies: </b><br><br>")
+      }
+      for (n in dat()$stdyDscr$othrStdyMat$relStdy) {
+        if(!is.null(n$biblCit)) {
+          relStdy <- paste0(relStdy, n$biblCit, "<br><br>")
+          if(!is.null(n$description)) {
+            relStdy <- paste0(relStdy, "&nbsp; &nbsp;&nbsp; &nbsp;<em>", n$description, 
+                              "</em><br><br>")
+          }
+        } else if(is.null(n$biblCit) & !is.null(n$description)) {
+          relStdy <- paste0(relStdy, "<em>", n$description, 
+                           "<br><br>")
+        }  
+      }
+      HTML(relStdy)
+    })
+
+    output$relPubl <- renderText( {
+      relPubl <- ""
+      if(length(dat()$stdyDscr$othrStdyMat$relPubl) > 0 &
+         length(dat()$stdyDscr$othrStdyMat$relMat) == 0 &
+         length(dat()$stdyDscr$othrStdyMat$relStdy) == 0) {
+        relPubl <- "<h4>Bibliography / Other Study Materials</h4>"
+      }
+      if(length(dat()$stdyDscr$othrStdyMat$relPubl) > 0) {
+        relPubl <- paste0(relPubl, "<b>Related Publications: </b><br><br>")
+      }
+      for (n in dat()$stdyDscr$othrStdyMat$relPubl) {
+        if(!is.null(n$biblCit)) {
+          relPubl <- paste0(relPubl, n$biblCit, "<br><br>")
+          if(!is.null(n$description)) {
+            relPubl <- paste0(relPubl, "&nbsp; &nbsp;&nbsp; &nbsp;<em>", 
+                              n$description, "</em><br><br>")
+          }
+        } else if(is.null(n$biblCit) & !is.null(n$description)) {
+          relPubl <- paste0(relPubl, "<em>", n$description, 
+                            "</em><br><br>")
+        }  
+      }
+      HTML(relPubl)
+    })
+    
+    output$othRefs <- renderText( {
+      othRefs <- ""
+      if(length(dat()$stdyDscr$othrStdyMat$othRefs) > 0 &
+         length(dat()$stdyDscr$othrStdyMat$relMat) == 0 &
+         length(dat()$stdyDscr$othrStdyMat$relStdy) == 0 &
+         length(dat()$stdyDscr$othrStdyMat$relPubl) == 0) {
+        othRefs <- "<h4>Bibliography / Other Study Materials</h4>"
+      }
+      if(length(dat()$stdyDscr$othrStdyMat$othRefs) > 0) {
+        othRefs <- paste0(othRefs, "<b>Other References: </b><br><br>")
+      }
+      for (n in dat()$stdyDscr$othrStdyMat$othRefs) {
+        if(!is.null(n$biblCit)) {
+          othRefs <- paste0(othRefs,n$biblCit, "<br><br>")
+          if(!is.null(n$description)) {
+            othRefs <- paste0(othRefs, "&nbsp; &nbsp;&nbsp; &nbsp;<em>", 
+                              n$description, "</em><br><br>")
+          }
+        } else if(is.null(n$biblCit) & !is.null(n$description)) {
+          othRefs <- paste0(othRefs, "<em>", n$description, 
+                            "</em><br><br>")
+        }  
+      }
+      HTML(othRefs)
+    })
+            
     output$frequenc <- renderText( {
       frequenc <- ""
       if(length(dat()$stdyDscr$method$dataColl$frequenc) > 0 & 

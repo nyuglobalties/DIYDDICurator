@@ -466,7 +466,7 @@ series_server <- function(id, dat, filepth, lang) {
   })
 }
 
-producers_server <- function(id, dat, filepth) {
+producers_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
     output$producers <- renderRHandsontable({
@@ -527,25 +527,28 @@ producers_server <- function(id, dat, filepth) {
       req(dat())
       prodDate <- tibble(
         value = character(),
-        date = as.Date("")
+        date = as.Date(""),
+        lang = character()
       )
       if(length(dat()$stdyDscr$citation$prodStmt$prodDate) == 0) {
         prodDate <- add_row(prodDate, value = NA_character_)
       }
       
       for (a in dat()$stdyDscr$citation$prodStmt$prodDate) {
-        if(is.null(a$value)) a$value <- NA_character_
         if(is.null(a$date)) a$date <- NA_character_
+        if(is.null(a$lang)) a$lang <- NA_character_
         prodDate <- add_row(prodDate, 
                             value = a$value,
-                            date = as.Date(a$date))
+                            date = as.Date(a$date),
+                            lang = a$lang)
       }
       rht <- rhandsontable(prodDate, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
-        hot_cols(colWidths = c(100, 40),
+        hot_cols(colWidths = c(100, 40, 20),
                  manualColumnMove = FALSE,
                  manualColumnResize = FALSE) %>% 
         hot_rows(rowHeights = NULL) %>% 
-        hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
+        hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang)
       htmlwidgets::onRender(rht, change_hook)
     })
 
@@ -595,7 +598,8 @@ producers_server <- function(id, dat, filepth) {
             if(!is.na(updated_prodDate$value[i])) {
               if(updated_prodDate$value[i] != "") {
                 new <- list(value = updated_prodDate$value[i],
-                            date = as.character(updated_prodDate$date[i]))
+                            date = as.character(updated_prodDate$date[i]),
+                            lang = stringr::str_extract(updated_prodDate$lang, "^[a-z]{2}"))
                 new_prodDate <- c(new_prodDate, list(new))
               }
             }

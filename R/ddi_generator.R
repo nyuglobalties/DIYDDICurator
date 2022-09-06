@@ -210,17 +210,23 @@ descr_prodPlac <- function(dat) {
 
 descr_prodDate <- function(dat) {
   ds <- tibble(value = character(),
-               date = character())
+               date = character(),
+               lang = character())
   for(n in dat$stdyDscr$citation$prodStmt$prodDate) {
     ds <- add_row(ds, 
                   value = n$value,
-                  date = n$date)
+                  date = n$date,
+                  lang = n$lang)
   }
   pmap(
-    .l = list(value = ds$value, date = ds$date),
-    .f = function(value, date) {
-      if(!is.na(date)) {
+    .l = list(value = ds$value, date = ds$date, lang = ds$lang),
+    .f = function(value, date, lang) {
+      if(!is.na(date) & ! is.na(lang)) {
+        ddi_prodDate(value, date = date, lang = lang)
+      } else if(!is.na(date) & is.na(lang)) {
         ddi_prodDate(value, date = date)
+      } else if(is.na(date) & !is.na(lang)) {
+        ddi_prodDate(value, lang = lang)
       } else {
         ddi_prodDate(value)
       }
@@ -1011,7 +1017,6 @@ descr_varGrp <- function(dat) {
                universe = list(),
                concept = list()
   )
-  #problem with below...this loop adds a new row for every list
   for(n in dat$dataDscr$varGrp) {
     ds <- add_row(ds, 
                   name = n$name[[1]], 
@@ -1028,6 +1033,578 @@ descr_varGrp <- function(dat) {
     }
   ) 
 }
+
+#---------------------------------------
+# For othrStdyMat
+generate_othrStdyMat <- function(dat) {
+  othrStdyMat <-ddi_othrStdyMat()
+  relMat <- descr_relMat(dat)
+  relPubl <- descr_relPubl(dat)
+  relStdy <- descr_relStdy(dat)
+  othRefs <- descr_othRefs(dat)
+  if(length(relMat) > 0) othrStdyMat$content <- append(othrStdyMat$content, relMat)
+  if(length(relPubl) > 0) othrStdyMat$content <- append(othrStdyMat$content, relPubl)
+  if(length(relStdy) > 0) othrStdyMat$content <- append(othrStdyMat$content, relStdy)
+  if(length(othRefs) > 0) othrStdyMat$content <- append(othrStdyMat$content, othRefs)  
+  othrStdyMat
+}
+
+descr_relMat <- function(dat) {
+  ds <- tibble(id = character(),
+               description = character(),
+               biblCit = character(),
+               format = character(),
+               doi = character(),
+               lang  = character())
+  for(n in dat$stdyDscr$othrStdyMat$relMat) {
+    ds <- add_row(ds, 
+                  id = n$id, 
+                  description = n$description,
+                  biblCit = n$biblCit,
+                  format = n$format,
+                  doi = n$doi,
+                  lang = n$lang)
+  }
+  pmap(
+    .l = list(id = ds$id, description = ds$description, biblCit = ds$biblCit,
+              format = ds$format, doi = ds$doi, lang = ds$lang),
+    .f = function(id, description, biblCit, format, doi, lang) {
+      if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+         !is.na(doi) & !is.na(lang)){
+        ddi_relMat(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relMat(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no format
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_relMat(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relMat(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no doi
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+           is.na(doi) & !is.na(lang)){
+          ddi_relMat(description, ID = id, lang = lang, 
+                     ddi_citation(ddi_biblCit(biblCit, format = format))
+          )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                  is.na(doi) & is.na(lang)) {
+          ddi_relMat(description, ID = id, 
+                     ddi_citation(ddi_biblCit(biblCit, format = format))
+          )
+          # no format and no doi
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                   is.na(doi) & !is.na(lang)){
+          ddi_relMat(description, ID = id, lang = lang, 
+                     ddi_citation(ddi_biblCit(biblCit))
+          )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                  is.na(doi) & is.na(lang)) {
+          ddi_relMat(description, ID = id, 
+                     ddi_citation(ddi_biblCit(biblCit))
+          )
+          # no citation 
+      } else if(!is.na(description) & is.na(biblCit) &
+                     !is.na(doi) & !is.na(lang)){
+          ddi_relMat(description, ID = id, lang = lang, 
+                     ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+          )
+      } else if(!is.na(description) & !is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relMat(description, ID = id, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                      !is.na(doi) & !is.na(lang)){
+        ddi_relMat(ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relMat(ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description no format
+      } else if (is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_relMat(ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relMat(ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & is.na(biblCit) &
+                      is.na(doi) & !is.na(lang)) {
+        ddi_relMat(description, ID = id, lang = lang)
+      } else if(!is.na(description) & is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relMat(description, ID = id)
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relMat(ID = id, lang = lang, 
+                   ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relMat(ID = id, 
+                   ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relMat(ID = id, lang = lang, 
+                   ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relMat(ID = id, 
+                   ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)) {
+        ddi_relMat(ID = id, lang = lang, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relMat(ID = id, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } 
+    }
+  )
+}
+
+descr_relPubl <- function(dat) {
+  ds <- tibble(id = character(),
+               description = character(),
+               biblCit = character(),
+               format = character(),
+               doi = character(),
+               lang  = character())
+  for(n in dat$stdyDscr$othrStdyMat$relPubl) {
+    ds <- add_row(ds, 
+                  id = n$id, 
+                  description = n$description,
+                  biblCit = n$biblCit,
+                  format = n$format,
+                  doi = n$doi,
+                  lang = n$lang)
+  }
+  pmap(
+    .l = list(id = ds$id, description = ds$description, biblCit = ds$biblCit,
+              format = ds$format, doi = ds$doi, lang = ds$lang),
+    .f = function(id, description, biblCit, format, doi, lang) {
+      if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+         !is.na(doi) & !is.na(lang)){
+        ddi_relPubl(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relPubl(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no format
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_relPubl(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relPubl(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no doi
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)){
+        ddi_relPubl(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relPubl(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format))
+        )
+        # no format and no doi
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 is.na(doi) & !is.na(lang)){
+        ddi_relPubl(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relPubl(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit))
+        )
+        # no citation 
+      } else if(!is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)){
+        ddi_relPubl(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relPubl(description, ID = id, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & !is.na(lang)){
+        ddi_relPubl(ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relPubl(ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description no format
+      } else if (is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_relPubl(ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relPubl(ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & is.na(biblCit) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relPubl(description, ID = id, lang = lang)
+      } else if(!is.na(description) & is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relPubl(description, ID = id)
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relPubl(ID = id, lang = lang, 
+                   ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relPubl(ID = id, 
+                   ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relPubl(ID = id, lang = lang, 
+                   ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relPubl(ID = id, 
+                   ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)) {
+        ddi_relPubl(ID = id, lang = lang, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relPubl(ID = id, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } 
+    }
+  )
+}
+
+descr_relStdy <- function(dat) {
+  ds <- tibble(id = character(),
+               description = character(),
+               biblCit = character(),
+               format = character(),
+               doi = character(),
+               lang  = character())
+  for(n in dat$stdyDscr$othrStdyMat$relStdy) {
+    ds <- add_row(ds, 
+                  id = n$id, 
+                  description = n$description,
+                  biblCit = n$biblCit,
+                  format = n$format,
+                  doi = n$doi,
+                  lang = n$lang)
+  }
+  pmap(
+    .l = list(id = ds$id, description = ds$description, biblCit = ds$biblCit,
+              format = ds$format, doi = ds$doi, lang = ds$lang),
+    .f = function(id, description, biblCit, format, doi, lang) {
+      if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+         !is.na(doi) & !is.na(lang)){
+        ddi_relStdy(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relStdy(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no format
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_relStdy(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relStdy(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no doi
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)){
+        ddi_relStdy(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relStdy(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format))
+        )
+        # no format and no doi
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 is.na(doi) & !is.na(lang)){
+        ddi_relStdy(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relStdy(description, ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit))
+        )
+        # no citation 
+      } else if(!is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)){
+        ddi_relStdy(description, ID = id, lang = lang, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relStdy(description, ID = id, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & !is.na(lang)){
+        ddi_relStdy(ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relStdy(ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit, format = format),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description no format
+      } else if (is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_relStdy(ID = id, lang = lang, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relStdy(ID = id, 
+                   ddi_citation(ddi_biblCit(biblCit),
+                                ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & is.na(biblCit) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relStdy(description, ID = id, lang = lang)
+      } else if(!is.na(description) & is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relStdy(description, ID = id)
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relStdy(ID = id, lang = lang, 
+                   ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relStdy(ID = id, 
+                   ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_relStdy(ID = id, lang = lang, 
+                   ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_relStdy(ID = id, 
+                   ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)) {
+        ddi_relStdy(ID = id, lang = lang, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_relStdy(ID = id, 
+                   ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } 
+    }
+  )
+}
+
+descr_othRefs <- function(dat) {
+  ds <- tibble(id = character(),
+               description = character(),
+               biblCit = character(),
+               format = character(),
+               doi = character(),
+               lang  = character())
+  for(n in dat$stdyDscr$othrStdyMat$othRefs) {
+    ds <- add_row(ds, 
+                  id = n$id, 
+                  description = n$description,
+                  biblCit = n$biblCit,
+                  format = n$format,
+                  doi = n$doi,
+                  lang = n$lang)
+  }
+  pmap(
+    .l = list(id = ds$id, description = ds$description, biblCit = ds$biblCit,
+              format = ds$format, doi = ds$doi, lang = ds$lang),
+    .f = function(id, description, biblCit, format, doi, lang) {
+      if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+         !is.na(doi) & !is.na(lang)){
+        ddi_othRefs(description, ID = id, lang = lang, 
+                    ddi_citation(ddi_biblCit(biblCit, format = format),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_othRefs(description, ID = id, 
+                    ddi_citation(ddi_biblCit(biblCit, format = format),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no format
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_othRefs(description, ID = id, lang = lang, 
+                    ddi_citation(ddi_biblCit(biblCit),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_othRefs(description, ID = id, 
+                    ddi_citation(ddi_biblCit(biblCit),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no doi
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)){
+        ddi_othRefs(description, ID = id, lang = lang, 
+                    ddi_citation(ddi_biblCit(biblCit, format = format))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_othRefs(description, ID = id, 
+                    ddi_citation(ddi_biblCit(biblCit, format = format))
+        )
+        # no format and no doi
+      } else if (!is.na(description) & !is.na(biblCit) & is.na(format) &
+                 is.na(doi) & !is.na(lang)){
+        ddi_othRefs(description, ID = id, lang = lang, 
+                    ddi_citation(ddi_biblCit(biblCit))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_othRefs(description, ID = id, 
+                    ddi_citation(ddi_biblCit(biblCit))
+        )
+        # no citation 
+      } else if(!is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)){
+        ddi_othRefs(description, ID = id, lang = lang, 
+                    ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & !is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_othRefs(description, ID = id, 
+                    ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & !is.na(lang)){
+        ddi_othRefs(ID = id, lang = lang, 
+                    ddi_citation(ddi_biblCit(biblCit, format = format),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_othRefs(ID = id, 
+                    ddi_citation(ddi_biblCit(biblCit, format = format),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+        # no description no format
+      } else if (is.na(description) & !is.na(biblCit) & is.na(format) &
+                 !is.na(doi) & !is.na(lang)){
+        ddi_othRefs(ID = id, lang = lang, 
+                    ddi_citation(ddi_biblCit(biblCit),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_othRefs(ID = id, 
+                    ddi_citation(ddi_biblCit(biblCit),
+                                 ddi_titlStmt(ddi_IDNo(doi, agency = "doi")))
+        )
+      } else if(!is.na(description) & is.na(biblCit) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_othRefs(description, ID = id, lang = lang)
+      } else if(!is.na(description) & is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_othRefs(description, ID = id)
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_othRefs(ID = id, lang = lang, 
+                    ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & !is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_othRefs(ID = id, 
+                    ddi_citation((ddi_biblCit(biblCit, format = format))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & !is.na(lang)) {
+        ddi_othRefs(ID = id, lang = lang, 
+                    ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & !is.na(biblCit) & is.na(format) &
+                is.na(doi) & is.na(lang)) {
+        ddi_othRefs(ID = id, 
+                    ddi_citation((ddi_biblCit(biblCit))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & !is.na(lang)) {
+        ddi_othRefs(ID = id, lang = lang, 
+                    ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } else if(is.na(description) & is.na(biblCit) &
+                !is.na(doi) & is.na(lang)) {
+        ddi_othRefs(ID = id, 
+                    ddi_citation(ddi_titlStmt(ddi_IDNo(doi, agency = "doi"))))
+      } 
+    }
+  )
+}
+
 #-------------------------------------------
 generate_stdyInfo <- function(dat) {
   stdyInfo <- ddi_stdyInfo()
@@ -1043,6 +1620,11 @@ generate_stdyInfo <- function(dat) {
   if(length(keyword) > 0) stdyInfo$content <- append(stdyInfo$content, list(splat(descr_keyword(dat), ddi_subject)))
   if(length(abstract) > 0) stdyInfo$content <- append(stdyInfo$content, abstract)
   if(!is.null(sumDscr$content)) stdyInfo$content <- append(stdyInfo$content, list(sumDscr))
+  if(length(dat$stdyDscr$othrStdyMat$relPubl) > 0 |
+     length(dat$stdyDscr$othrStdyMat$relStdy) > 0 |
+     length(dat$stdyDscr$othrStdyMat$relMat) > 0 |
+     length(dat$stdyDscr$othrStdyMat$othRefs) > 0) {
+  }
   stdyInfo
 }
 
@@ -1111,17 +1693,24 @@ generate_method <- function(dat) {
 }
 
 
+
 #-------------------------------------------
 
 generate_ddi_codebook <- function(dat) {
   citation <- generate_citation(dat)
   stdyInfo <- generate_stdyInfo(dat)
   method <- generate_method(dat)
+  othrStdyMat <- generate_othrStdyMat(dat)
   varGrp <- descr_varGrp(dat)
-  cb <- ddi_codeBook(ddi_stdyDscr(generate_citation(dat)))
-  if(!is.null(stdyInfo$content)) cb$content <- append(cb$content, list(stdyInfo))
-  if(!is.null(method$content)) cb$content <- append(cb$content, list(method))
+  cb <- ddi_codeBook(ddi_stdyDscr(citation))
+  if(!is.null(stdyInfo$content)) cb$content[[1]]$content <- append(cb$content[[1]]$content, list(stdyInfo))
+  if(!is.null(method$content)) cb$content[[1]]$content <- append(cb$content[[1]]$content, list(method))
+  if(!is.null(othrStdyMat$content)) cb$content[[1]]$content <- append(cb$content[[1]]$content, list(othrStdyMat))
   if(length(varGrp) > 0) cb$content <- append(cb$content, list(splat(varGrp, ddi_dataDscr)))
 
   ddi <- as_xml(cb)
+  
+  ddi <- gsub("&lt;", "<", ddi)
+  ddi <- gsub("&gt;", ">", ddi)
+  ddi
 }

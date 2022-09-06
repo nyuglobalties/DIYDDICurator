@@ -43,15 +43,15 @@ stdyDscr:
       IDNo: ~
       titl:
       - value: Placeholder title
-        lang: .na.character
+        lang: en
     rspStmt:
       AuthEnty: []
       othId: []
     prodStmt:
-      fundAg: []
       producer: []
       prodPlac: []
       prodDate: []
+      fundAg: []
     distStmt:
       distrbtr: ~
       distrbtr-abbr: ~
@@ -93,10 +93,10 @@ stdyDscr:
   stdyInfo:
     sumDscr:
       anlyUnit: []
-      dataKind: []
       nation: []
       geogCover: []
       geogUnit: []
+      dataKind: []
       timePrd: []
       collDate: []
       universe: []
@@ -110,19 +110,18 @@ stdyDscr:
     subject: []
   method:
     dataColl:
-      actMin: []
-      collectorTraining: []
-      collMode:
-      - {}
-      collSitu: []
-      ConOps: []
-      dataCollector: []
-      deviat: []
-      frequenc: []
-      instrumentDevelopment: []
-      resInstru: []
-      sampProc: []
       timeMeth: []
+      frequenc: []
+      dataCollector: []
+      collSitu: []
+      collectorTraining: []
+      resInstru: []
+      instrumentDevelopment: []
+      ConOps: []
+      actMin: []
+      sampProc: []
+      deviat: []
+      collMode: []
     stdyClas:
       value: ~
       type: ~
@@ -133,8 +132,28 @@ stdyDscr:
     authroizingAgency-abbr: ~
     authorizationStatement: ~
   othrStdyMat:
-    relStdy: ~
-    relPubl: ~
-    relMat: ~
+    relPubl: []
+    othRefs:
+    - id: othRefs_1
+      description: hahahaha
+      biblCit: eh
+      format: APA
+      doi: '1234'
+      lang: en
+    relMat:
+    - id: relMat_1
+      description: hi
+      biblCit: dairop7dfuojvadsnrt, a (2021). Title. Publisher. Etc.
+      format: APA
+      doi: '1'
+      lang: en
+    relStdy:
+    - id: relStdy_1
+      biblCit: this will definitely work
+      format: APA
+      doi: 1234/12345
+      lang: en
+    - id: relStdy_2
+      description: ehhhhhhh
 dataDscr:
   varGrp: []

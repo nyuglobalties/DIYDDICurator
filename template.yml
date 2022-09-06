@@ -112,8 +112,6 @@ stdyDscr:
     dataColl:
       actMin: []
       collectorTraining: []
-      collMode:
-      - {}
       collSitu: []
       ConOps: []
       dataCollector: []
@@ -123,6 +121,7 @@ stdyDscr:
       resInstru: []
       sampProc: []
       timeMeth: []
+      collMode: []
     stdyClas:
       value: ~
       type: ~

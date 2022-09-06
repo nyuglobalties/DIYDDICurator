@@ -1,14 +1,11 @@
-#!/usr/bin/env Rscript --vanilla
-
 library(shiny)
-library(shinyjs)
 library(rhandsontable)
 library(tidyverse)
 
 loadSupport()
 
 ui <- fluidPage(
-  navbarPage(strong("DDI metadata curation tool"),
+  navbarPage(strong("TIES metadata curation tool2"),
     tabPanel("Introduction", 
              p('This is the TIES metadata curation tool. It is designed for 
                you, the researcher, to edit, add, and delete descriptive metadata 
@@ -66,13 +63,6 @@ ui <- fluidPage(
       sampProc_ui("sampProc"),
       deviat_ui("deviat")
     ),
-    navbarMenu(
-      "Bibliography",
-      relMat_ui("relMat"),
-      relStdy_ui("relStdy"),
-      relPubl_ui("relPubl"),
-      othRefs_ui("othRefs")
-    ),
     varGrp_ui("varGrp"),
         
     navbarMenu(
@@ -126,10 +116,6 @@ server <- function(input, output, session) {
       })
     })
   
-  session$onSessionEnded(function() {
-    stopApp()
-  })
-  
   # add projectinformation servers here
   title_server("titles", dat, filepth, lang)
   authors_server("authors", dat, filepth)
@@ -158,11 +144,6 @@ server <- function(input, output, session) {
   actMin_server("actMin", dat, filepth, lang)
   sampProc_server("sampProc", dat, filepth, lang)
   deviat_server("deviat", dat, filepth, lang)
-  
-  relMat_server("relMat", dat, filepth, lang)
-  relStdy_server("relStdy", dat, filepth, lang)
-  relPubl_server("relPubl", dat, filepth, lang)
-  othRefs_server("othRefs", dat, filepth, lang)
   
   varGrp_server("varGrp", dat, filepth, lang)
   ddi_generation_server("ddi", dat, filepth)
