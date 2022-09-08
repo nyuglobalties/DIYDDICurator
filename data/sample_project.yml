@@ -133,13 +133,6 @@ stdyDscr:
     authorizationStatement: ~
   othrStdyMat:
     relPubl: []
-    othRefs:
-    - id: othRefs_1
-      description: hahahaha
-      biblCit: eh
-      format: APA
-      doi: '1234'
-      lang: en
     relMat:
     - id: relMat_1
       description: hi
@@ -147,13 +140,7 @@ stdyDscr:
       format: APA
       doi: '1'
       lang: en
-    relStdy:
-    - id: relStdy_1
-      biblCit: this will definitely work
-      format: APA
-      doi: 1234/12345
-      lang: en
-    - id: relStdy_2
-      description: ehhhhhhh
+    relStdy: []
+    othRefs: []
 dataDscr:
   varGrp: []

@@ -8,23 +8,21 @@ library(tidyverse)
 loadSupport()
 
 ui <- fluidPage(
-  navbarPage(strong("DDI metadata curation tool"),
+  navbarPage(strong("DIY DDI Curator"),
     tabPanel("Introduction", 
-             p('This is the TIES metadata curation tool. It is designed for 
-               you, the researcher, to edit, add, and delete descriptive metadata 
-               for your projects using tables that allows you edit existing 
-               metadata, add or delete metadata by right clicking on the table, 
-               and choose appropriate attributes from drop down menus. Many 
-               tables have a "lang" (language) attribute for translations.'),
-             p('In addition, each table has the element definitions below it. In 
-               some cases a table may represent more than one element in which 
-               case a field column is added to the table.'),
-             p(strong('To begin, please pick the project you would like to edit 
-                      below or create a new file.')),
+             p('The DIY DDI Curator is designed for you, the researcher and/or information professional, 
+               to edit, add, and delete  metadata for your projects using the DDI-Codebook 2.5 schema.'), 
+             p('To begin, please pick the project you would like to edit 
+                      below, create a new file, or upload your own (just remember 
+                      to save before you shut down the app).'),
              tags$hr(), 
              uiOutput("project"),
              tags$hr(),
-             textInput("newFileName", label = "New file name", placeholder = "Type new file name here"),
+             fileInput("inputed_dat", 
+                       "Upload an existing yaml file",
+                       accept = ".yml"),
+             tags$hr(),
+             textInput("newFileName", label = "New local file", placeholder = "Type new file name here"),
              tags$em('When creating a new file please use snake_case (dashes instead 
                of blanks) or camelCase (no blanks but uppercase the first letter 
                of the non-first word.'),
@@ -78,7 +76,8 @@ ui <- fluidPage(
     navbarMenu(
       "Evaluation/Export",
       readme_generation_ui("readme"),
-      ddi_generation_ui("ddi")
+      ddi_generation_ui("ddi"),
+      download_data_ui("data_download")
     )
   )
 )
@@ -86,7 +85,11 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   filepth <- reactive({
-    r <- paste0("data/", input$project)
+    if(is.null(input$inputed_dat)) {
+      r <- paste0("data/", input$project)
+    } else {
+      r <- input$inputed_dat$datapath
+    }
     return(r)
   })
   
@@ -167,6 +170,7 @@ server <- function(input, output, session) {
   varGrp_server("varGrp", dat, filepth, lang)
   ddi_generation_server("ddi", dat, filepth)
   readme_generation_server("readme", dat)
+  download_data_server("data_download", dat)
 }
 
 shinyApp(server = server, ui = ui)

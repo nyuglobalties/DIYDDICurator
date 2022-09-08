@@ -1,6 +1,6 @@
 collDate_ui <- function(id) {
   ns <- NS(id)
-  tabPanel("Dates of data collection",
+  tabPanel("Dates of Data Collection",
           rHandsontableOutput(ns("collDate")),
           tags$br(),
           actionButton(ns("save_collDate"), "Save data collection dates"),
