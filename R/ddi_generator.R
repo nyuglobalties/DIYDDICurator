@@ -1,6 +1,4 @@
-devtools::load_all("/Users/danielwoulfin/Documents/Github/rddi")
-library(tidyverse)
-library(xml2)
+library(rddi)
 
 # splat generation
 
@@ -1012,28 +1010,295 @@ descr_concept <- function(dat) {
 
 descr_varGrp <- function(dat) {
   ds <- tibble(name = character(), 
+               type = character(),
+               otherType = character(),
+               var = character(),
+               varGrp = character(),
                labl = list(),
                defntn = list(), 
                universe = list(),
                concept = list()
   )
-  for(n in dat$dataDscr$varGrp) {
+  for(vg in dat$dataDscr$varGrp) {
     ds <- add_row(ds, 
-                  name = n$name[[1]], 
-                  labl = list(n$labl),
-                  defntn = list(n$defntn),
-                  universe = list(n$universe),
-                  concept = list(n$concept))
+                  name = vg$name[[1]], 
+                  type = vg$type[[1]],
+                  otherType = vg$otherType[[1]],
+                  var = vg[["var"]][[1]],
+                  varGrp = vg$varGrp[[1]],
+                  labl = list(vg$labl),
+                  defntn = list(vg$defntn),
+                  universe = list(vg$universe),
+                  concept = list(vg$concept))
   }
   pmap(
-    .l = list(name = ds$name, labl = ds$labl, ds$defntn,
+    .l = list(name = ds$name, type = ds$type, otherType = ds$otherType, 
+              var = ds$var, varGrp = ds$varGrp, labl = ds$labl, defntn = ds$defntn, 
               universe = ds$universe, concept = ds$concept),
-    .f = function(name, labl, universe, defntn, concept) {
-      splat(c(name = name, descr_labl(labl), descr_concept(concept), descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
+    .f = function(name, type, otherType, varGrp, var, labl, universe, defntn, concept) {
+      if(!is.na(type) & !is.na(otherType) &!is.na(varGrp) & !is.na(var)) {
+        splat(c(ID = name, name = name, type = type, otherType = otherType, 
+                varGrp = varGrp, var = var, descr_labl(labl), descr_concept(concept), 
+                descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & !is.na(otherType) &!is.na(varGrp) & is.na(var)) {
+        splat(c(ID = name, name = name, type = type, otherType = otherType, 
+                varGrp = varGrp, descr_labl(labl), descr_concept(concept), 
+                descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & !is.na(otherType) & is.na(varGrp) & !is.na(var)) {
+        splat(c(ID = name, name = name, type = type, otherType = otherType, 
+                var = var, descr_labl(labl), descr_concept(concept), 
+                descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & !is.na(otherType) & is.na(varGrp) & is.na(var)) {
+        splat(c(ID = name, name = name, type = type, otherType = otherType, 
+                descr_labl(labl), descr_concept(concept), 
+                descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & is.na(otherType) & !is.na(varGrp) & !is.na(var)) {
+        splat(c(ID = name, name = name, type = type, varGrp = varGrp, var = var,
+                descr_labl(labl), descr_concept(concept), descr_defntn(defntn), 
+                descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & is.na(otherType) & !is.na(varGrp) & is.na(var)) {
+        splat(c(ID = name, name = name, type = type, varGrp = varGrp,
+                descr_labl(labl), descr_concept(concept), descr_defntn(defntn), 
+                descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & is.na(otherType) & is.na(varGrp) & !is.na(var)) {
+        splat(c(ID = name, name = name, type = type, var = var,
+                descr_labl(labl), descr_concept(concept), descr_defntn(defntn), 
+                descr_universe(universe)), ddi_varGrp) 
+      } else if(!is.na(type) & is.na(otherType) & is.na(varGrp) & is.na(var)) {
+        splat(c(ID = name, name = name, type = type, 
+                descr_labl(labl), descr_concept(concept), descr_defntn(defntn), 
+                descr_universe(universe)), ddi_varGrp) 
+      } else if(is.na(type) & is.na(otherType) & !is.na(varGrp) & !is.na(var)) {
+        splat(c(ID = name, name = name, varGrp = varGrp, var = var,
+                descr_labl(labl), descr_concept(concept), descr_defntn(defntn), 
+                descr_universe(universe)), ddi_varGrp) 
+      } else if(is.na(type) & is.na(otherType) & !is.na(varGrp) & is.na(var)) {
+        splat(c(ID = name, name = name, varGrp = varGrp,
+                descr_labl(labl), descr_concept(concept), descr_defntn(defntn), 
+                descr_universe(universe)), ddi_varGrp) 
+      } else {
+        splat(c(ID = name, name = name, descr_labl(labl), descr_concept(concept), 
+                descr_defntn(defntn), descr_universe(universe)), ddi_varGrp) 
+      }
     }
   ) 
 }
 
+descr_var <- function(dat) {
+  ds <- tibble(name = character(), 
+               nature = character(),
+               temporal = character(),
+               geog = character(),
+               labl = list(),
+               anlysUnit = list(), 
+               respUnit = list(),
+               security = list(),
+               embargo = list(),
+               catgry = list()
+  )
+  for(v in dat$dataDscr[["var"]]) {
+    ds <- add_row(ds, 
+                  name = v$name[[1]], 
+                  nature = v$nature[[1]],
+                  temporal = v$temporal[[1]],
+                  geog = v$geog[[1]],
+                  labl = list(v$labl),
+                  anlysUnit = list(v$anlysUnit),
+                  respUnit = list(v$respUnit),
+                  security = list(v$security),
+                  embargo = list(v$embargo),
+                  catgry = list(v$catgry)
+    )
+  }
+  pmap(
+    .l = list(name = ds$name, nature = ds$nature, temporal = ds$temporal, 
+              geog = ds$geog, labl = ds$labl, anlysUnit = ds$anlysUnit, 
+              respUnit = ds$respUnit, security = ds$security, 
+              embargo = ds$embargo, catgry = ds$catgry),
+    .f = function(name, nature, temporal, geog, labl, anlysUnit, respUnit, 
+                  security, embargo, catgry) {
+      if(!is.na(nature) & !is.na(temporal) &!is.na(geog)) {
+        splat(c(ID = name, varname = name, nature = nature, temporal = temporal, geog = geog,
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(!is.na(nature) & !is.na(temporal) & is.na(geog)) {
+        splat(c(ID = name, varname = name, nature = nature, temporal = temporal,
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(!is.na(nature) & is.na(temporal) & !is.na(geog)) {
+        splat(c(ID = name, varname = name, nature = nature, geog = geog,
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(!is.na(nature) & is.na(temporal) & is.na(geog)) {
+        splat(c(ID = name, varname = name, nature = nature, 
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(is.na(nature) & !is.na(temporal) & !is.na(geog)) {
+        splat(c(ID = name, varname = name, temporal = temporal, geog = geog,
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(is.na(nature) & !is.na(temporal) & is.na(geog)) {
+        splat(c(ID = name, varname = name, temporal = temporal,
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(is.na(nature) & is.na(temporal) & !is.na(geog)) {
+        splat(c(ID = name, varname = name, geog = geog,
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      } else if(is.na(nature) & is.na(temporal) & is.na(geog)) {
+        splat(c(ID = name, varname = name, 
+                descr_labl(labl), descr_anlysUnit(anlysUnit), descr_respUnit(respUnit), 
+                descr_security(security), descr_embargo(embargo), descr_catgry(catgry)), ddi_var) 
+      }
+    }
+  ) 
+}
+
+descr_anlysUnit <- function(dat) {
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    lang = n$lang
+      )
+    }
+  } else {
+    ds <- dat
+  }
+  pmap(
+    .l = list(value = ds$value, lang = ds$lang),
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_anlysUnit(value, lang = lang)
+      } else {
+        ddi_anlysUnit(value)
+      }
+    }
+  )
+}
+
+descr_respUnit <- function(dat) {
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    lang = n$lang
+      )
+    }
+  } else {
+    ds <- dat
+  }
+  pmap(
+    .l = list(value = ds$value, lang = ds$lang),
+    .f = function(value, lang) {
+      if(!is.na(lang)) {
+        ddi_respUnit(value, lang = lang)
+      } else {
+        ddi_respUnit(value)
+      }
+    }
+  )
+}
+
+descr_embargo <- function(dat) {
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 date = character(),
+                 event = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    date = n$date,
+                    event = n$event,
+                    lang = n$lang
+      )
+    }
+  } else {
+    ds <- dat
+  }
+  pmap(
+    .l = list(value = ds$value, date = ds$date, event = ds$event, lang = ds$lang),
+    .f = function(value, date, event, lang) {
+      if(!is.na(date) & !is.na(event) & !is.na(lang)) {
+        ddi_embargo(value, date = date, event = event, lang = lang)
+      } else if(!is.na(date) & !is.na(event) & is.na(lang)){
+        ddi_embargo(value, date = date, event = event)
+      } else if(!is.na(date) & is.na(event) & !is.na(lang)){
+        ddi_embargo(value, date = date, lang = lang)
+      } else if(!is.na(date) & is.na(event) & is.na(lang)){
+        ddi_embargo(value, date = date)
+      } else if(is.na(date) & !is.na(event) & !is.na(lang)){
+        ddi_embargo(value, event = event, lang = lang)
+      } else if(!is.na(date) & is.na(event) & !is.na(lang)){
+        ddi_embargo(value, event = event)
+      } else if(is.na(date) & is.na(event) & !is.na(lang)){
+        ddi_embargo(value, lang = lang)
+      } else if(is.na(date) & is.na(event) & is.na(lang)){
+        ddi_embargo(value)
+      }
+    }
+  )
+}
+
+descr_security <- function(dat) {
+  if(!is.data.frame(dat)) {
+    ds <- tibble(value = character(),
+                 date = character(),
+                 lang = character())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    value = n$value,
+                    date = n$date,
+                    event = n$event,
+                    lang = n$lang
+      )
+    }
+  } else {
+    ds <- dat
+  }
+  pmap(
+    .l = list(value = ds$value, date = ds$date, lang = ds$lang),
+    .f = function(value, date, event, lang) {
+      if(!is.na(date) &  !is.na(lang)) {
+        ddi_security(value, date = date, lang = lang)
+      } else if(!is.na(date) & is.na(lang)){
+        ddi_embargo(value, date = date)
+      } else if(is.na(date) & !is.na(lang)){
+        ddi_embargo(value, lang = lang)
+      } else if(is.na(date) & is.na(lang)){
+        ddi_embargo(value)
+      }
+    }
+  )
+}
+
+descr_catgry <- function(dat) {
+  if(!is.data.frame(dat)) {
+    ds <- tibble(catValu = character(),
+                 labl = list())
+    for(n in dat) {
+      ds <- add_row(ds,
+                    catValu = n$catValu,
+                    labl = list(n$labl),
+      )
+    }
+  } else {
+    ds <- dat
+  }
+  pmap(
+    .l = list(catValu = ds$catValu, labl = ds$labl),
+    .f = function(catValu, labl) {
+      catgry <- splat(descr_labl(labl), ddi_catgry)
+      catgry$content <- append(catgry$content, list(ddi_catValu(catValu)))
+      catgry
+    }
+  )
+}
 #---------------------------------------
 # For othrStdyMat
 generate_othrStdyMat <- function(dat) {
@@ -1702,12 +1967,19 @@ generate_ddi_codebook <- function(dat) {
   method <- generate_method(dat)
   othrStdyMat <- generate_othrStdyMat(dat)
   varGrp <- descr_varGrp(dat)
+  var <- descr_var(dat)
   cb <- ddi_codeBook(ddi_stdyDscr(citation))
   if(!is.null(stdyInfo$content)) cb$content[[1]]$content <- append(cb$content[[1]]$content, list(stdyInfo))
   if(!is.null(method$content)) cb$content[[1]]$content <- append(cb$content[[1]]$content, list(method))
   if(!is.null(othrStdyMat$content)) cb$content[[1]]$content <- append(cb$content[[1]]$content, list(othrStdyMat))
-  if(length(varGrp) > 0) cb$content <- append(cb$content, list(splat(varGrp, ddi_dataDscr)))
-
+  if(length(varGrp) > 0 & length(var) > 0) {
+    cb$content <- append(cb$content, list(splat(c(varGrp, var), ddi_dataDscr)))
+  } else if(length(varGrp) > 0 & length(var) == 0) {
+    cb$content <- append(cb$content, list(splat(varGrp, ddi_dataDscr)))
+  } else if(length(varGrp) == 0 & length(var) > 0) { 
+    cb$content <- append(cb$content, list(splat(var, ddi_dataDscr)))
+  }
+  
   ddi <- as_xml(cb)
   
   ddi <- gsub("&lt;", "<", ddi)

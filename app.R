@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript --vanilla
 
 library(shiny)
-library(shinyjs)
 library(rhandsontable)
 library(tidyverse)
+library(data.tree)
 
 loadSupport()
 
@@ -71,8 +71,24 @@ ui <- fluidPage(
       relPubl_ui("relPubl"),
       othRefs_ui("othRefs")
     ),
-    varGrp_ui("varGrp"),
-        
+    navbarMenu(
+      "Variable Groups",
+      varGrp_label_ui("varGrp_l"),
+      varGrp_type_ui("varGrp_t"),
+      varGrp_defntn_ui("varGrp_d"),
+      varGrp_universe_ui("varGrp_u"),
+      varGrp_concept_ui("varGrp_c"),
+      varGrp_hierarchy_ui("varGrp_h")
+    ),
+    navbarMenu(
+      "Variables",
+      var_label_ui("var"), 
+      var_characteristics_ui("var_char"),
+      var_respondent_ui("var_resp"),
+      var_varGrpAssign_ui("varGrp_assign"),
+      var_security_ui("var_sec"),
+      var_catgry_ui("catgry")
+    ),
     navbarMenu(
       "Evaluation/Export",
       readme_generation_ui("readme"),
@@ -111,6 +127,8 @@ server <- function(input, output, session) {
   lang <- isolate(c("", "en - English", "fr - Français", "es - Español", 
                     "ar - عربى", "zh - 中国人", "ru - Русский"))
   
+  
+  
   observeEvent(
     input$createNewFile, {
       isolate({
@@ -133,13 +151,14 @@ server <- function(input, output, session) {
     stopApp()
   })
   
-  # add projectinformation servers here
+  # Project Information servers 
   title_server("titles", dat, filepth, lang)
   authors_server("authors", dat, filepth)
   series_server("series", dat, filepth, lang)
   producers_server("producers", dat, filepth, lang)
   funders_server("funders", dat, filepth)
   
+  # Study Information servers
   abstract_server("abstract", dat, filepth, lang)
   subject_server("subject", dat, filepth, lang)
   universe_server("universe", dat, filepth, lang)
@@ -147,7 +166,8 @@ server <- function(input, output, session) {
   dataKind_server("dataKind", dat, filepth, lang)
   geography_server("geog", dat, filepth, lang)
   timePeriods_server("timePrd", dat, filepth, lang)
-
+  
+  # Data Collection servers
   collDate_server("collDate", dat, filepth, lang)
   timeMeth_server("timeMeth", dat, filepth, lang)  
   frequenc_server("frequenc", dat, filepth, lang)
@@ -167,7 +187,23 @@ server <- function(input, output, session) {
   relPubl_server("relPubl", dat, filepth, lang)
   othRefs_server("othRefs", dat, filepth, lang)
   
-  varGrp_server("varGrp", dat, filepth, lang)
+  # Vargrp servers
+  varGrp_label_server("varGrp_l", dat, filepth, lang)
+  varGrp_type_server("varGrp_t", dat, filepth)
+  varGrp_defntn_server("varGrp_d", dat, filepth, lang)
+  varGrp_universe_server("varGrp_u", dat, filepth, lang)
+  varGrp_concept_server("varGrp_c", dat, filepth, lang)
+  varGrp_hierarchy_server("varGrp_h", dat, filepth)
+  
+  # var servers
+  var_label_server("var", dat, filepth, lang)
+  var_characteristics_server("var_char", dat, filepth)
+  var_respondent_server("var_resp", dat, filepth, lang)
+  var_varGrpAssign_server("varGrp_assign", dat, filepth)
+  var_security_server("var_sec", dat, filepth, lang)
+  var_catgry_server("catgry", dat, filepth, lang)
+  
+  # Export servers
   ddi_generation_server("ddi", dat, filepth)
   readme_generation_server("readme", dat)
   download_data_server("data_download", dat)
