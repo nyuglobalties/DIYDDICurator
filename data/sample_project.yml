@@ -45,7 +45,8 @@ stdyDscr:
       - value: Placeholder title
         lang: en
     rspStmt:
-      AuthEnty: []
+      AuthEnty:
+      - name: Abi
       othId: []
     prodStmt:
       producer: []
@@ -107,7 +108,21 @@ stdyDscr:
         producer: ~
       complianceDescription: ~
     abstract: []
-    subject: []
+    subject:
+    - keyword: one
+      lang: en
+    - keyword: two
+      vocabu: adsraodfjl
+      vocab_URI: adrs79p8aduf
+    - keyword: three
+    - keyword: four
+      vocab_URI: erp8adfo
+    - keyword: five
+      vocabu: reqwerqwr
+    - keyword: six
+      vocabu: eforu8dij
+      vocab_URI: kluardso
+      lang: fr
   method:
     dataColl:
       timeMeth: []
@@ -143,4 +158,127 @@ stdyDscr:
     relStdy: []
     othRefs: []
 dataDscr:
-  varGrp: []
+  varGrp:
+  - name: vg1
+    labl:
+    - value: 548930rfh
+      lang: fr
+      level: varGrp
+    defntn:
+    - value: testing
+      level: varGrp
+    universe:
+    - group: kids
+      lang: en
+      clusion: I
+      level: varGrp
+    concept:
+    - value: 768iyuhkj
+      vocabu: retuo;if
+      vocab_URI: www.fake.com/
+      lang: en
+    - value: ioqturep
+    type: other
+    otherType: gobedlygook
+    varGrp: vg2
+    var: V1 V2 test
+  - name: vg2
+    labl:
+    - value: ye;ah
+      lang: en
+      level: varGrp
+    universe:
+    - group: people
+      clusion: I
+      level: varGrp
+    concept:
+    - value: sdfgiou
+    type: subject
+  - name: vg4
+    labl:
+    - value: ldafsouefjaoi
+      level: varGrp
+  - name: vg3
+    labl:
+    - value: hi
+      level: varGrp
+    varGrp: vg1 vg4
+  var:
+  - name: V1
+    labl:
+    - value: test
+      lang: en
+      level: var
+    - value: 0u8orwep
+      lang: es
+      level: var
+    nature: nominal
+    anlysUnit:
+    - value: child
+      lang: en
+    - value: toddler
+    respUnit:
+    - value: parent
+      lang: en
+    security:
+    - value: text explaining the restriciton
+      lang: en
+      date: '2022-09-14'
+    - value: testing again
+      lang: fr
+      date: '2022-09-14'
+    embargo:
+    - value: test
+      lang: en
+      event: notBefore
+      date: '2022-09-15'
+    catSet: binary
+    catgry:
+    - catValu: '0'
+      labl:
+      - value: 'No'
+        level: catgry
+    - catValu: '1'
+      labl:
+      - value: 'Yes'
+        level: catgry
+    temporal: 'Y'
+  - name: V2
+    labl:
+    - value: second test
+      level: var
+    geog: 'N'
+    nature: nominal
+    catSet: new
+    catgry:
+    - catValu: '0'
+      labl:
+      - value: zero
+        lang: en
+    - catValu: '3'
+      labl:
+      - value: one
+        lang: en
+  - name: test
+    labl: []
+catgrySets:
+- name: binary
+  options:
+  - catValu: '0'
+    labl:
+    - value: 'No'
+      level: catgry
+  - catValu: '1'
+    labl:
+    - value: 'Yes'
+      level: catgry
+- name: new
+  options:
+  - catValu: '0'
+    labl:
+    - value: zero
+      lang: en
+  - catValu: '3'
+    labl:
+    - value: one
+      lang: en
