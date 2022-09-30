@@ -148,7 +148,7 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
         label = character(),
         lang = character()
       )
-      
+
       if(length(dat()$dataDscr$varGrp) == 0) {
         varGrp <- add_row(varGrp, name = "varGrp1")
       }
@@ -182,18 +182,20 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
           updated_varGrp <- hot_to_r(input$varGrp_label)
           varGrpList <- unique(updated_varGrp$name)
           existing_varGrps <- list()
-          
+
           for(vg in dat()$dataDscr$varGrp) {
             existing_varGrps <- append(existing_varGrps, vg$name)
           }
           
           # remove previously existing vars that have been removed from app
-          for(i in 1:length(existing_varGrps)) {
-            if(existing_varGrps[[i]] %in% varGrpList) {
-            } else {
-              updatedData$dataDscr$varGrp <- lapply(1:length(updatedData$dataDscr$varGrp), 
+          if(length(existing_varGrps) > 0) {
+            for(i in 1:length(existing_varGrps)) {
+              if(existing_varGrps[[i]] %in% varGrpList) {
+              } else {
+                updatedData$dataDscr$varGrp <- lapply(1:length(updatedData$dataDscr$varGrp), 
                                                       function(x) updatedData$dataDscr$varGrp[[x]][updatedData$dataDscr$varGrp[[x]]$name != existing_varGrps[[i]]])
-              updatedData$dataDscr$varGrp <- updatedData$dataDscr$varGrp[lengths(updatedData$dataDscr$varGrp) > 0] 
+                updatedData$dataDscr$varGrp <- updatedData$dataDscr$varGrp[lengths(updatedData$dataDscr$varGrp) > 0] 
+              }
             }
           }
           
@@ -203,6 +205,7 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
             name <- vg 
             if(length(new_df$label) > 0) {
               for(l in 1:length(new_df$label)) {
+                if(is.null(new_df$label[l])) new_df$label[l] <- NA_character_
                 if(!is.na(new_df$label[l])) {
                   if(new_df$label[l] != "") {
                     labl <- list(value = new_df$label[l], 
@@ -221,7 +224,11 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
               #only write over labels
               for(i in 1:length(updatedData$dataDscr$varGrp)) {
                 if(vg == updatedData$dataDscr$varGrp[[i]]$name) {
-                  updatedData$dataDscr$varGrp[[i]]$labl <- new_l
+                  if(length(new_l) == 0) {
+                    updatedData$dataDscr$varGrp[[i]] <- NULL
+                  } else {
+                    updatedData$dataDscr$varGrp[[i]]$labl <- new_l
+                  }
                 }
               }
             } else {
@@ -252,18 +259,21 @@ varGrp_type_server <- function(id, dat, filepth) {
                      "subject", "version", "iteration", "analysis", "pragmatic",
                      "record", "file", "randomized", "other")
       # get a list of all varGrps...
-      name_list <- list()
-      for(i in 1:length(dat()$dataDscr$varGrp)) {
-        name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
-      }
       
-      for (vg in dat()$dataDscr$varGrp) {
-        if(is.null(vg$type)) vg$type <- NA_character_
-        if(is.null(vg$otherType)) vg$otherType <- NA_character_
-        varGrp <- add_row(varGrp,
-                          name = vg$name,
-                          type = vg$type,
-                          otherType = vg$otherType)
+      if(length(dat()$dataDscr$varGrp) > 0) {
+        name_list <- list()
+        for(i in 1:length(dat()$dataDscr$varGrp)) {
+          name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
+        }
+        
+        for (vg in dat()$dataDscr$varGrp) {
+          if(is.null(vg$type)) vg$type <- NA_character_
+          if(is.null(vg$otherType)) vg$otherType <- NA_character_
+          varGrp <- add_row(varGrp,
+                            name = vg$name,
+                            type = vg$type,
+                            otherType = vg$otherType)
+        }
       }
       
       rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
@@ -339,35 +349,39 @@ varGrp_hierarchy_server <- function(id, dat, filepth) {
         child = character()
       )
       
-      # get a list of all varGrps...
+      # get a list of all varGrps and placeholder for child list
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr$varGrp)) {
-        name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
-      }
+      child_list <- list()
       
-      # make child list
-      child_list <- c("")
-      child_list <- append(child_list, name_list)
-      
-      # check that there is a hierarchy
-      hierarchy_exist <- FALSE
-      for(vg in dat()$dataDscr$varGrp) {
-        if(length(vg$varGrp) > 0) hierarchy_exist = TRUE
-      }
-      
-      if(!hierarchy_exist) {
-        varGrp <- add_row(varGrp, parent = name_list[[1]])
-      }
-      
-      for (vg in dat()$dataDscr$varGrp) {
-        if(is.null(vg$varGrp)) vg$varGrp <- NA_character_
+      if(length(dat()$dataDscr$varGrp) > 0) {
+        for(i in 1:length(dat()$dataDscr$varGrp)) {
+          name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
+        }
         
-        if(!is.na(vg$varGrp)) {
-          split_vg <- strsplit(vg$varGrp, " ")
-          for(x in split_vg) {
-            varGrp <- add_row(varGrp,
-                              parent = vg$name,
-                              child = x)
+        # make child list
+        child_list <- c("")
+        child_list <- append(child_list, name_list)
+        
+        # check that there is a hierarchy
+        hierarchy_exist <- FALSE
+        for(vg in dat()$dataDscr$varGrp) {
+          if(length(vg$varGrp) > 0) hierarchy_exist = TRUE
+        }
+        
+        if(!hierarchy_exist) {
+          varGrp <- add_row(varGrp, parent = name_list[[1]])
+        }
+        
+        for (vg in dat()$dataDscr$varGrp) {
+          if(is.null(vg$varGrp)) vg$varGrp <- NA_character_
+          
+          if(!is.na(vg$varGrp)) {
+            split_vg <- strsplit(vg$varGrp, " ")
+            for(x in split_vg) {
+              varGrp <- add_row(varGrp,
+                                parent = vg$name,
+                                child = x)
+            }
           }
         }
       }
@@ -394,31 +408,32 @@ varGrp_hierarchy_server <- function(id, dat, filepth) {
         child = character()
       )
       
-      # put all varGrps under study - two dataframes?
-      
-      for(vg in dat()$dataDscr$varGrp) {
-        first_level <- add_row(first_level,
-                               parent = "study",
-                               child = vg$name)
-      }
-
-      # as a varGrp becomes a child filter out the ones under the study
-      for (vg in dat()$dataDscr$varGrp) {
-        if(is.null(vg$varGrp)) vg$varGrp <- NA_character_
+      if(length(dat()$dataDscr$varGrp) > 0) {
+        # put all varGrps under study
+        for(vg in dat()$dataDscr$varGrp) {
+          first_level <- add_row(first_level,
+                                 parent = "study",
+                                 child = vg$name)
+        }
         
-        if(!is.na(vg$varGrp)) {
-          split_vg <- strsplit(vg$varGrp, " ")
-          for(i in 1:lengths(split_vg)) {
-            varGrp <- add_row(varGrp,
-                              parent = vg$name,
-                              child = split_vg[[1]][i])
-            # remove x from first_level
-            first_level <- first_level %>% filter(child != split_vg[[1]][i])
+        # as a varGrp becomes a child filter out the ones under the study
+        for (vg in dat()$dataDscr$varGrp) {
+          if(is.null(vg$varGrp)) vg$varGrp <- NA_character_
+          
+          if(!is.na(vg$varGrp)) {
+            split_vg <- strsplit(vg$varGrp, " ")
+            for(i in 1:lengths(split_vg)) {
+              varGrp <- add_row(varGrp,
+                                parent = vg$name,
+                                child = split_vg[[1]][i])
+              # remove x from first_level
+              first_level <- first_level %>% filter(child != split_vg[[1]][i])
+            }
           }
         }
+        varGrp <- bind_rows(first_level, varGrp)
+        print(FromDataFrameNetwork(varGrp))
       }
-      varGrp <- bind_rows(first_level, varGrp)
-      print(FromDataFrameNetwork(varGrp))
     })
     
     
@@ -480,28 +495,31 @@ varGrp_defntn_server <- function(id, dat, filepth, lang) {
       
       # get a list of all varGrps...
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr$varGrp)) {
-        name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
-      }
-      
-      defntn_exist <- FALSE
-      for(vg in dat()$dataDscr$varGrp) {
-        if(length(vg$defntn) > 0) defntn_exist = TRUE
-      }
-      
-      if(!defntn_exist) {
-        varGrp <- add_row(varGrp, name = name_list[[1]])
-      }
-      
-      for (vg in dat()$dataDscr$varGrp) {
-        for (d in vg$defntn) {
-          if(is.null(d$lang)) d$lang <- NA_character_
-          varGrp <- add_row(varGrp,
-                            name = vg$name,
-                            defntn = d$value,
-                            lang = d$lang)
+      if(length(dat()$dataDscr$varGrp) > 0) {
+        for(i in 1:length(dat()$dataDscr$varGrp)) {
+          name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
+        }
+        
+        defntn_exist <- FALSE
+        for(vg in dat()$dataDscr$varGrp) {
+          if(length(vg$defntn) > 0) defntn_exist = TRUE
+        }
+        
+        if(!defntn_exist) {
+          varGrp <- add_row(varGrp, name = name_list[[1]])
+        }
+        
+        for (vg in dat()$dataDscr$varGrp) {
+          for (d in vg$defntn) {
+            if(is.null(d$lang)) d$lang <- NA_character_
+            varGrp <- add_row(varGrp,
+                              name = vg$name,
+                              defntn = d$value,
+                              lang = d$lang)
+          }
         }
       }
+
       rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(40, 40, 40),
                  manualColumnMove = FALSE,
@@ -578,34 +596,38 @@ varGrp_concept_server <-function(id, dat, filepth, lang) {
 
       # gotta get a list of all varGrps...
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr$varGrp)) {
-        name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
-      }
       
-      concept_exist <- FALSE
-      for(vg in dat()$dataDscr$varGrp) {
-        if(length(vg$concept) > 0) concept_exist = TRUE
-      }
-      
-      if(!concept_exist) {
-        varGrp <- add_row(varGrp, name = name_list[[1]])
-      }
-      
-      for (vg in dat()$dataDscr$varGrp) {
-        name <- vg$name
-        for (con in vg$concept) {
-          if(is.null(con$vocabu)) con$vocabu <- NA_character_
-          if(is.null(con$vocab_URI)) con$vocab_URI <- NA_character_
-          if(is.null(con$lang)) con$lang <- NA_character_
-          
-          varGrp <- add_row(varGrp,
-                            name = name,
-                            term = con$value,
-                            vocabu = con$vocabu,
-                            vocab_URI = con$vocab_URI,
-                            lang = con$lang)
+      if(length(dat()$dataDscr$varGrp)) {
+        for(i in 1:length(dat()$dataDscr$varGrp)) {
+          name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
+        }
+        
+        concept_exist <- FALSE
+        for(vg in dat()$dataDscr$varGrp) {
+          if(length(vg$concept) > 0) concept_exist = TRUE
+        }
+        
+        if(!concept_exist) {
+          varGrp <- add_row(varGrp, name = name_list[[1]])
+        }
+        
+        for (vg in dat()$dataDscr$varGrp) {
+          name <- vg$name
+          for (con in vg$concept) {
+            if(is.null(con$vocabu)) con$vocabu <- NA_character_
+            if(is.null(con$vocab_URI)) con$vocab_URI <- NA_character_
+            if(is.null(con$lang)) con$lang <- NA_character_
+            
+            varGrp <- add_row(varGrp,
+                              name = name,
+                              term = con$value,
+                              vocabu = con$vocabu,
+                              vocab_URI = con$vocab_URI,
+                              lang = con$lang)
+          }
         }
       }
+
       rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(20, 20, 20, 20, 20, 20),
                  manualColumnMove = FALSE,
@@ -683,29 +705,33 @@ varGrp_universe_server <- function(id, dat, filepth, lang) {
       
       # gotta get a list of all varGrps...
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr$varGrp)) {
-        name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
-      }
       
-      universe_exist <- FALSE
-      for(vg in dat()$dataDscr$varGrp) {
-        if(length(vg$defntn) > 0) universe_exist = TRUE
-      }
-      
-      if(!universe_exist) {
-        varGrp <- add_row(varGrp, name = name_list[[1]])
-      }
-      
-      for (vg in dat()$dataDscr$varGrp) {
-        for (u in vg$universe) {
-          if(is.null(u$lang)) u$lang <- NA_character_
-          varGrp <- add_row(varGrp,
-                            name = vg$name,
-                            universe = u$group,
-                            clusion = u$clusion,
-                            lang = u$lang)
+      if(length(dat()$dataDscr$varGrp) > 0) {
+        for(i in 1:length(dat()$dataDscr$varGrp)) {
+          name_list <- append(name_list, dat()$dataDscr$varGrp[[i]]$name)
+        }
+        
+        universe_exist <- FALSE
+        for(vg in dat()$dataDscr$varGrp) {
+          if(length(vg$defntn) > 0) universe_exist = TRUE
+        }
+        
+        if(!universe_exist) {
+          varGrp <- add_row(varGrp, name = name_list[[1]])
+        }
+        
+        for (vg in dat()$dataDscr$varGrp) {
+          for (u in vg$universe) {
+            if(is.null(u$lang)) u$lang <- NA_character_
+            varGrp <- add_row(varGrp,
+                              name = vg$name,
+                              universe = u$group,
+                              clusion = u$clusion,
+                              lang = u$lang)
+          }
         }
       }
+
       rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(40, 40, 40, 40),
                  manualColumnMove = FALSE,

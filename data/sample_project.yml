@@ -45,8 +45,7 @@ stdyDscr:
       - value: Placeholder title
         lang: en
     rspStmt:
-      AuthEnty:
-      - name: Abi
+      AuthEnty: []
       othId: []
     prodStmt:
       producer: []
@@ -93,21 +92,32 @@ stdyDscr:
       citReq: ~
   stdyInfo:
     sumDscr:
-      anlyUnit: []
-      nation: []
-      geogCover: []
-      geogUnit: []
-      dataKind: []
-      timePrd: []
+      anlyUnit:
+      - group: children
       collDate: []
-      universe: []
+      nation:
+      - value: United States of America
+        abbr: USA
+      geogCover:
+      - value: New York
+      geogUnit: []
+      universe:
+      - group: test
+        level: project
+        clusion: I
+      dataKind:
+      - value: survey data
+      timePrd:
+      - value: September 29, 2022
+        date: '2022-09-29'
+        event: single
+        cycle: baseline
     qualityStatement:
     - standardsCompliance: ~
       standard:
       - standardName: ~
         producer: ~
       complianceDescription: ~
-    abstract: []
     subject:
     - keyword: one
       lang: en
@@ -123,20 +133,27 @@ stdyDscr:
       vocabu: eforu8dij
       vocab_URI: kluardso
       lang: fr
+    abstract:
+    - value: 4owpq857r89eosufidjxzlknf
   method:
     dataColl:
       timeMeth: []
-      frequenc: []
-      dataCollector: []
       collSitu: []
       collectorTraining: []
       resInstru: []
       instrumentDevelopment: []
       ConOps: []
-      actMin: []
       sampProc: []
       deviat: []
       collMode: []
+      dataCollector:
+      - value: International Rescue Committee
+        abbr: IRC
+      frequenc:
+      - value: quarterly
+        lang: en
+      actMin:
+      - value: 89p234eorw7;fsudhlzcJXRiud
     stdyClas:
       value: ~
       type: ~
@@ -147,7 +164,9 @@ stdyDscr:
     authroizingAgency-abbr: ~
     authorizationStatement: ~
   othrStdyMat:
-    relPubl: []
+    relPubl:
+    - id: relPubl_1
+      description: test
     relMat:
     - id: relMat_1
       description: hi
@@ -155,7 +174,9 @@ stdyDscr:
       format: APA
       doi: '1'
       lang: en
-    relStdy: []
+    relStdy:
+    - id: relStdy_1
+      biblCit: 48p9qw7erosufd
     othRefs: []
 dataDscr:
   varGrp:
@@ -178,10 +199,11 @@ dataDscr:
       vocab_URI: www.fake.com/
       lang: en
     - value: ioqturep
+      vocabu: 78o6
     type: other
     otherType: gobedlygook
+    var: V1 V2
     varGrp: vg2
-    var: V1 V2 test
   - name: vg2
     labl:
     - value: ye;ah
@@ -194,6 +216,8 @@ dataDscr:
     concept:
     - value: sdfgiou
     type: subject
+    var: test
+    varGrp: vg4
   - name: vg4
     labl:
     - value: ldafsouefjaoi
@@ -202,7 +226,7 @@ dataDscr:
     labl:
     - value: hi
       level: varGrp
-    varGrp: vg1 vg4
+    varGrp: vg1
   var:
   - name: V1
     labl:
@@ -217,6 +241,7 @@ dataDscr:
     - value: child
       lang: en
     - value: toddler
+      lang: en
     respUnit:
     - value: parent
       lang: en
@@ -260,7 +285,10 @@ dataDscr:
       - value: one
         lang: en
   - name: test
-    labl: []
+    labl:
+    - value: soemthing
+      level: var
+    nature: interval
 catgrySets:
 - name: binary
   options:

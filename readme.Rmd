@@ -1,14 +1,12 @@
-# DIY DDI Curator
+# DIYDDICurator
 
 ## Description
 
-The DIY DDI Curator is an open source Shiny app designed to streamline metadata generation for research data sharing. It allows the user to input project metadata and generate a valid Data Documentation Initiative Codebook (DDI 2.5) to describe the study and data collected.
+The DIYDDICurator is a graphic user interface to the `rddi` package. It is a shiny app designed to streamline metadata generation for research data sharing. It allows the user to input project metadata and generate a valid Data Documentation Initiative Codebook (DDI 2.5) to describe the study and data collected.
 
-DDI elements and their attributes are listed in various tabs and described using a `handsontable` (https://handsontable.com/). By right clicking on the table users can add or delete rows. A human readable README, the DDI Codebook and the data is available for export in the Export navigation menu. For those working remotely off of this repository, exported data can be imported to the shiny app.
+DDI elements and their attributes are listed in various tabs and described using a `handsontable` (https://handsontable.com/). By right clicking on the table users can add or delete rows. A human readable README, the DDI Codebook and the data is available for export in the Export navigation menu. 
 
-**The application uses the following packages:** `rddi`, `rhandsontable`, `tidyverse`, `data.tree` 
-
-## Loading Dependencies
+## Installation
 
 It is recommended to use the development version of rddi from Github
 
@@ -17,23 +15,22 @@ It is recommended to use the development version of rddi from Github
 devtools::install_github("nyuglobalties/rddi")
 ```
 
-The other packages can be installed using this command
+DIYDDICurator installation
 
 ```{r}
 
-install.packages(c("rhandsontable", "tidyverse", "data.tree"))
+devtools::install_github("nyuglobalties/DIYDDICurator")
 
 ```
 
 ## Launch DIY DDI Curator
 
-**Locally**
+```{r}
+library(DIYDDICurator)
+curator()
 
-Clone this repository and open it as a R project in RStudio. Run `shiny::runApp()` in the console.
+# or
+DIYDDICurator:curator()
+```
 
-To launch from the terminal in Mac and Linux run `r -e "shiny::runApp('<path to app.R>', launch.browser = TRUE)"`
-
-**Remotely**
-
-Type `shiny::runGitHub(repo = “nyugloablties/rddi”)` in the console or `r -e shiny::runGitHub(repo = “nyugloablties/rddi”)` in the terminal.
 

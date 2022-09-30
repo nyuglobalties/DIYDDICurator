@@ -1,14 +1,12 @@
-library(shiny)
-library(rhandsontable)
-library(tidyverse)
-library(data.tree)
-
 curator <- function() {
   ui <- fluidPage(
     navbarPage(strong("DIY DDI Curator"),
       tabPanel("Introduction", 
                p('The DIY DDI Curator is designed for you, the researcher and/or information professional, 
                  to edit, add, and delete  metadata for your projects using the DDI-Codebook 2.5 schema.'), 
+               p("It is a limited graphical user interface to the rddi package. This shiny app
+                 doesn't include all potential DDI elements but does include the majority needed
+                 to describe a dataset."),
                p('To begin, please pick the project you would like to edit 
                         bÍelow, create a new file, or upload your own (just remember 
                         to save before you shut down the app).'),
@@ -33,7 +31,8 @@ curator <- function() {
         authors_ui("authors"),
         series_ui("series"),
         producers_ui("producers"),
-        funders_ui("funders")
+        funders_ui("funders"),
+        bibliography_ui("bib")
       ),
       navbarMenu(
         "Study Information",
@@ -60,13 +59,6 @@ curator <- function() {
         actMin_ui("actMin"),
         sampProc_ui("sampProc"),
         deviat_ui("deviat")
-      ),
-      navbarMenu(
-        "Bibliography",
-        relMat_ui("relMat"),
-        relStdy_ui("relStdy"),
-        relPubl_ui("relPubl"),
-        othRefs_ui("othRefs")
       ),
       navbarMenu(
         "Variable Groups",
@@ -152,6 +144,7 @@ curator <- function() {
     series_server("series", dat, filepth, lang)
     producers_server("producers", dat, filepth, lang)
     funders_server("funders", dat, filepth)
+    bibliography_server("bib", dat, filepth, lang)
   
     # Study Information servers
     abstract_server("abstract", dat, filepth, lang)
@@ -176,11 +169,6 @@ curator <- function() {
     actMin_server("actMin", dat, filepth, lang)
     sampProc_server("sampProc", dat, filepth, lang)
     deviat_server("deviat", dat, filepth, lang)
-  
-    relMat_server("relMat", dat, filepth, lang)
-    relStdy_server("relStdy", dat, filepth, lang)
-    relPubl_server("relPubl", dat, filepth, lang)
-    othRefs_server("othRefs", dat, filepth, lang)
   
     # Vargrp servers
     varGrp_label_server("varGrp_l", dat, filepth, lang)

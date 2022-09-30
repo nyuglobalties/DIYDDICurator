@@ -1,5 +1,3 @@
-library(rddi)
-
 # splat generation
 
 splat <- function(x, f) {
@@ -1984,5 +1982,6 @@ generate_ddi_codebook <- function(dat) {
   
   ddi <- gsub("&lt;", "<", ddi)
   ddi <- gsub("&gt;", ">", ddi)
+  ddi <- xml2::read_xml(ddi)
   ddi
 }
