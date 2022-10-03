@@ -167,7 +167,6 @@ var_label_server <- function(id, dat, filepth, lang) {
           }
           
           for(v in varList) {
-            browser()
             new_df <- updated_var %>% filter(name == v)
             new_l <- list()
             if(length(new_df$label) > 0) {

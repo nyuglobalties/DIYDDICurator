@@ -1,49 +1,9 @@
-docDscr:
-  citation: ~
-  guide: ~
-  docStatus: ~
-  controlledVocabUsed:
-    codeListName: ~
-    codeListID: ~
-    codeListAgencyName: ~
-    codeListURN: ~
-    usage:
-      attribute: ~
-      selector: ~
-      specificElements: ~
-fileDscr:
-  fileTxt:
-    fileStrc: ~
-    fileStrc-type: ~
-    fileName: ~
-    fileCitation:
-      biblCit: ~
-    fileCont: ~
-    fileCont-lang: ~
-    fileType: ~
-    fileType-charset: ~
-    ProcStat: ~
-    dataMsng: ~
-    software: ~
-    software-version: ~
-    software-date: ~
-    verStmt:
-      version: ~
-      version-date: ~
-      version-type: ~
-      verResp: ~
-      verResp-affiliation: ~
-      notes: ~
 stdyDscr:
   citation:
-    biblCit: ~
-    biblCit-format: ~
     titlStmt:
       parTitl: []
-      IDNo: ~
       titl:
       - value: Placeholder title
-        lang: en
     rspStmt:
       AuthEnty: []
       othId: []
@@ -52,89 +12,25 @@ stdyDscr:
       prodPlac: []
       prodDate: []
       fundAg: []
-    distStmt:
-      distrbtr: ~
-      distrbtr-abbr: ~
-      distrbtr-affiliation: ~
-      distrbtr-URI: ~
-      distDate: ~
-      distDate-date: ~
-      depDate: ~
-      depDate-date: ~
-      depositor: ~
-      depositor-abbr: ~
-      depositor-affiliation: ~
-      contact: ~
-      contact-affiliation: ~
-      contact-email: ~
     serStmt: []
-  dataAccs:
-    setAvail:
-      avlStatus: ~
-      complete: ~
-      accsPlac: ~
-      accsPlac-URI: ~
-    useStmt:
-      confDec: ~
-      confDec-required: ~
-      confDec-formNo: ~
-      confDec-URI: ~
-      contact: ~
-      contact-affiliation: ~
-      contact-email: ~
-      conditions: ~
-      disclaimer: ~
-      restrctn: ~
-      specPerm: ~
-      specPerm-required: ~
-      specPerm-formNo: ~
-      specPerm-URI: ~
-      citReq: ~
   stdyInfo:
     sumDscr:
-      anlyUnit:
-      - group: children
+      anlyUnit: []
       collDate: []
-      nation:
-      - value: United States of America
-        abbr: USA
-      geogCover:
-      - value: New York
+      universe: []
+      dataKind: []
+      nation: []
+      geogCover: []
       geogUnit: []
-      universe:
-      - group: test
-        level: project
-        clusion: I
-      dataKind:
-      - value: survey data
-      timePrd:
-      - value: September 29, 2022
-        date: '2022-09-29'
-        event: single
-        cycle: baseline
+      timePrd: []
     qualityStatement:
     - standardsCompliance: ~
       standard:
       - standardName: ~
         producer: ~
       complianceDescription: ~
-    subject:
-    - keyword: one
-      lang: en
-    - keyword: two
-      vocabu: adsraodfjl
-      vocab_URI: adrs79p8aduf
-    - keyword: three
-    - keyword: four
-      vocab_URI: erp8adfo
-    - keyword: five
-      vocabu: reqwerqwr
-    - keyword: six
-      vocabu: eforu8dij
-      vocab_URI: kluardso
-      lang: fr
-    abstract:
-    - value: 4owpq857r89eosufidjxzlknf
+    abstract: []
+    subject: []
   method:
     dataColl:
       timeMeth: []
@@ -146,149 +42,19 @@ stdyDscr:
       sampProc: []
       deviat: []
       collMode: []
-      dataCollector:
-      - value: International Rescue Committee
-        abbr: IRC
-      frequenc:
-      - value: quarterly
-        lang: en
-      actMin:
-      - value: 89p234eorw7;fsudhlzcJXRiud
-    stdyClas:
-      value: ~
-      type: ~
-      lang: ~
-    dataProcessing: ~
-  studyAuthorization:
-    authorizingAgency: ~
-    authroizingAgency-abbr: ~
-    authorizationStatement: ~
+      frequenc: []
+      dataCollector: []
+      actMin: []
   othrStdyMat:
-    relPubl:
-    - id: relPubl_1
-      description: test
-    relMat:
-    - id: relMat_1
-      description: hi
-      biblCit: dairop7dfuojvadsnrt, a (2021). Title. Publisher. Etc.
-      format: APA
-      doi: '1'
-      lang: en
-    relStdy:
-    - id: relStdy_1
-      biblCit: 48p9qw7erosufd
+    relPubl: []
+    relMat: []
+    relStdy: []
     othRefs: []
 dataDscr:
-  varGrp:
-  - name: vg1
-    labl:
-    - value: 548930rfh
-      lang: fr
-      level: varGrp
-    defntn:
-    - value: testing
-      level: varGrp
-    universe:
-    - group: kids
-      lang: en
-      clusion: I
-      level: varGrp
-    concept:
-    - value: 768iyuhkj
-      vocabu: retuo;if
-      vocab_URI: www.fake.com/
-      lang: en
-    - value: ioqturep
-      vocabu: 78o6
-    type: other
-    otherType: gobedlygook
-    var: V1 V2
-    varGrp: vg2
-  - name: vg2
-    labl:
-    - value: ye;ah
-      lang: en
-      level: varGrp
-    universe:
-    - group: people
-      clusion: I
-      level: varGrp
-    concept:
-    - value: sdfgiou
-    type: subject
-    var: test
-    varGrp: vg4
-  - name: vg4
-    labl:
-    - value: ldafsouefjaoi
-      level: varGrp
-  - name: vg3
-    labl:
-    - value: hi
-      level: varGrp
-    varGrp: vg1
+  varGrp: []
   var:
-  - name: V1
-    labl:
-    - value: test
-      lang: en
-      level: var
-    - value: 0u8orwep
-      lang: es
-      level: var
-    nature: nominal
-    anlysUnit:
-    - value: child
-      lang: en
-    - value: toddler
-      lang: en
-    respUnit:
-    - value: parent
-      lang: en
-    security:
-    - value: text explaining the restriciton
-      lang: en
-      date: '2022-09-14'
-    - value: testing again
-      lang: fr
-      date: '2022-09-14'
-    embargo:
-    - value: test
-      lang: en
-      event: notBefore
-      date: '2022-09-15'
-    catSet: binary
-    catgry:
-    - catValu: '0'
-      labl:
-      - value: 'No'
-        level: catgry
-    - catValu: '1'
-      labl:
-      - value: 'Yes'
-        level: catgry
-    temporal: 'Y'
-  - name: V2
-    labl:
-    - value: second test
-      level: var
-    geog: 'N'
-    nature: nominal
-    catSet: new
-    catgry:
-    - catValu: '0'
-      labl:
-      - value: zero
-        lang: en
-    - catValu: '3'
-      labl:
-      - value: one
-        lang: en
-  - name: test
-    labl:
-    - value: soemthing
-      level: var
-    nature: interval
+  - name: ''
+    labl: []
 catgrySets:
 - name: binary
   options:
@@ -300,13 +66,3 @@ catgrySets:
     labl:
     - value: 'Yes'
       level: catgry
-- name: new
-  options:
-  - catValu: '0'
-    labl:
-    - value: zero
-      lang: en
-  - catValu: '3'
-    labl:
-    - value: one
-      lang: en

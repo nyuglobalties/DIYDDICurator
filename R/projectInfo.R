@@ -85,6 +85,7 @@ title_server <- function(id, dat, filepth, lang) {
           updatedData$stdyDscr$citation$titlStmt$titl <- NULL
           updatedData$stdyDscr$citation$titlStmt$titl <- new_titl
           updatedData$stdyDscr$citation$titlStmt$titl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$titl)
+          updatedData$stdyDscr$citation$titlStmt$titl <- lapply(updatedData$stdyDscr$citation$titlStmt$titl, function(x) x[!is.na(x)])
           
           updated_parTitl <- hot_to_r(input$parTitl)
           updatedData$stdyDscr$citation$titlStmt$parTilt <- NULL
@@ -101,8 +102,8 @@ title_server <- function(id, dat, filepth, lang) {
           }
           updatedData$stdyDscr$citation$titlStmt$parTitl <- new_parTitl
           updatedData$stdyDscr$citation$titlStmt$parTitl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$parTitl)
+          updatedData$stdyDscr$citation$titlStmt$parTitl <- lapply(updatedData$stdyDscr$citation$titlStmt$parTitl, function(x) x[!is.na(x)])
           
-          updatedData$stdyDscr$citation$titlStmt <- lapply(updatedData$stdyDscr$citation$titlStmt,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })

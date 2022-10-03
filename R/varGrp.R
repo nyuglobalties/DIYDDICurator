@@ -203,13 +203,15 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
             new_df <- updated_varGrp %>% filter(name == vg)
             new_l <- list()
             name <- vg 
+
             if(length(new_df$label) > 0) {
-              for(l in 1:length(new_df$label)) {
-                if(is.null(new_df$label[l])) new_df$label[l] <- NA_character_
-                if(!is.na(new_df$label[l])) {
-                  if(new_df$label[l] != "") {
-                    labl <- list(value = new_df$label[l], 
-                                 lang = stringr::str_extract(new_df$lang[l], "^[a-z]{2}"), 
+              for(i in 1:length(new_df$label)) {
+                if(is.null(new_df$label[i])) new_df$label[i] <- NA_character_
+                if(!is.na(new_df$label[i]) & new_df$label[i] == "") new_df$label[i] <- NA_character_
+                if(!is.na(new_df$label[i])) {
+                  if(new_df$label[i] != "") {
+                    labl <- list(value = new_df$label[i], 
+                                 lang = stringr::str_extract(new_df$lang[i], "^[a-z]{2}"), 
                                  level = "varGrp")
                     new_l <- c(new_l, list(labl))
                   }
@@ -232,9 +234,11 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
                 }
               }
             } else {
-              updatedData$dataDscr$varGrp <- append(updatedData$dataDscr$varGrp, 
-                                                    list(list(name = vg,
-                                                      labl = new_l)))
+              if(length(new_l) > 0) {
+                updatedData$dataDscr$varGrp <- append(updatedData$dataDscr$varGrp, 
+                                                      list(list(name = vg,
+                                                                labl = new_l)))
+              }
             }
           }
           
