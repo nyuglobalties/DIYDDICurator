@@ -20,92 +20,6 @@ title_ui <- function(id) {
            )
 }
 
-authors_ui <- function(id) {
-  ns <- NS(id)
-  tabPanel("Authors and Contributors",
-           h3("Authoring Entity"),
-           rHandsontableOutput(ns("authors")),
-           h3("Other Identifications/Acknowledgements"),
-           rHandsontableOutput(ns("contrib")),
-           tags$br(),
-           actionButton(ns("save_authors"), "Save authors and contributors"),
-           tags$hr(),
-           p("The Authoring Entity or Primary Investigator is the person, 
-           corporate body, or agency responsible for the work's substantive and 
-           intellectual content. Repeat the element for each author, and use 
-           'affiliation' attribute if available. Invert first and last name and 
-           use commas. Author of data collection (codeBook/stdyDscr/citation/rspStmt/AuthEnty) 
-           maps to Dublin Core Creator element. Inclusion of this element 
-           in codebook is recommended."),
-           p('Other identifications or acknowledgements are statements of 
-             responsibility not recorded in the title and statement of responsibility 
-             areas. Indicate here the persons or bodies connected with the work, 
-             or significant persons or bodies connected with previous editions 
-             and not already named in the description. For example, the name of 
-             the person who edited the marked-up documentation might be cited in 
-             codeBook/docDscr/rspStmt/othId, using the "role" and "affiliation" 
-             attributes. Other identifications/acknowledgments for data collection 
-             (codeBook/stdyDscr/citation/rspStmt/othId) maps to Dublin Core 
-             Contributor element.')
-           )
-}
-
-series_ui <- function(id) {
-  ns <- NS(id)
-  tabPanel("Series",
-           rHandsontableOutput(ns("seriesName")),
-           h3("Series Information"),
-           rHandsontableOutput(ns("serInfo")),
-           tags$br(),
-           actionButton(ns("save_series"), "Save series information"),
-           tags$hr(),
-           p('The series title is the name of the series to which the work belongs.'),
-           p('Series information contains a history of the series and a summary 
-             of those features that apply to the series as a whole.')
-           )
-}
-
-producers_ui <- function(id) {
-  ns <- NS(id)
-  tabPanel("Producers",
-           h3("Producers"),
-           rHandsontableOutput(ns("producers")),
-           h3("Place of Production"),
-           rHandsontableOutput(ns("prodPlac")),
-           h3("Date of Production"),
-           rHandsontableOutput(ns("prodDate")),
-           tags$br(),
-           actionButton(ns("save_producers"), "Save producers"),
-           tags$hr(),
-           p('The producer is the person or organization with the financial or 
-             administrative responsibility for the physical processes whereby 
-             the document was brought into existence. Use the "role" attribute 
-             to distinguish different stages of involvement in the production 
-             process, such as original producer. Producer of data collection 
-             (codeBook/stdyDscr/citation/prodStmt/producer) maps to Dublin Core 
-             Publisher element.'),
-           p('The Place of Production is the address of the archive or 
-             organization that produced the work.'),
-           p('The Date of Production is the date when the marked-up document/marked-up 
-             document source/data collection/other material(s) were produced (not 
-             distributed or archived). The ISO standard for dates (YYYY-MM-DD) 
-             is recommended for use with the date attribute. Production date for 
-             data collection (codeBook/stdyDscr/citation/prodStmt/prodDate) maps 
-             to Dublin Core Date element.'))
-}
-
-funders_ui <- function(id) {
-  ns <- NS(id)
-  tabPanel("Funding Agency",
-           rHandsontableOutput(ns("funders")),
-           tags$br(),
-           actionButton(ns("save_funders"), "Save funders"),
-           tags$hr(),
-           p('The Funding Agency is the source(s) of funds for production of the 
-             work. If different funding agencies sponsored different stages of the 
-             production process, use the "role" attribute to distinguish them.'))
-}
-
 title_server <- function(id, dat, filepth, lang) {
   moduleServer(id, function(input, output, session) {
     
@@ -171,6 +85,7 @@ title_server <- function(id, dat, filepth, lang) {
           updatedData$stdyDscr$citation$titlStmt$titl <- NULL
           updatedData$stdyDscr$citation$titlStmt$titl <- new_titl
           updatedData$stdyDscr$citation$titlStmt$titl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$titl)
+          updatedData$stdyDscr$citation$titlStmt$titl <- lapply(updatedData$stdyDscr$citation$titlStmt$titl, function(x) x[!is.na(x)])
           
           updated_parTitl <- hot_to_r(input$parTitl)
           updatedData$stdyDscr$citation$titlStmt$parTilt <- NULL
@@ -187,12 +102,44 @@ title_server <- function(id, dat, filepth, lang) {
           }
           updatedData$stdyDscr$citation$titlStmt$parTitl <- new_parTitl
           updatedData$stdyDscr$citation$titlStmt$parTitl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$parTitl)
+          updatedData$stdyDscr$citation$titlStmt$parTitl <- lapply(updatedData$stdyDscr$citation$titlStmt$parTitl, function(x) x[!is.na(x)])
           
-          updatedData$stdyDscr$citation$titlStmt <- lapply(updatedData$stdyDscr$citation$titlStmt,function(x) x[!is.na(x)])
           yaml::write_yaml(updatedData, filepth())
         })
       })
   })
+}
+
+################################################
+
+authors_ui <- function(id) {
+  ns <- NS(id)
+  tabPanel("Authors and Contributors",
+           h3("Authoring Entity"),
+           rHandsontableOutput(ns("authors")),
+           h3("Other Identifications/Acknowledgements"),
+           rHandsontableOutput(ns("contrib")),
+           tags$br(),
+           actionButton(ns("save_authors"), "Save authors and contributors"),
+           tags$hr(),
+           p("The Authoring Entity or Primary Investigator is the person, 
+           corporate body, or agency responsible for the work's substantive and 
+           intellectual content. Repeat the element for each author, and use 
+           'affiliation' attribute if available. Invert first and last name and 
+           use commas. Author of data collection (codeBook/stdyDscr/citation/rspStmt/AuthEnty) 
+           maps to Dublin Core Creator element. Inclusion of this element 
+           in codebook is recommended."),
+           p('Other identifications or acknowledgements are statements of 
+             responsibility not recorded in the title and statement of responsibility 
+             areas. Indicate here the persons or bodies connected with the work, 
+             or significant persons or bodies connected with previous editions 
+             and not already named in the description. For example, the name of 
+             the person who edited the marked-up documentation might be cited in 
+             codeBook/docDscr/rspStmt/othId, using the "role" and "affiliation" 
+             attributes. Other identifications/acknowledgments for data collection 
+             (codeBook/stdyDscr/citation/rspStmt/othId) maps to Dublin Core 
+             Contributor element.')
+           )
 }
 
 authors_server <- function(id, dat, filepth) {
@@ -280,8 +227,8 @@ authors_server <- function(id, dat, filepth) {
             if(!is.na(updated_contrib$name[i])) {
               if(updated_contrib$name[i] != "") {
                 new <- list(name = updated_contrib$name[i],
-                        role = updated_contrib$role[i],
-                        affiliation = updated_contrib$affiliation[i]
+                            role = updated_contrib$role[i],
+                            affiliation = updated_contrib$affiliation[i]
                 )
                 new_contrib <- c(new_contrib, list(new))
               }
@@ -295,6 +242,23 @@ authors_server <- function(id, dat, filepth) {
         })
       })
   })
+}
+
+##############################
+
+series_ui <- function(id) {
+  ns <- NS(id)
+  tabPanel("Series",
+           rHandsontableOutput(ns("seriesName")),
+           h3("Series Information"),
+           rHandsontableOutput(ns("serInfo")),
+           tags$br(),
+           actionButton(ns("save_series"), "Save series information"),
+           tags$hr(),
+           p('The series title is the name of the series to which the work belongs.'),
+           p('Series information contains a history of the series and a summary 
+             of those features that apply to the series as a whole.')
+           )
 }
 
 series_server <- function(id, dat, filepth, lang) {
@@ -330,11 +294,11 @@ series_server <- function(id, dat, filepth, lang) {
           if(is.null(sn$abbr)) sn$abbr <- NA_character_
           if(is.null(sn$lang)) sn$lang <- NA_character_
           seriesName <- add_row(seriesName, 
-                             ID = s$ID,
-                             URI = s$URI,
-                             value = sn$value,
-                             abbr = sn$abbr,
-                             lang = sn$lang)
+                                ID = s$ID,
+                                URI = s$URI,
+                                value = sn$value,
+                                abbr = sn$abbr,
+                                lang = sn$lang)
         }
       }
       rht <- rhandsontable(seriesName, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
@@ -413,7 +377,7 @@ series_server <- function(id, dat, filepth, lang) {
             filtered_serName <- updated_serName %>% filter(ID == id)
             filtered_serInfo <- updated_serInfo %>% filter(ID == id)
             URI <- filtered_serName[1,]$URI
-          
+            
             if(length(filtered_serName$value > 0)) {
               for(i in 1:length(filtered_serName$value)) {
                 if(!is.na(filtered_serName$value[i])) {
@@ -422,7 +386,7 @@ series_server <- function(id, dat, filepth, lang) {
                     new <- list(value = filtered_serName[i,]$value,
                                 abbr = filtered_serName[i,]$abbr,
                                 lang = stringr::str_extract(filtered_serName[i,]$lang, "^[a-z]{2}")
-                                )
+                    )
                     new_serName <- c(new_serName, list(new))
                   }  
                 }
@@ -464,6 +428,37 @@ series_server <- function(id, dat, filepth, lang) {
         })
       })
   })
+}
+
+#############################
+
+producers_ui <- function(id) {
+  ns <- NS(id)
+  tabPanel("Producers",
+           h3("Producers"),
+           rHandsontableOutput(ns("producers")),
+           h3("Place of Production"),
+           rHandsontableOutput(ns("prodPlac")),
+           h3("Date of Production"),
+           rHandsontableOutput(ns("prodDate")),
+           tags$br(),
+           actionButton(ns("save_producers"), "Save producers"),
+           tags$hr(),
+           p('The producer is the person or organization with the financial or 
+             administrative responsibility for the physical processes whereby 
+             the document was brought into existence. Use the "role" attribute 
+             to distinguish different stages of involvement in the production 
+             process, such as original producer. Producer of data collection 
+             (codeBook/stdyDscr/citation/prodStmt/producer) maps to Dublin Core 
+             Publisher element.'),
+           p('The Place of Production is the address of the archive or 
+             organization that produced the work.'),
+           p('The Date of Production is the date when the marked-up document/marked-up 
+             document source/data collection/other material(s) were produced (not 
+             distributed or archived). The ISO standard for dates (YYYY-MM-DD) 
+             is recommended for use with the date attribute. Production date for 
+             data collection (codeBook/stdyDscr/citation/prodStmt/prodDate) maps 
+             to Dublin Core Date element.'))
 }
 
 producers_server <- function(id, dat, filepth, lang) {
@@ -551,7 +546,7 @@ producers_server <- function(id, dat, filepth, lang) {
         hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang)
       htmlwidgets::onRender(rht, change_hook)
     })
-
+    
     observeEvent(
       input$save_producers, {
         isolate({
@@ -613,6 +608,20 @@ producers_server <- function(id, dat, filepth, lang) {
   })
 }
 
+#############################
+
+funders_ui <- function(id) {
+  ns <- NS(id)
+  tabPanel("Funding Agency",
+           rHandsontableOutput(ns("funders")),
+           tags$br(),
+           actionButton(ns("save_funders"), "Save funders"),
+           tags$hr(),
+           p('The Funding Agency is the source(s) of funds for production of the 
+             work. If different funding agencies sponsored different stages of the 
+             production process, use the "role" attribute to distinguish them.'))
+}
+
 funders_server <- function(id, dat, filepth) {
   moduleServer(id, function(input, output, session) {
     
@@ -672,3 +681,248 @@ funders_server <- function(id, dat, filepth) {
       })
   })
 }
+
+#####################################
+
+bibliography_ui <- function(id) {
+  ns <- NS(id)
+  tabPanel("Bibliography",
+           rHandsontableOutput(ns("bib")),
+           tags$br(),
+           actionButton(ns("save_bib"), "Save Bibliography"),
+           tags$hr(),
+           p('DDI allows for four types of documents in the codebook: Related Publications,
+             Related Materials, Related Studies, and other references. It also allows for a description
+             and/or a bibliographic citation in each element.'),
+           tags$hr(),
+           p('Related Publications are bibliographic and access information about articles and 
+                  reports based on the data in this dataset.'),
+           p("Related Materials describes materials related to the study description, such 
+                  as appendices, additional information on sampling found in 
+                  other documents, etc."),
+           p('Related Studies are information on the relationship of the current data 
+                  collection to others (e.g., predecessors, successors, other 
+                  waves or rounds) or to other editions of the same file. This 
+                  would include the names of additional data collections 
+                  generated from the same data collection vehicle plus other 
+                  collections directed at the same general topic.'),
+           p('Other References indicates other pertinent references that do not fit 
+             in the above categories.')
+           )
+}
+
+bibliography_server <-  function(id, dat, filepth, lang) {
+  moduleServer(id, function(input, output, session) {
+    
+    output$bib <- renderRHandsontable({
+      req(dat())
+      bibliography <- tibble(
+        publication_type = character(),
+        description = character(),
+        biblCit = character(),
+        format = character(),
+        doi = character(),
+        lang = character()
+      )
+      
+      bib_list <- c("Related Publications", "Related Materials", "Related Studies", "Other References")
+      
+      if(length(dat()$stdyDscr$othrStdyMat$relPubl) == 0 &
+         length(dat()$stdyDscr$othrStdyMat$relMat) == 0 &
+         length(dat()$stdyDscr$othrStdyMat$relStdy) == 0 &
+         length(dat()$stdyDscr$othrStdyMat$othRefs) == 0) {
+        bibliography <- add_row(bibliography, publication_type = "Related Publications", description = NA_character_)
+      }
+    
+      for (s in dat()$stdyDscr$othrStdyMat$relPubl) {
+        if(is.null(s$biblCit)) s$biblCit <- NA_character_
+        if(is.null(s$format)) s$format <- NA_character_
+        if(is.null(s$doi)) s$doi <- NA_character_
+        if(is.null(s$lang)) s$lang <- NA_character_
+        bibliography <- add_row(bibliography, 
+                       publication_type = "Related Publications",
+                       description = s$description, 
+                       biblCit = s$biblCit,
+                       format = s$format,
+                       doi = s$doi,
+                       lang = s$lang)
+      }
+      
+      for (s in dat()$stdyDscr$othrStdyMat$relMat) {
+        if(is.null(s$biblCit)) s$biblCit <- NA_character_
+        if(is.null(s$format)) s$format <- NA_character_
+        if(is.null(s$doi)) s$doi <- NA_character_
+        if(is.null(s$lang)) s$lang <- NA_character_
+        bibliography <- add_row(bibliography, 
+                       publication_type = "Related Materials",
+                       description = s$description, 
+                       biblCit = s$biblCit,
+                       format = s$format,
+                       doi = s$doi,
+                       lang = s$lang)
+      }
+
+      for (s in dat()$stdyDscr$othrStdyMat$relStdy) {
+        if(is.null(s$biblCit)) s$biblCit <- NA_character_
+        if(is.null(s$format)) s$format <- NA_character_
+        if(is.null(s$doi)) s$doi <- NA_character_
+        if(is.null(s$lang)) s$lang <- NA_character_
+        bibliography <- add_row(bibliography, 
+                       publication_type = "Related Studies",
+                       description = s$description, 
+                       biblCit = s$biblCit,
+                       format = s$format,
+                       doi = s$doi,
+                       lang = s$lang)
+      }
+      
+      for (s in dat()$stdyDscr$othrStdyMat$othRefs) {
+        if(is.null(s$biblCit)) s$biblCit <- NA_character_
+        if(is.null(s$format)) s$format <- NA_character_
+        if(is.null(s$doi)) s$doi <- NA_character_
+        if(is.null(s$lang)) s$lang <- NA_character_
+        bibliography <- add_row(bibliography, 
+                       publication_type = "Other References",
+                       description = s$description, 
+                       biblCit = s$biblCit,
+                       format = s$format,
+                       doi = s$doi,
+                       lang = s$lang)
+      }
+      
+      
+      rht <- rhandsontable(bibliography, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
+        hot_cols(colWidths = c(100, 40, 40, 40),
+                 manualColumnMove = FALSE,
+                 manualColumnResize = FALSE) %>% 
+        hot_rows(rowHeights = NULL) %>% 
+        hot_col("lang", allowInvalid = FALSE, type = "dropdown", source = lang) %>% 
+        hot_col("publication_type", allowInvalid = FALSE, type = "dropdown", source = bib_list) %>% 
+        hot_context_menu(allowRowEdit = TRUE, allowColEdit = FALSE) 
+      htmlwidgets::onRender(rht, change_hook)
+    })
+    
+    
+    observeEvent(
+      input$save_bib, {
+        isolate({
+          req(dat())
+          updatedData <- dat()
+          updatedBib <- hot_to_r(input$bib)
+          
+          updatedRelPubl <- updatedBib %>% filter(publication_type == "Related Publications")
+          updatedRelMat <- updatedBib %>% filter(publication_type == "Related Materials")
+          updatedRelStdy <- updatedBib %>% filter(publication_type == "Related Studies")
+          updatedOthRefs <- updatedBib %>% filter(publication_type == "Other References")
+
+          updatedData$stdyDscr$othrStdyMat$relPubl <- NULL
+          updatedData$stdyDscr$othrStdyMat$relMat <- NULL
+          updatedData$stdyDscr$othrStdyMat$relStdy <- NULL
+          updatedData$stdyDscr$othrStdyMat$othRefs <- NULL
+          
+          new_relPubl <- list()
+          if(length(updatedRelPubl$description) > 0) {
+            for(i in 1:length(updatedRelPubl$description)) {
+              if(!is.na(updatedRelPubl$description[i]) & updatedRelPubl$description[i] == "") updatedRelPubl$description[i] <- NA_character_
+              if(!is.na(updatedRelPubl$biblCit[i]) & updatedRelPubl$biblCit[i] == "") updatedRelPubl$biblCit[i] <- NA_character_
+              
+              if((!is.na(updatedRelPubl$description[i]) & is.na(updatedRelPubl$biblCit[i])) | 
+                 (is.na(updatedRelPubl$description[i]) & !is.na(updatedRelPubl$biblCit[i])) | 
+                 (!is.na(updatedRelPubl$description[i]) & !is.na(updatedRelPubl$biblCit[i]))) {
+                new <- list(id = paste0("relPubl_", i),
+                            description = updatedRelPubl$description[i],
+                            biblCit = updatedRelPubl$biblCit[i],
+                            format = updatedRelPubl$format[i],
+                            doi = updatedRelPubl$doi[i],
+                            lang  = stringr::str_extract(updatedRelPubl$lang[i], "^[a-z]{2}")
+                )
+                new_relPubl <- c(new_relPubl, list(new))
+              }
+            }
+          }
+          
+          new_relMat <- list()
+          if(length(updatedRelMat$description) > 0) {
+            for(i in 1:length(updatedRelMat$description)) {
+              if(!is.na(updatedRelMat$description[i]) & updatedRelMat$description[i] == "") updatedRelMat$description[i] <- NA_character_
+              if(!is.na(updatedRelMat$biblCit[i]) & updatedRelMat$biblCit[i] == "") updatedRelMat$biblCit[i] <- NA_character_
+              
+              if((!is.na(updatedRelMat$description[i]) & is.na(updatedRelMat$biblCit[i])) | 
+                 (is.na(updatedRelMat$description[i]) & !is.na(updatedRelMat$biblCit[i])) | 
+                 (!is.na(updatedRelMat$description[i]) & !is.na(updatedRelMat$biblCit[i]))) {
+                new <- list(id = paste0("relMat_", i),
+                            description = updatedRelMat$description[i],
+                            biblCit = updatedRelMat$biblCit[i],
+                            format = updatedRelMat$format[i],
+                            doi = updatedRelMat$doi[i],
+                            lang  = stringr::str_extract(updatedRelMat$lang[i], "^[a-z]{2}")
+                )
+                new_relMat <- c(new_relMat, list(new))
+              }
+            }
+          }
+
+          new_relStdy <- list()
+          if(length(updatedRelStdy$description) > 0) {
+            for(i in 1:length(updatedRelStdy$description)) {
+              if(!is.na(updatedRelStdy$description[i]) & updatedRelStdy$description[i] == "") updatedRelStdy$description[i] <- NA_character_
+              if(!is.na(updatedRelStdy$biblCit[i]) & updatedRelStdy$biblCit[i] == "") updatedRelStdy$biblCit[i] <- NA_character_
+              
+              if((!is.na(updatedRelStdy$description[i]) & is.na(updatedRelStdy$biblCit[i])) | 
+                 (is.na(updatedRelStdy$description[i]) & !is.na(updatedRelStdy$biblCit[i])) | 
+                 (!is.na(updatedRelStdy$description[i]) & !is.na(updatedRelStdy$biblCit[i]))) {
+                new <- list(id = paste0("relStdy_", i),
+                            description = updatedRelStdy$description[i],
+                            biblCit = updatedRelStdy$biblCit[i],
+                            format = updatedRelStdy$format[i],
+                            doi = updatedRelStdy$doi[i],
+                            lang  = stringr::str_extract(updatedRelStdy$lang[i], "^[a-z]{2}")
+                )
+                new_relStdy <- c(new_relStdy, list(new))
+              }
+            }
+          }
+          
+          new_othRefs <- list()
+          if(length(updatedOthRefs$description) > 0) {
+            for(i in 1:length(updatedOthRefs$description)) {
+              if(!is.na(updatedOthRefs$description[i]) & updatedOthRefs$description[i] == "") updatedOthRefs$description[i] <- NA_character_
+              if(!is.na(updatedOthRefs$biblCit[i]) & updatedOthRefs$biblCit[i] == "") updatedOthRefs$biblCit[i] <- NA_character_
+              
+              if((!is.na(updatedOthRefs$description[i]) & is.na(updatedOthRefs$biblCit[i])) | 
+                 (is.na(updatedOthRefs$description[i]) & !is.na(updatedOthRefs$biblCit[i])) | 
+                 (!is.na(updatedOthRefs$description[i]) & !is.na(updatedOthRefs$biblCit[i]))) {
+                new <- list(id = paste0("othRefs_", i),
+                            description = updatedOthRefs$description[i],
+                            biblCit = updatedOthRefs$biblCit[i],
+                            format = updatedOthRefs$format[i],
+                            doi = updatedOthRefs$doi[i],
+                            lang  = stringr::str_extract(updatedOthRefs$lang[i], "^[a-z]{2}")
+                )
+                new_othRefs <- c(new_othRefs, list(new))
+              }
+            }
+          }
+          
+          updatedData$stdyDscr$othrStdyMat$relPubl <- new_relPubl
+          updatedData$stdyDscr$othrStdyMat$relMat <- new_relMat
+          updatedData$stdyDscr$othrStdyMat$relStdy <- new_relStdy
+          updatedData$stdyDscr$othrStdyMat$othRefs <- new_othRefs
+          
+          updatedData$stdyDscr$othrStdyMat$relPubl <- recurse_write(updatedData$stdyDscr$othrStdyMat$relPubl)
+          updatedData$stdyDscr$othrStdyMat$relMat <- recurse_write(updatedData$stdyDscr$othrStdyMat$relMat)
+          updatedData$stdyDscr$othrStdyMat$relStdy <- recurse_write(updatedData$stdyDscr$othrStdyMat$relStdy)
+          updatedData$stdyDscr$othrStdyMat$othRefs <- recurse_write(updatedData$stdyDscr$othrStdyMat$othRefs)
+          
+          updatedData$stdyDscr$othrStdyMat$relPubl <- lapply(updatedData$stdyDscr$othrStdyMat$relPubl,function(x) x[!is.na(x)])
+          updatedData$stdyDscr$othrStdyMat$relMat <- lapply(updatedData$stdyDscr$othrStdyMat$relMat,function(x) x[!is.na(x)])
+          updatedData$stdyDscr$othrStdyMat$relStdy <- lapply(updatedData$stdyDscr$othrStdyMat$relStdy,function(x) x[!is.na(x)])
+          updatedData$stdyDscr$othrStdyMat$othRefs <- lapply(updatedData$stdyDscr$othrStdyMat$othRefs,function(x) x[!is.na(x)])
+                  
+          yaml::write_yaml(updatedData, filepth())
+        })
+      })
+    
+  })
+}
+

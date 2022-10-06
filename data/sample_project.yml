@@ -1,49 +1,9 @@
-docDscr:
-  citation: ~
-  guide: ~
-  docStatus: ~
-  controlledVocabUsed:
-    codeListName: ~
-    codeListID: ~
-    codeListAgencyName: ~
-    codeListURN: ~
-    usage:
-      attribute: ~
-      selector: ~
-      specificElements: ~
-fileDscr:
-  fileTxt:
-    fileStrc: ~
-    fileStrc-type: ~
-    fileName: ~
-    fileCitation:
-      biblCit: ~
-    fileCont: ~
-    fileCont-lang: ~
-    fileType: ~
-    fileType-charset: ~
-    ProcStat: ~
-    dataMsng: ~
-    software: ~
-    software-version: ~
-    software-date: ~
-    verStmt:
-      version: ~
-      version-date: ~
-      version-type: ~
-      verResp: ~
-      verResp-affiliation: ~
-      notes: ~
 stdyDscr:
   citation:
-    biblCit: ~
-    biblCit-format: ~
     titlStmt:
       parTitl: []
-      IDNo: ~
       titl:
       - value: Placeholder title
-        lang: en
     rspStmt:
       AuthEnty: []
       othId: []
@@ -52,54 +12,17 @@ stdyDscr:
       prodPlac: []
       prodDate: []
       fundAg: []
-    distStmt:
-      distrbtr: ~
-      distrbtr-abbr: ~
-      distrbtr-affiliation: ~
-      distrbtr-URI: ~
-      distDate: ~
-      distDate-date: ~
-      depDate: ~
-      depDate-date: ~
-      depositor: ~
-      depositor-abbr: ~
-      depositor-affiliation: ~
-      contact: ~
-      contact-affiliation: ~
-      contact-email: ~
     serStmt: []
-  dataAccs:
-    setAvail:
-      avlStatus: ~
-      complete: ~
-      accsPlac: ~
-      accsPlac-URI: ~
-    useStmt:
-      confDec: ~
-      confDec-required: ~
-      confDec-formNo: ~
-      confDec-URI: ~
-      contact: ~
-      contact-affiliation: ~
-      contact-email: ~
-      conditions: ~
-      disclaimer: ~
-      restrctn: ~
-      specPerm: ~
-      specPerm-required: ~
-      specPerm-formNo: ~
-      specPerm-URI: ~
-      citReq: ~
   stdyInfo:
     sumDscr:
       anlyUnit: []
+      collDate: []
+      universe: []
+      dataKind: []
       nation: []
       geogCover: []
       geogUnit: []
-      dataKind: []
       timePrd: []
-      collDate: []
-      universe: []
     qualityStatement:
     - standardsCompliance: ~
       standard:
@@ -111,36 +34,35 @@ stdyDscr:
   method:
     dataColl:
       timeMeth: []
-      frequenc: []
-      dataCollector: []
       collSitu: []
       collectorTraining: []
       resInstru: []
       instrumentDevelopment: []
       ConOps: []
-      actMin: []
       sampProc: []
       deviat: []
       collMode: []
-    stdyClas:
-      value: ~
-      type: ~
-      lang: ~
-    dataProcessing: ~
-  studyAuthorization:
-    authorizingAgency: ~
-    authroizingAgency-abbr: ~
-    authorizationStatement: ~
+      frequenc: []
+      dataCollector: []
+      actMin: []
   othrStdyMat:
     relPubl: []
-    relMat:
-    - id: relMat_1
-      description: hi
-      biblCit: dairop7dfuojvadsnrt, a (2021). Title. Publisher. Etc.
-      format: APA
-      doi: '1'
-      lang: en
+    relMat: []
     relStdy: []
     othRefs: []
 dataDscr:
   varGrp: []
+  var:
+  - name: ''
+    labl: []
+catgrySets:
+- name: binary
+  options:
+  - catValu: '0'
+    labl:
+    - value: 'No'
+      level: catgry
+  - catValu: '1'
+    labl:
+    - value: 'Yes'
+      level: catgry

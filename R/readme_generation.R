@@ -52,7 +52,7 @@ readme_generation_server <- function(id, dat) {
       
       content = function(file) {
         tempReport <- file.path(tempdir(), "readme.Rmd")
-        file.copy("readme.Rmd", tempReport, overwrite = TRUE)
+        file.copy("templates/readme_template.Rmd", tempReport, overwrite = TRUE)
         
         params <- list(data = dat())
     

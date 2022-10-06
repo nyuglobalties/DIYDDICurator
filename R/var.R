@@ -99,7 +99,9 @@ var_catgry_ui <- function(id) {
            tags$br(),
            actionButton(ns("saveVars"), "Save categories"),
            tags$hr(),
-           tags$p('...')
+           tags$p('A description of a particular response to a categorical variable.'),
+           tags$p('To assign categories either use an existing category set or create a new one and
+                  then assign it to the variable.  Existing sets can be edited as needed.')
   )
 }
 
@@ -181,7 +183,6 @@ var_label_server <- function(id, dat, filepth, lang) {
               new_l <- recurse_write(new_l)
               new_l <- lapply(new_l,function(x) x[!is.na(x)])
             }
-            
             
             if(v %in% existing_vars) {
               #only write over labels
@@ -321,38 +322,40 @@ var_respondent_server <- function(id, dat, filepth, lang) {
       
       # get a list of all varGrps...
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr[["var"]])) {
-        name_list <- append(name_list, dat()$dataDscr[["var"]][[i]]$name)
-      }
-      
       respondent_type = c("Analysis Unit", "Response Unit")
       
-      respondent_exist <- FALSE
-      for(v in dat()$dataDscr[["var"]]) {
-        if(length(v$anlysUnit) > 0) respondent_exist = TRUE
-        if(length(v$respUnit) > 0) respondent_exist = TRUE
-      }
-      
-      if(!respondent_exist) {
-        respondents <- add_row(respondents, name = name_list[[1]])
-      }
-      
-      for (v in dat()$dataDscr[["var"]]) {
-        for (resp in v$respUnit) {
-          if(is.null(resp$lang)) resp$lang <- NA_character_
-          respondents <- add_row(respondents,
-                                name = v$name,
-                                respondent_type = "Response Unit",
-                                value = resp$value,
-                                lang = resp$lang)
+      if(length(dat()$dataDscr[["var"]]) > 0) {
+        for(i in 1:length(dat()$dataDscr[["var"]])) {
+          name_list <- append(name_list, dat()$dataDscr[["var"]][[i]]$name)
         }
-        for(anly in v$anlysUnit) {
-          if(is.null(resp$lang)) resp$lang <- NA_character_
-          respondents <- add_row(respondents,
-                                name = v$name,
-                                respondent_type = "Analysis Unit",
-                                value = anly$value,
-                                lang = anly$lang)
+      
+        respondent_exist <- FALSE
+        for(v in dat()$dataDscr[["var"]]) {
+          if(length(v$anlysUnit) > 0) respondent_exist = TRUE
+          if(length(v$respUnit) > 0) respondent_exist = TRUE
+        }
+        
+        if(!respondent_exist) {
+          respondents <- add_row(respondents, name = name_list[[1]])
+        }
+        
+        for (v in dat()$dataDscr[["var"]]) {
+          for (resp in v$respUnit) {
+            if(is.null(resp$lang)) resp$lang <- NA_character_
+            respondents <- add_row(respondents,
+                                   name = v$name,
+                                   respondent_type = "Response Unit",
+                                   value = resp$value,
+                                   lang = resp$lang)
+          }
+          for(anly in v$anlysUnit) {
+            if(is.null(resp$lang)) resp$lang <- NA_character_
+            respondents <- add_row(respondents,
+                                   name = v$name,
+                                   respondent_type = "Analysis Unit",
+                                   value = anly$value,
+                                   lang = anly$lang)
+          }
         }
       }
       rht <- rhandsontable(respondents, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
@@ -453,28 +456,30 @@ var_varGrpAssign_server <- function(id, dat, filepth) {
       )
 
       varGrp_list <- c("")
-      for(i in 1:length(dat()$dataDscr$varGrp)) {
-        varGrp_list <- append(varGrp_list, dat()$dataDscr$varGrp[[i]]$name)
-        if(!is.null(dat()$dataDscr$varGrp[[i]][["var"]])) {
-          vars_temp <- strsplit(dat()$dataDscr$varGrp[[i]][["var"]], " ")
-          for(v in vars_temp) {
-            varGrp2<- add_row(varGrp2, 
-                              variable = v,
-                              variable_group = dat()$dataDscr$varGrp[[i]]$name)
+      if(length(dat()$dataDscr$varGrp) > 0) {
+        for(i in 1:length(dat()$dataDscr$varGrp)) {
+          varGrp_list <- append(varGrp_list, dat()$dataDscr$varGrp[[i]]$name)
+          if(!is.null(dat()$dataDscr$varGrp[[i]][["var"]])) {
+            vars_temp <- strsplit(dat()$dataDscr$varGrp[[i]][["var"]], " ")
+            for(v in vars_temp) {
+              varGrp2<- add_row(varGrp2, 
+                                variable = v,
+                                variable_group = dat()$dataDscr$varGrp[[i]]$name)
+            }
           }
         }
       }
       
       var <- tibble(variable = character())
-      for (v in dat()$dataDscr[["var"]]) {
-        # pull the var from varGrp to put in here
-        var <- add_row(var,
-                       variable = v$name)
+      if(length(dat()$dataDscr[["var"]]) > 0) {
+        for (v in dat()$dataDscr[["var"]]) {
+          # pull the var from varGrp to put in here
+          var <- add_row(var,
+                         variable = v$name)
+        }
       }
-      
       varGrp <- left_join(var, varGrp2, by = "variable") %>% 
-                mutate(variable_group = ifelse(is.na(variable_group), "", variable_group))
-      
+        mutate(variable_group = ifelse(is.na(variable_group), "", variable_group))
       
       rht <- rhandsontable(varGrp, stretchH = "all", overflow = "visible") %>% # converts the R dataframe to rhandsontable object
         hot_cols(colWidths = c(20, 20),
@@ -551,27 +556,29 @@ var_security_server <- function(id, dat, filepth, lang) {
       
       # get a list of all varGrps...
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr[["var"]])) {
-        name_list <- append(name_list, dat()$dataDscr[["var"]][[i]]$name)
-      }
-      
-      security_exist <- FALSE
-      for(v in dat()$dataDscr[["var"]]) {
-        if(length(v$security) > 0) security_exist = TRUE
-      }
-      if(!security_exist) {
-        security <- add_row(security, variable = name_list[[1]])
-      }
-      
-      for (v in dat()$dataDscr[["var"]]) {
-        for(s in v$security) {
-          if(is.null(s$date)) v$date <- NA_character_
-          if(is.null(s$lang)) v$lang <- NA_character_
-          security <- add_row(security,
-                         variable = v$name,
-                         value = s$value,
-                         date = as.Date(s$date),
-                         lang = s$lang)
+      if(length(dat()$dataDscr[["var"]]) > 0) {
+        for(i in 1:length(dat()$dataDscr[["var"]])) {
+          name_list <- append(name_list, dat()$dataDscr[["var"]][[i]]$name)
+        }
+        
+        security_exist <- FALSE
+        for(v in dat()$dataDscr[["var"]]) {
+          if(length(v$security) > 0) security_exist = TRUE
+        }
+        if(!security_exist) {
+          security <- add_row(security, variable = name_list[[1]])
+        }
+        
+        for (v in dat()$dataDscr[["var"]]) {
+          for(s in v$security) {
+            if(is.null(s$date)) v$date <- NA_character_
+            if(is.null(s$lang)) v$lang <- NA_character_
+            security <- add_row(security,
+                                variable = v$name,
+                                value = s$value,
+                                date = as.Date(s$date),
+                                lang = s$lang)
+          }
         }
       }
       
@@ -600,29 +607,31 @@ var_security_server <- function(id, dat, filepth, lang) {
       
       # get a list of all varGrps...
       name_list <- list()
-      for(i in 1:length(dat()$dataDscr[["var"]])) {
-        name_list <- append(name_list, dat()$dataDscr[["var"]][[i]]$name)
-      }
       event_list <- c("notBefore", "notAfter")
-      
-      embargo_exist <- FALSE
-      for(v in dat()$dataDscr[["var"]]) {
-        if(length(v$embargo) > 0) embargo_exist = TRUE
-      }
-      if(!embargo_exist) {
-        embargo <- add_row(embargo, variable = name_list[[1]])
-      }
-      
-      for (v in dat()$dataDscr[["var"]]) {
-        for(e in v$embargo) {
-          if(is.null(e$date)) v$date <- NA_character_
-          if(is.null(e$lang)) v$lang <- NA_character_
-          embargo <- add_row(embargo,
-                         variable = v$name,
-                         value = e$value,
-                         date = as.Date(e$date),
-                         event = e$event,
-                         lang = e$lang)
+      if(length(dat()$dataDscr[["var"]]) > 0) {
+        for(i in 1:length(dat()$dataDscr[["var"]])) {
+          name_list <- append(name_list, dat()$dataDscr[["var"]][[i]]$name)
+        }
+        
+        embargo_exist <- FALSE
+        for(v in dat()$dataDscr[["var"]]) {
+          if(length(v$embargo) > 0) embargo_exist = TRUE
+        }
+        if(!embargo_exist) {
+          embargo <- add_row(embargo, variable = name_list[[1]])
+        }
+        
+        for (v in dat()$dataDscr[["var"]]) {
+          for(e in v$embargo) {
+            if(is.null(e$date)) v$date <- NA_character_
+            if(is.null(e$lang)) v$lang <- NA_character_
+            embargo <- add_row(embargo,
+                               variable = v$name,
+                               value = e$value,
+                               date = as.Date(e$date),
+                               event = e$event,
+                               lang = e$lang)
+          }
         }
       }
       
