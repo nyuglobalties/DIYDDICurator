@@ -182,11 +182,12 @@ varGrp_label_server <- function(id, dat, filepth, lang) {
           updated_varGrp <- hot_to_r(input$varGrp_label)
           varGrpList <- unique(updated_varGrp$name)
           existing_varGrps <- list()
+          varGrpList <- varGrpList[varGrpList != ""]
 
           for(vg in dat()$dataDscr$varGrp) {
             existing_varGrps <- append(existing_varGrps, vg$name)
           }
-          
+
           # remove previously existing vars that have been removed from app
           if(length(existing_varGrps) > 0) {
             for(i in 1:length(existing_varGrps)) {
@@ -263,7 +264,7 @@ varGrp_type_server <- function(id, dat, filepth) {
                      "subject", "version", "iteration", "analysis", "pragmatic",
                      "record", "file", "randomized", "other")
       # get a list of all varGrps...
-      
+
       if(length(dat()$dataDscr$varGrp) > 0) {
         name_list <- list()
         for(i in 1:length(dat()$dataDscr$varGrp)) {
@@ -423,7 +424,7 @@ varGrp_hierarchy_server <- function(id, dat, filepth) {
         # as a varGrp becomes a child filter out the ones under the study
         for (vg in dat()$dataDscr$varGrp) {
           if(is.null(vg$varGrp)) vg$varGrp <- NA_character_
-          
+
           if(!is.na(vg$varGrp)) {
             split_vg <- strsplit(vg$varGrp, " ")
             for(i in 1:lengths(split_vg)) {
@@ -460,12 +461,20 @@ varGrp_hierarchy_server <- function(id, dat, filepth) {
             child_list <- list()
  
             for(child in new_df$child) {
-              if(child != vg) {
-                child_list <- append(child_list, child)
+              if(!is.na(child)) {
+                if(child != "") {
+                  if(child != vg) {
+                    child_list <- append(child_list, child)
+                  }
+                }
               }
             }
             # take the list or vector and convert it into a string
-            varGrp <- paste(child_list, collapse = " ")
+            if(length(child_list) > 0) {
+              varGrp <- paste(child_list, collapse = " ")
+            } else {
+              varGrp <- NA
+            }
             
             #only write over hierarchy
             for(i in 1:length(updatedData$dataDscr$varGrp)) {
@@ -717,7 +726,7 @@ varGrp_universe_server <- function(id, dat, filepth, lang) {
         
         universe_exist <- FALSE
         for(vg in dat()$dataDscr$varGrp) {
-          if(length(vg$defntn) > 0) universe_exist = TRUE
+          if(length(vg$universe) > 0) universe_exist = TRUE
         }
         
         if(!universe_exist) {

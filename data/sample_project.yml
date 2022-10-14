@@ -16,13 +16,13 @@ stdyDscr:
   stdyInfo:
     sumDscr:
       anlyUnit: []
-      collDate: []
       universe: []
-      dataKind: []
       nation: []
       geogCover: []
       geogUnit: []
+      dataKind: []
       timePrd: []
+      collDate: []
     qualityStatement:
     - standardsCompliance: ~
       standard:
@@ -34,17 +34,18 @@ stdyDscr:
   method:
     dataColl:
       timeMeth: []
+      frequenc: []
+      dataCollector: []
+      collMode:
+      - {}
       collSitu: []
       collectorTraining: []
       resInstru: []
       instrumentDevelopment: []
       ConOps: []
+      actMin: []
       sampProc: []
       deviat: []
-      collMode: []
-      frequenc: []
-      dataCollector: []
-      actMin: []
   othrStdyMat:
     relPubl: []
     relMat: []
@@ -52,9 +53,7 @@ stdyDscr:
     othRefs: []
 dataDscr:
   varGrp: []
-  var:
-  - name: ''
-    labl: []
+  var: []
 catgrySets:
 - name: binary
   options:

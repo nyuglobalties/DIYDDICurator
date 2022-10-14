@@ -693,7 +693,8 @@ bibliography_ui <- function(id) {
            tags$hr(),
            p('DDI allows for four types of documents in the codebook: Related Publications,
              Related Materials, Related Studies, and other references. It also allows for a description
-             and/or a bibliographic citation in each element.'),
+             and/or a bibliographic citation in each element. If using the a bibliographic citation 
+             you may include the citation format under format.'),
            tags$hr(),
            p('Related Publications are bibliographic and access information about articles and 
                   reports based on the data in this dataset.'),

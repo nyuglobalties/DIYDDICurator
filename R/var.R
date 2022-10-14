@@ -150,6 +150,7 @@ var_label_server <- function(id, dat, filepth, lang) {
           updatedData <- dat()
           updated_var <- hot_to_r(input$var)
           varList <- unique(updated_var$name)
+          varList <- varList[varList != ""]
           existing_vars <- list()
           
           for(v in dat()$dataDscr$var) {
@@ -259,6 +260,21 @@ var_characteristics_server <- function(id, dat, filepth) {
           updatedData <- dat()
           updated_var <- hot_to_r(input$varCharacteristics)
           varList <- unique(updated_var$name)
+          
+          # check for nature change - especiallly categorical to numeric
+          # if catgry exists in numeric variables delete
+          browser()
+          for(i in 1:length(updatedData$dataDscr[["var"]])) {
+            temp_df <- updated_var %>% filter(name == updatedData$dataDscr[["var"]][[i]]$name)
+            if(updatedData$dataDscr[["var"]][[i]]$nature != temp_df$nature) {
+              if(temp_df$nature == "interval" | temp_df$nature == "ratio") {
+                if(!is.null(updatedData$dataDscr[["var"]][[i]]$catgry)) {
+                  updatedData$dataDscr[["var"]][[i]]$catSet <- NULL
+                  updatedData$dataDscr[["var"]][[i]]$catgry <- NULL
+                }
+              }
+            }
+          }
           
           for(v in varList) {
             new_df <- updated_var %>% filter(name == v)
@@ -571,8 +587,8 @@ var_security_server <- function(id, dat, filepth, lang) {
         
         for (v in dat()$dataDscr[["var"]]) {
           for(s in v$security) {
-            if(is.null(s$date)) v$date <- NA_character_
-            if(is.null(s$lang)) v$lang <- NA_character_
+            if(is.null(s$date)) s$date <- NA_character_
+            if(is.null(s$lang)) s$lang <- NA_character_
             security <- add_row(security,
                                 variable = v$name,
                                 value = s$value,
@@ -623,8 +639,8 @@ var_security_server <- function(id, dat, filepth, lang) {
         
         for (v in dat()$dataDscr[["var"]]) {
           for(e in v$embargo) {
-            if(is.null(e$date)) v$date <- NA_character_
-            if(is.null(e$lang)) v$lang <- NA_character_
+            if(is.null(e$date)) e$date <- NA_character_
+            if(is.null(e$lang)) e$lang <- NA_character_
             embargo <- add_row(embargo,
                                variable = v$name,
                                value = e$value,
