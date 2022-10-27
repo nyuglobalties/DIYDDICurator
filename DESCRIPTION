@@ -2,15 +2,18 @@ Package: DIYDDICurator
 Title: A Curation Tool for Human Survey Research Data Based on the rddi Package
 Version: 0.0.0.9000
 Authors@R: 
-    person(
+    c(person(
             given = "Daniel",
             family = "Woulfin",
             role = c("aut", "cre"),
             email = "dw2896@nyu.edu",
-            comment = c(ORCID = "0000-0001-5502-9861"))
-Description: The package serves as a graphic user interface to the rddi package and allows for researchers and curators working with human survey data to gather appropriate metadata to generate a DDI Codebook 2.5.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+            comment = c(ORCID = "0000-0001-5502-9861")),
+      person(
+            given = "Global TIES for Children", 
+            role = "cph",
+            comment = "https://steinhardt.nyu.edu/ihdsc/global-ties"))            
+Description: The package serves as a graphic user interface to the rddi package and allows for researchers and curators working with human survey data to gather appropriate metadata to generate a DDI 2.5 Codebook.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1

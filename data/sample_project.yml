@@ -23,12 +23,6 @@ stdyDscr:
       dataKind: []
       timePrd: []
       collDate: []
-    qualityStatement:
-    - standardsCompliance: ~
-      standard:
-      - standardName: ~
-        producer: ~
-      complianceDescription: ~
     abstract: []
     subject: []
   method:
@@ -36,8 +30,7 @@ stdyDscr:
       timeMeth: []
       frequenc: []
       dataCollector: []
-      collMode:
-      - {}
+      collMode: []
       collSitu: []
       collectorTraining: []
       resInstru: []

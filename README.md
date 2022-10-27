@@ -20,13 +20,6 @@ Export navigation menu.
 
 ## Installation
 
-It is recommended to use the development version of rddi from Github
-
-``` r
-# install.packages("devtools")
-devtools::install_github("nyuglobalties/rddi")
-```
-
 DIYDDICurator installation
 
 ``` r

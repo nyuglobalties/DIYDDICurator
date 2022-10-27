@@ -1,6 +1,7 @@
 title_ui <- function(id) {
   ns <- NS(id)
   tabPanel("Title",
+           h4("Authoritative title of study"),
            rHandsontableOutput(ns("titl")),
            tags$br(),
            h4("Translated title(s)"),
@@ -14,7 +15,7 @@ title_ui <- function(id) {
              related to study. The study title will in most cases be identical 
              to the title for the marked-up document. A full title should 
              indicate the geographic scope of the data collection as well as the 
-             \time period covered.'),
+             time period covered.'),
            p('The parallel title or translated title is the title translated into 
              another language. Use the lang column to specify the language.')
            )
