@@ -104,7 +104,7 @@ curator <- function() {
   
     filepth <- reactive({
       if(is.null(input$inputed_dat)) {
-        r <- paste0("data/", input$project)
+        r <- paste0(system.file("data", package = "DIYDDICurator"), input$project)
       } else {
         r <- input$inputed_dat$datapath
       }
@@ -120,7 +120,7 @@ curator <- function() {
     output$project <- renderUI(
       radioButtons("project", 
                    label = "Select Project",
-                   choices = list.files("data/")
+                   choices = list.files(system.file("data", package = "DIYDDICurator"))
                    )
     )
     
