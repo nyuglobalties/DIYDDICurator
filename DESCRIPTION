@@ -17,16 +17,15 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
-Depends:
-    rddi,
-    rhandsontable,
-    shiny
 Imports: 
     data.tree,
     dplyr,
     htmltidy,
     magrittr,
     purrr,
+    rddi,
+    rhandsontable,
+    shiny,
     stringr,
     tibble,
     xml2,

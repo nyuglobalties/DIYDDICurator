@@ -6,6 +6,10 @@
 #' @examples 
 #' curator()
 #' 
+#' @import shiny
+#' @import rddi
+#' @import rhandsontable
+#'
 #' @export
 curator <- function() {
   ui <- fluidPage(
