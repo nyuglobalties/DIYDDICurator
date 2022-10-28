@@ -1,3 +1,12 @@
+#' curator
+#'
+#' This function calls the shiny app, allowing users to input and save metadata 
+#' and generate DDI Codebooks and README files.
+#'
+#' @examples 
+#' curator()
+#' 
+#' @export
 curator <- function() {
   ui <- fluidPage(
     navbarPage(strong("DIY DDI Curator"),
