@@ -828,18 +828,14 @@ bibliography_server <-  function(id, dat, filepth, lang) {
               if(!is.na(updatedRelPubl$description[i]) & updatedRelPubl$description[i] == "") updatedRelPubl$description[i] <- NA_character_
               if(!is.na(updatedRelPubl$biblCit[i]) & updatedRelPubl$biblCit[i] == "") updatedRelPubl$biblCit[i] <- NA_character_
               
-              if((!is.na(updatedRelPubl$description[i]) & is.na(updatedRelPubl$biblCit[i])) | 
-                 (is.na(updatedRelPubl$description[i]) & !is.na(updatedRelPubl$biblCit[i])) | 
-                 (!is.na(updatedRelPubl$description[i]) & !is.na(updatedRelPubl$biblCit[i]))) {
-                new <- list(id = paste0("relPubl_", i),
-                            description = updatedRelPubl$description[i],
-                            biblCit = updatedRelPubl$biblCit[i],
-                            format = updatedRelPubl$format[i],
-                            doi = updatedRelPubl$doi[i],
-                            lang  = stringr::str_extract(updatedRelPubl$lang[i], "^[a-z]{2}")
-                )
-                new_relPubl <- c(new_relPubl, list(new))
-              }
+              new <- list(id = paste0("relPubl_", i),
+                          description = updatedRelPubl$description[i],
+                          biblCit = updatedRelPubl$biblCit[i],
+                          format = updatedRelPubl$format[i],
+                          doi = updatedRelPubl$doi[i],
+                          lang  = stringr::str_extract(updatedRelPubl$lang[i], "^[a-z]{2}")
+              )
+              new_relPubl <- c(new_relPubl, list(new))
             }
           }
           
@@ -849,18 +845,14 @@ bibliography_server <-  function(id, dat, filepth, lang) {
               if(!is.na(updatedRelMat$description[i]) & updatedRelMat$description[i] == "") updatedRelMat$description[i] <- NA_character_
               if(!is.na(updatedRelMat$biblCit[i]) & updatedRelMat$biblCit[i] == "") updatedRelMat$biblCit[i] <- NA_character_
               
-              if((!is.na(updatedRelMat$description[i]) & is.na(updatedRelMat$biblCit[i])) | 
-                 (is.na(updatedRelMat$description[i]) & !is.na(updatedRelMat$biblCit[i])) | 
-                 (!is.na(updatedRelMat$description[i]) & !is.na(updatedRelMat$biblCit[i]))) {
-                new <- list(id = paste0("relMat_", i),
-                            description = updatedRelMat$description[i],
-                            biblCit = updatedRelMat$biblCit[i],
-                            format = updatedRelMat$format[i],
-                            doi = updatedRelMat$doi[i],
-                            lang  = stringr::str_extract(updatedRelMat$lang[i], "^[a-z]{2}")
-                )
-                new_relMat <- c(new_relMat, list(new))
-              }
+              new <- list(id = paste0("relMat_", i),
+                          description = updatedRelMat$description[i],
+                          biblCit = updatedRelMat$biblCit[i],
+                          format = updatedRelMat$format[i],
+                          doi = updatedRelMat$doi[i],
+                          lang  = stringr::str_extract(updatedRelMat$lang[i], "^[a-z]{2}")
+              )
+              new_relMat <- c(new_relMat, list(new))
             }
           }
 
@@ -870,18 +862,14 @@ bibliography_server <-  function(id, dat, filepth, lang) {
               if(!is.na(updatedRelStdy$description[i]) & updatedRelStdy$description[i] == "") updatedRelStdy$description[i] <- NA_character_
               if(!is.na(updatedRelStdy$biblCit[i]) & updatedRelStdy$biblCit[i] == "") updatedRelStdy$biblCit[i] <- NA_character_
               
-              if((!is.na(updatedRelStdy$description[i]) & is.na(updatedRelStdy$biblCit[i])) | 
-                 (is.na(updatedRelStdy$description[i]) & !is.na(updatedRelStdy$biblCit[i])) | 
-                 (!is.na(updatedRelStdy$description[i]) & !is.na(updatedRelStdy$biblCit[i]))) {
-                new <- list(id = paste0("relStdy_", i),
-                            description = updatedRelStdy$description[i],
-                            biblCit = updatedRelStdy$biblCit[i],
-                            format = updatedRelStdy$format[i],
-                            doi = updatedRelStdy$doi[i],
-                            lang  = stringr::str_extract(updatedRelStdy$lang[i], "^[a-z]{2}")
-                )
-                new_relStdy <- c(new_relStdy, list(new))
-              }
+              new <- list(id = paste0("relStdy_", i),
+                          description = updatedRelStdy$description[i],
+                          biblCit = updatedRelStdy$biblCit[i],
+                          format = updatedRelStdy$format[i],
+                          doi = updatedRelStdy$doi[i],
+                          lang  = stringr::str_extract(updatedRelStdy$lang[i], "^[a-z]{2}")
+              )
+              new_relStdy <- c(new_relStdy, list(new))
             }
           }
           
@@ -891,18 +879,14 @@ bibliography_server <-  function(id, dat, filepth, lang) {
               if(!is.na(updatedOthRefs$description[i]) & updatedOthRefs$description[i] == "") updatedOthRefs$description[i] <- NA_character_
               if(!is.na(updatedOthRefs$biblCit[i]) & updatedOthRefs$biblCit[i] == "") updatedOthRefs$biblCit[i] <- NA_character_
               
-              if((!is.na(updatedOthRefs$description[i]) & is.na(updatedOthRefs$biblCit[i])) | 
-                 (is.na(updatedOthRefs$description[i]) & !is.na(updatedOthRefs$biblCit[i])) | 
-                 (!is.na(updatedOthRefs$description[i]) & !is.na(updatedOthRefs$biblCit[i]))) {
-                new <- list(id = paste0("othRefs_", i),
-                            description = updatedOthRefs$description[i],
-                            biblCit = updatedOthRefs$biblCit[i],
-                            format = updatedOthRefs$format[i],
-                            doi = updatedOthRefs$doi[i],
-                            lang  = stringr::str_extract(updatedOthRefs$lang[i], "^[a-z]{2}")
-                )
-                new_othRefs <- c(new_othRefs, list(new))
-              }
+              new <- list(id = paste0("othRefs_", i),
+                          description = updatedOthRefs$description[i],
+                          biblCit = updatedOthRefs$biblCit[i],
+                          format = updatedOthRefs$format[i],
+                          doi = updatedOthRefs$doi[i],
+                          lang  = stringr::str_extract(updatedOthRefs$lang[i], "^[a-z]{2}")
+              )
+              new_othRefs <- c(new_othRefs, list(new))
             }
           }
           

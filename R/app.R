@@ -205,5 +205,5 @@ curator <- function() {
     download_data_server("data_download", dat)
   }
 
-  shinyApp(server = server, ui = ui)
+  shinyApp(server = server, ui = ui, options = c(launch.browser = TRUE))
 }

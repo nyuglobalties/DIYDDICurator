@@ -20,7 +20,6 @@ RoxygenNote: 7.2.1
 Imports: 
     data.tree,
     dplyr,
-    htmltidy,
     magrittr,
     purrr,
     rddi,
