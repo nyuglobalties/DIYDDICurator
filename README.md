@@ -23,15 +23,15 @@ Export navigation menu.
 DIYDDICurator installation
 
 ``` r
-devtools::install_github("nyuglobalties/DIYDDICurator")
+devtools::install_github("nyuglobalties/diyddi")
 ```
 
 ## Launch DIY DDI Curator
 
 ``` r
-library(DIYDDICurator)
+library(diyddi)
 curator()
 
 # or
-DIYDDICurator:curator()
+diyddi:curator()
 ```
