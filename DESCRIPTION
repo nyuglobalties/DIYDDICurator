@@ -1,4 +1,4 @@
-Package: DIYDDICurator
+Package: diyddi
 Title: A Curation Tool for Human Survey Research Data Based on the rddi Package
 Version: 0.0.0.9000
 Authors@R: 
