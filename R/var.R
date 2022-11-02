@@ -158,12 +158,14 @@ var_label_server <- function(id, dat, filepth, lang) {
           }
           
           # remove previously existing vars that have been removed from app
-          for(i in 1:length(existing_vars)) {
-            if(existing_vars[[i]] %in% varList) {
-            } else {
-              updatedData$dataDscr[["var"]] <- lapply(1:length(updatedData$dataDscr[["var"]]), 
-                                                      function(x) updatedData$dataDscr[["var"]][[x]][updatedData$dataDscr[["var"]][[x]]$name != existing_vars[[i]]])
-              updatedData$dataDscr[["var"]] <- updatedData$dataDscr[["var"]][lengths(updatedData$dataDscr[["var"]]) > 0] 
+          if(length(existing_vars) > 0) {
+            for(i in 1:length(existing_vars)) {
+              if(existing_vars[[i]] %in% varList) {
+              } else {
+                updatedData$dataDscr[["var"]] <- lapply(1:length(updatedData$dataDscr[["var"]]), 
+                                                        function(x) updatedData$dataDscr[["var"]][[x]][updatedData$dataDscr[["var"]][[x]]$name != existing_vars[[i]]])
+                updatedData$dataDscr[["var"]] <- updatedData$dataDscr[["var"]][lengths(updatedData$dataDscr[["var"]]) > 0] 
+              }
             }
           }
           
@@ -261,16 +263,18 @@ var_characteristics_server <- function(id, dat, filepth) {
           updated_var <- hot_to_r(input$varCharacteristics)
           varList <- unique(updated_var$name)
           
-          # check for nature change - especiallly categorical to numeric
+          # check for nature change - especially categorical to numeric
           # if catgry exists in numeric variables delete
           browser()
           for(i in 1:length(updatedData$dataDscr[["var"]])) {
             temp_df <- updated_var %>% filter(name == updatedData$dataDscr[["var"]][[i]]$name)
-            if(updatedData$dataDscr[["var"]][[i]]$nature != temp_df$nature) {
-              if(temp_df$nature == "interval" | temp_df$nature == "ratio") {
-                if(!is.null(updatedData$dataDscr[["var"]][[i]]$catgry)) {
-                  updatedData$dataDscr[["var"]][[i]]$catSet <- NULL
-                  updatedData$dataDscr[["var"]][[i]]$catgry <- NULL
+            if(!is.null(updatedData$dataDscr[["var"]][[i]]$nature)) {
+              if(updatedData$dataDscr[["var"]][[i]]$nature != temp_df$nature) {
+                if(temp_df$nature == "interval" | temp_df$nature == "ratio") {
+                  if(!is.null(updatedData$dataDscr[["var"]][[i]]$catgry)) {
+                    updatedData$dataDscr[["var"]][[i]]$catSet <- NULL
+                    updatedData$dataDscr[["var"]][[i]]$catgry <- NULL
+                  }
                 }
               }
             }
