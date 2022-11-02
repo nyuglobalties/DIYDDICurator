@@ -33,5 +33,5 @@ library(diyddi)
 curator()
 
 # or
-diyddi:curator()
+diyddi::curator()
 ```
