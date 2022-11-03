@@ -265,7 +265,7 @@ var_characteristics_server <- function(id, dat, filepth) {
           
           # check for nature change - especially categorical to numeric
           # if catgry exists in numeric variables delete
-          browser()
+          
           for(i in 1:length(updatedData$dataDscr[["var"]])) {
             temp_df <- updated_var %>% filter(name == updatedData$dataDscr[["var"]][[i]]$name)
             if(!is.null(updatedData$dataDscr[["var"]][[i]]$nature)) {
