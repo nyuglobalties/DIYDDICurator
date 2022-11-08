@@ -137,13 +137,15 @@ curator <- function() {
           if(!stringr::str_detect(input$newFileName, "[.]yml$")) {
             name <- paste0(name, ".yml")
           }
-          file.copy("templates/template.yml", "data/template.yml")
-          file.rename("data/template.yml", paste0("data/", name))
+          file.copy(paste0(system.file("templates", package = "diyddi"), "/template.yml"), 
+                    paste0(system.file("data", package = "diyddi"), "/template.yml"))
+          file.rename(paste0(system.file("data", package = "diyddi"), "/template.yml"), 
+                             paste0(system.file("data", package = "diyddi"), "/", name))
         
           updateRadioButtons(session = session,
                              inputId = "project",
                              label = "Select Project",
-                             choices = list.files("data/"))
+                             choices = list.files(system.file("data", package = "diyddi")))
         })
       })
   
