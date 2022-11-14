@@ -104,7 +104,6 @@ title_server <- function(id, dat, filepth, lang) {
           updatedData$stdyDscr$citation$titlStmt$parTitl <- new_parTitl
           updatedData$stdyDscr$citation$titlStmt$parTitl <- recurse_write(updatedData$stdyDscr$citation$titlStmt$parTitl)
           updatedData$stdyDscr$citation$titlStmt$parTitl <- lapply(updatedData$stdyDscr$citation$titlStmt$parTitl, function(x) x[!is.na(x)])
-          
           yaml::write_yaml(updatedData, filepth())
         })
       })

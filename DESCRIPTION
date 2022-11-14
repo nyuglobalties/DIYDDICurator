@@ -25,6 +25,7 @@ Imports:
     rddi,
     rhandsontable,
     shiny,
+    shinyFiles,
     stringr,
     tibble,
     xml2,

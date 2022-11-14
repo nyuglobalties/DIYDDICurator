@@ -9,6 +9,7 @@
 #' @import shiny
 #' @import rddi
 #' @import rhandsontable
+#' @import shinyFiles
 #'
 #' @export
 curator <- function() {
@@ -24,19 +25,14 @@ curator <- function() {
                         bÍelow, create a new file, or upload your own (just remember 
                         to save before you shut down the app).'),
               tags$hr(), 
-               uiOutput("project"),
+              p('Select data source'),
+              actionButton("default_file", label = "Use app default"),
+              shinyFilesButton("inputed_dat", 
+                         label = "Upload an existing project",
+                         title = "Please upload a yaml file",
+                         multiple = FALSE),
               tags$hr(),
-              fileInput("inputed_dat", 
-                         "Upload an existing yaml file",
-                         accept = ".yml"),
-              tags$hr(),
-              textInput("newFileName", label = "New local file", placeholder = "Type new file name here"),
-              tags$em('When creating a new file please use snake_case (dashes instead 
-                      of blanks) or camelCase (no blanks but uppercase the first letter 
-                      of the non-first word.'),
-              tags$br(),
-              tags$br(),
-              actionButton("createNewFile", "Create new file")
+              verbatimTextOutput("file_used")
               ),
       navbarMenu(
         "Project Information",
@@ -101,14 +97,37 @@ curator <- function() {
   )
 
   server <- function(input, output, session) {
-  
+    use_data_default <- reactiveVal(TRUE)
+    
+    volumes <- c(Home = fs::path_home(), "R Installation" = R.home(), getVolumes()())
+    shinyFileChoose(input, 
+                    "inputed_dat",
+                    session = session, 
+                    roots = volumes,
+                    filetypes = c('', "yml")
+                    )
+    
+    observeEvent(input$default_file, {
+      use_data_default(TRUE)
+    })
+    
+    observeEvent(input$inputed_dat, {
+      use_data_default(FALSE)
+    })
+    
     filepth <- reactive({
-      if(is.null(input$inputed_dat)) {
-        r <- paste0(system.file("data", package = "diyddi"), "/", input$project)
-      } else {
-        r <- input$inputed_dat$datapath
+      r <- paste0(system.file("data", package = "diyddi"), "/sample_project.yml")
+      if(!use_data_default()) {
+        path <- parseFilePaths(roots = volumes, input$inputed_dat)
+        if(!is.na(path$datapath[1])) {
+          r <- path$datapath[[1]]
+        }
       }
       return(r)
+    })
+    
+    output$file_used <- renderPrint({
+      cat("The data file being used is located at ", filepth())
     })
   
     init_dat <- reactiveFileReader(intervalMillis = 1000, 
@@ -116,39 +135,12 @@ curator <- function() {
                               filePath = filepth,
                               readFunc = yaml::read_yaml
                             )
-  
-    output$project <- renderUI(
-      radioButtons("project", 
-                   label = "Select Project",
-                   choices = list.files(system.file("data", package = "diyddi"))
-                   )
-    )
     
     dat <- reactive(recurse_read(init_dat()))
   
     lang <- isolate(c("", "en - English", "fr - Français", "es - Español", 
                       "ar - عربى", "zh - 中国人", "ru - Русский"))
-  
-    observeEvent(
-      input$createNewFile, {
-        isolate({
-          req(input$newFileName) 
-          name <- str_replace_all(input$newFileName, " ", "_")
-          if(!stringr::str_detect(input$newFileName, "[.]yml$")) {
-            name <- paste0(name, ".yml")
-          }
-          file.copy(paste0(system.file("templates", package = "diyddi"), "/template.yml"), 
-                    paste0(system.file("data", package = "diyddi"), "/template.yml"))
-          file.rename(paste0(system.file("data", package = "diyddi"), "/template.yml"), 
-                             paste0(system.file("data", package = "diyddi"), "/", name))
-        
-          updateRadioButtons(session = session,
-                             inputId = "project",
-                             label = "Select Project",
-                             choices = list.files(system.file("data", package = "diyddi")))
-        })
-      })
-  
+
     session$onSessionEnded(function() {
       stopApp()
     })
