@@ -40,8 +40,7 @@ descr_AuthEnty <- function(dat) {
     ds <- add_row(ds, name = auth$name, affiliation = auth$affiliation)
   }
   pmap(
-    .l = list(name = ds$name, 
-              affiliation = ds$affiliation),
+    .l = list(name = ds$name, affiliation = ds$affiliation),
     .f = function(name, affiliation) {
       ddi_AuthEnty(name, affiliation = affiliation)  
     }
@@ -56,9 +55,7 @@ descr_othId <- function(dat) {
                   affiliation = othId$affiliation)
   }
   pmap(
-    .l = list(name = ds$name, 
-              role = ds$role,
-              affiliation = ds$affiliation),
+    .l = list(name = ds$name, role = ds$role, affiliation = ds$affiliation),
     .f = function(name, role, affiliation) {
       ddi_othId(name, role = role, affiliation = affiliation)
     }
@@ -187,8 +184,7 @@ descr_anlyUnit <- function(dat) {
                   lang = n$lang)
   }
   pmap(
-    .l = list(group = ds$group, 
-              lang = ds$lang),
+    .l = list(group = ds$group, lang = ds$lang),
     .f = function(group, lang) {
       ddi_anlyUnit(group, lang = lang)  
     }
@@ -1188,9 +1184,5 @@ generate_ddi_codebook <- function(dat) {
     cb$content <- append(cb$content, list(splat(var, ddi_dataDscr)))
   }
   
-
-  #ddi <- gsub("&lt;", "<", ddi)
-  #ddi <- gsub("&gt;", ">", ddi)
-  #ddi <- xml2::read_xml(ddi)
   cb
 }
