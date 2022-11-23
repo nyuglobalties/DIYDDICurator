@@ -856,8 +856,8 @@ generate_othrStdyMat <- function(dat) {
   relStdy <- descr_relStdy(dat)
   othRefs <- descr_othRefs(dat)
   if(length(relMat) > 0) othrStdyMat$content <- append(othrStdyMat$content, relMat)
-  if(length(relPubl) > 0) othrStdyMat$content <- append(othrStdyMat$content, relPubl)
   if(length(relStdy) > 0) othrStdyMat$content <- append(othrStdyMat$content, relStdy)
+  if(length(relPubl) > 0) othrStdyMat$content <- append(othrStdyMat$content, relPubl)
   if(length(othRefs) > 0) othrStdyMat$content <- append(othrStdyMat$content, othRefs)  
   othrStdyMat
 }
