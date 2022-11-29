@@ -53,14 +53,16 @@ abstract_server <- function(id, dat, filepth, lang) {
           updatedAbstracts <- hot_to_r(input$abstract)
           updatedData$stdyDscr$stdyInfo$abstract <- NULL
           newAbstract <- list()
-          for(i in 1:length(updatedAbstracts$value)) {
-            if(!is.na(updatedAbstracts$value[i])) {
-              if(updatedAbstracts$value[i] != "") {
-                new <- list(value = updatedAbstracts$value[i],
-                            contentType = updatedAbstracts$contentType[i],
-                            lang  = stringr::str_extract(updatedAbstracts$lang[i], "^[a-z]{2}")
-                )
-                newAbstract <- c(newAbstract, list(new))
+          if(length(updatedAbstracts$value) > 0) {
+            for(i in 1:length(updatedAbstracts$value)) {
+              if(!is.na(updatedAbstracts$value[i])) {
+                if(updatedAbstracts$value[i] != "") {
+                  new <- list(value = updatedAbstracts$value[i],
+                              contentType = updatedAbstracts$contentType[i],
+                              lang  = stringr::str_extract(updatedAbstracts$lang[i], "^[a-z]{2}")
+                  )
+                  newAbstract <- c(newAbstract, list(new))
+                }
               }
             }
           }
@@ -136,15 +138,17 @@ subject_server <-  function(id, dat, filepth, lang) {
           updatedSubjects <- hot_to_r(input$subject)
           updatedData$stdyDscr$stdyInfo$subject <- NULL
           newSubject <- list()
-          for(i in 1:length(updatedSubjects$keyword)) {
-            if(!is.na(updatedSubjects$keyword[i])) {
-              if(updatedSubjects$keyword[i] != "") {
-                new <- list(keyword = updatedSubjects$keyword[i],
-                            vocabu = updatedSubjects$vocabu[i],
-                            vocab_URI = updatedSubjects$vocab_URI[i],
-                            lang  = stringr::str_extract(updatedSubjects$lang[i], "^[a-z]{2}")
-                )
-                newSubject <- c(newSubject, list(new))
+          if(length(updatedSubjects$keyword) > 0) {
+            for(i in 1:length(updatedSubjects$keyword)) {
+              if(!is.na(updatedSubjects$keyword[i])) {
+                if(updatedSubjects$keyword[i] != "") {
+                  new <- list(keyword = updatedSubjects$keyword[i],
+                              vocabu = updatedSubjects$vocabu[i],
+                              vocab_URI = updatedSubjects$vocab_URI[i],
+                              lang  = stringr::str_extract(updatedSubjects$lang[i], "^[a-z]{2}")
+                  )
+                  newSubject <- c(newSubject, list(new))
+                }
               }
             }
           }
@@ -225,15 +229,17 @@ universe_server <-  function(id, dat, filepth, lang) {
           updatedUniverse<- hot_to_r(input$universe)
           updatedData$stdyDscr$stdyInfo$sumDscr$universe <- NULL
           newUniverse <- list()
-          for(i in 1:length(updatedUniverse$group)) {
-            if(!is.na(updatedUniverse$group[i])) {
-              if(updatedUniverse$group[i] != "") {
-                new <- list(group = updatedUniverse$group[i],
-                            level = "project",
-                            clusion = updatedUniverse$clusion[i],
-                            lang  = stringr::str_extract(updatedUniverse$lang[i], "^[a-z]{2}")
-                )
-                newUniverse <- c(newUniverse, list(new))
+          if(length(updatedUniverse$group) > 0) {
+            for(i in 1:length(updatedUniverse$group)) {
+              if(!is.na(updatedUniverse$group[i])) {
+                if(updatedUniverse$group[i] != "") {
+                  new <- list(group = updatedUniverse$group[i],
+                              level = "project",
+                              clusion = updatedUniverse$clusion[i],
+                              lang  = stringr::str_extract(updatedUniverse$lang[i], "^[a-z]{2}")
+                  )
+                  newUniverse <- c(newUniverse, list(new))
+                }
               }
             }
           }
@@ -299,13 +305,15 @@ anlyUnit_server <- function(id, dat, filepth, lang) {
           updated_anlyUnit <- hot_to_r(input$anlyUnit)
           updatedData$stdyDscr$sumDscr$anlyUnit <- NULL
           new_anlyUnit <- list()
-          for(i in 1:length(updated_anlyUnit$group)) {
-            if(!is.na(updated_anlyUnit$group[i])) {
-              if(updated_anlyUnit$group[i] != "") {
-                new <- list(group = updated_anlyUnit$group[i],
-                            lang  = stringr::str_extract(updated_anlyUnit$lang[i], "^[a-z]{2}")
-                )
-                new_anlyUnit <- c(new_anlyUnit, list(new))
+          if(length(updated_anlyUnit$group) > 0) {
+            for(i in 1:length(updated_anlyUnit$group)) {
+              if(!is.na(updated_anlyUnit$group[i])) {
+                if(updated_anlyUnit$group[i] != "") {
+                  new <- list(group = updated_anlyUnit$group[i],
+                              lang  = stringr::str_extract(updated_anlyUnit$lang[i], "^[a-z]{2}")
+                  )
+                  new_anlyUnit <- c(new_anlyUnit, list(new))
+                }
               }
             }
           }
@@ -378,14 +386,16 @@ dataKind_server <- function(id, dat, filepth, lang) {
           updated_dataKind <- hot_to_r(input$dataKind)
           updatedData$stdyDscr$stdyInfo$sumDscr$dataKind <- NULL
           new_dataKind <- list()
-          for(i in 1:length(updated_dataKind$value)) {
-            if(!is.na(updated_dataKind$value[i])) {
-              if(updated_dataKind$value[i] != "") {
-                new <- list(value = updated_dataKind$value[i],
-                            type = updated_dataKind$type[i],
-                            lang = stringr::str_extract(updated_dataKind$lang[i], "^[a-z]{2}")
-                )
-                new_dataKind <- c(new_dataKind, list(new))
+          if(length(updated_dataKind$value) > 0) {
+            for(i in 1:length(updated_dataKind$value)) {
+              if(!is.na(updated_dataKind$value[i])) {
+                if(updated_dataKind$value[i] != "") {
+                  new <- list(value = updated_dataKind$value[i],
+                              type = updated_dataKind$type[i],
+                              lang = stringr::str_extract(updated_dataKind$lang[i], "^[a-z]{2}")
+                  )
+                  new_dataKind <- c(new_dataKind, list(new))
+                }
               }
             }
           }
@@ -491,25 +501,27 @@ geography_server <- function(id, dat, filepth, lang) {
           new_nation <- list()
           new_geogCover <- list()
           new_geogUnit <- list()
-          for(i in 1:length(updated_geog$field)) {
-            if(!is.na(updated_geog$value[i])) {
-              if(updated_geog$value[i] != "") {
-                if(updated_geog$field[i] == "nation") {
-                  new_n <- list(value = updated_geog$value[i],
-                                abbr = updated_geog$abbr[i],
-                                lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
-                  )
-                  new_nation <- c(new_nation, list(new_n))
-                } else if(updated_geog$field[i] == "geogCover"){
-                  new_gc <- list(value = updated_geog$value[i],
-                                 lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
-                  )
-                  new_geogCover <- c(new_geogCover, list(new_gc))
-                } else {
-                  new_gu <- list(value = updated_geog$value[i],
-                                 lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
-                  )
-                  new_geogUnit <- c(new_geogUnit, list(new_gu))
+          if(length(updated_geog$field) > 0) {
+            for(i in 1:length(updated_geog$field)) {
+              if(!is.na(updated_geog$value[i])) {
+                if(updated_geog$value[i] != "") {
+                  if(updated_geog$field[i] == "nation") {
+                    new_n <- list(value = updated_geog$value[i],
+                                  abbr = updated_geog$abbr[i],
+                                  lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
+                    )
+                    new_nation <- c(new_nation, list(new_n))
+                  } else if(updated_geog$field[i] == "geogCover"){
+                    new_gc <- list(value = updated_geog$value[i],
+                                   lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
+                    )
+                    new_geogCover <- c(new_geogCover, list(new_gc))
+                  } else {
+                    new_gu <- list(value = updated_geog$value[i],
+                                   lang = stringr::str_extract(updated_geog$lang[i], "^[a-z]{2}")
+                    )
+                    new_geogUnit <- c(new_geogUnit, list(new_gu))
+                  }
                 }
               }
             }
@@ -600,19 +612,21 @@ timePeriods_server <- function(id, dat, filepth, lang) {
           updated_prds$event[is.na(updated_prds$event) | updated_prds$event == "" ] <- "single"
           updatedData$stdyDscr$stdyInfo$sumDscr$timePrd <- NULL
           new_timePrd <- list()
-          for(i in 1:length(updated_prds$value)) {
-            if(!is.na(updated_prds$value[i])) {
-              if(updated_prds$value[i] != "") {
-                new_tp <- list(value = updated_prds$value[i],
-                               date = as.character(updated_prds$date[i]),
-                               event = updated_prds$event[i],
-                               cycle = updated_prds$cycle[i],
-                               lang = stringr::str_extract(updated_prds$lang[i], "^[a-z]{2}")
-                )
-                new_timePrd <- c(new_timePrd, list(new_tp))
+          if(length(updated_prds$value) > 0) {
+            for(i in 1:length(updated_prds$value)) {
+              if(!is.na(updated_prds$value[i])) {
+                if(updated_prds$value[i] != "") {
+                  new_tp <- list(value = updated_prds$value[i],
+                                 date = as.character(updated_prds$date[i]),
+                                 event = updated_prds$event[i],
+                                 cycle = updated_prds$cycle[i],
+                                 lang = stringr::str_extract(updated_prds$lang[i], "^[a-z]{2}")
+                  )
+                  new_timePrd <- c(new_timePrd, list(new_tp))
+                }
               }
-            }
-          } 
+            } 
+          }
           updatedData$stdyDscr$stdyInfo$sumDscr$timePrd <- new_timePrd
           updatedData$stdyDscr$stdyInfo$sumDscr$timePrd <- recurse_write(updatedData$stdyDscr$stdyInfo$sumDscr$timePrd)
           updatedData$stdyDscr$stdyInfo$sumDscr$timePrd <- lapply(updatedData$stdyDscr$stdyInfo$sumDscr$timePrd,function(x) x[!is.na(x)])

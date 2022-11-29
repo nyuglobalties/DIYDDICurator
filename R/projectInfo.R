@@ -91,13 +91,15 @@ title_server <- function(id, dat, filepth, lang) {
           updated_parTitl <- hot_to_r(input$parTitl)
           updatedData$stdyDscr$citation$titlStmt$parTilt <- NULL
           new_parTitl <- list()
-          for(i in 1:length(updated_parTitl$value)) {
-            if(!is.na(updated_parTitl$value[i])) {
-              if(updated_parTitl$value[i] != "") {
-                new <- list(value = updated_parTitl$value[i],
-                            lang  = stringr::str_extract(updated_parTitl$lang[i], "^[a-z]{2}")
-                )
-                new_parTitl <- c(new_parTitl, list(new))
+          if(length(updated_parTitl$value) > 0) {
+            for(i in 1:length(updated_parTitl$value)) {
+              if(!is.na(updated_parTitl$value[i])) {
+                if(updated_parTitl$value[i] != "") {
+                  new <- list(value = updated_parTitl$value[i],
+                              lang  = stringr::str_extract(updated_parTitl$lang[i], "^[a-z]{2}")
+                  )
+                  new_parTitl <- c(new_parTitl, list(new))
+                }
               }
             }
           }
@@ -206,13 +208,15 @@ authors_server <- function(id, dat, filepth) {
           updated_authors <- hot_to_r(input$authors)
           updatedData$stdyDscr$citation$rspStmt$AuthEnty <- NULL
           new_authors <- list()
-          for(i in 1:length(updated_authors$name)) {
-            if(!is.na(updated_authors$name[i])) {
-              if(updated_authors$name[i] != "") {
-                new <- list(name = updated_authors$name[i],
-                            affiliation = updated_authors$affiliation[i]
-                )
-                new_authors <- c(new_authors, list(new))
+          if(length(updated_authors$name) > 0) {
+            for(i in 1:length(updated_authors$name)) {
+              if(!is.na(updated_authors$name[i])) {
+                if(updated_authors$name[i] != "") {
+                  new <- list(name = updated_authors$name[i],
+                              affiliation = updated_authors$affiliation[i]
+                  )
+                  new_authors <- c(new_authors, list(new))
+                }
               }
             }
           }
@@ -223,14 +227,16 @@ authors_server <- function(id, dat, filepth) {
           updated_contrib <- hot_to_r(input$contrib)
           updatedData$stdyDscr$citation$rspStmt$othId <- NULL
           new_contrib <- list()
-          for(i in 1:length(updated_contrib$name)) {
-            if(!is.na(updated_contrib$name[i])) {
-              if(updated_contrib$name[i] != "") {
-                new <- list(name = updated_contrib$name[i],
-                            role = updated_contrib$role[i],
-                            affiliation = updated_contrib$affiliation[i]
-                )
-                new_contrib <- c(new_contrib, list(new))
+          if(length(updated_contrib$name) > 0) {
+            for(i in 1:length(updated_contrib$name)) {
+              if(!is.na(updated_contrib$name[i])) {
+                if(updated_contrib$name[i] != "") {
+                  new <- list(name = updated_contrib$name[i],
+                              role = updated_contrib$role[i],
+                              affiliation = updated_contrib$affiliation[i]
+                  )
+                  new_contrib <- c(new_contrib, list(new))
+                }
               }
             }
           }
@@ -555,15 +561,17 @@ producers_server <- function(id, dat, filepth, lang) {
           updated_producers <- hot_to_r(input$producers)
           updatedData$stdyDscr$citation$prodStmt$producer <- NULL
           new_producers <- list()
-          for(i in 1:length(updated_producers$name)) {
-            if(!is.na(updated_producers$name[i])) {
-              if(updated_producers$name[i] != "") {
-                new <- list(name = updated_producers$name[i],
-                            abbr = updated_producers$abbr[i],
-                            affiliation = updated_producers$affiliation[i],
-                            role = updated_producers$role[i]
-                )
-                new_producers <- c(new_producers, list(new))
+          if(length(updated_producers$name) > 0) {
+            for(i in 1:length(updated_producers$name)) {
+              if(!is.na(updated_producers$name[i])) {
+                if(updated_producers$name[i] != "") {
+                  new <- list(name = updated_producers$name[i],
+                              abbr = updated_producers$abbr[i],
+                              affiliation = updated_producers$affiliation[i],
+                              role = updated_producers$role[i]
+                  )
+                  new_producers <- c(new_producers, list(new))
+                }
               }
             }
           }
@@ -574,11 +582,13 @@ producers_server <- function(id, dat, filepth, lang) {
           updated_prodPlac <- hot_to_r(input$prodPlac)
           updatedData$stdyDscr$citation$prodStmt$prodPlac <- NULL
           new_prodPlac <- list()
-          for(i in 1:length(updated_prodPlac$value)) {
-            if(!is.na(updated_prodPlac$value[i])) {
-              if(updated_prodPlac$value[i] != "") {
-                new <- list(value = updated_prodPlac$value[i])
-                new_prodPlac <- c(new_prodPlac, list(new))
+          if(length(updated_prodPlac$value) > 0) {
+            for(i in 1:length(updated_prodPlac$value)) {
+              if(!is.na(updated_prodPlac$value[i])) {
+                if(updated_prodPlac$value[i] != "") {
+                  new <- list(value = updated_prodPlac$value[i])
+                  new_prodPlac <- c(new_prodPlac, list(new))
+                }
               }
             }
           }
@@ -589,13 +599,15 @@ producers_server <- function(id, dat, filepth, lang) {
           updated_prodDate <- hot_to_r(input$prodDate)
           updatedData$stdyDscr$citation$prodStmt$prodDate <- NULL
           new_prodDate <- list()
-          for(i in 1:length(updated_prodDate$value)) {
-            if(!is.na(updated_prodDate$value[i])) {
-              if(updated_prodDate$value[i] != "") {
-                new <- list(value = updated_prodDate$value[i],
-                            date = as.character(updated_prodDate$date[i]),
-                            lang = stringr::str_extract(updated_prodDate$lang, "^[a-z]{2}"))
-                new_prodDate <- c(new_prodDate, list(new))
+          if(length(updated_prodDate$value) > 0) {
+            for(i in 1:length(updated_prodDate$value)) {
+              if(!is.na(updated_prodDate$value[i])) {
+                if(updated_prodDate$value[i] != "") {
+                  new <- list(value = updated_prodDate$value[i],
+                              date = as.character(updated_prodDate$date[i]),
+                              lang = stringr::str_extract(updated_prodDate$lang, "^[a-z]{2}"))
+                  new_prodDate <- c(new_prodDate, list(new))
+                }
               }
             }
           }
@@ -662,14 +674,16 @@ funders_server <- function(id, dat, filepth) {
           updated_funders <- hot_to_r(input$funders)
           updatedData$stdyDscr$citation$prodStmt$fundAg <- NULL
           new_funders <- list()
-          for(i in 1:length(updated_funders$name)) {
-            if(!is.na(updated_funders$name[i])) {
-              if(updated_funders$name[i] != "") {
-                new <- list(name = updated_funders$name[i],
-                            abbr = updated_funders$abbr[i],
-                            role = updated_funders$role[i]
-                )
-                new_funders <- c(new_funders, list(new))
+          if(length(updated_funders$name) > 0) {
+            for(i in 1:length(updated_funders$name)) {
+              if(!is.na(updated_funders$name[i])) {
+                if(updated_funders$name[i] != "") {
+                  new <- list(name = updated_funders$name[i],
+                              abbr = updated_funders$abbr[i],
+                              role = updated_funders$role[i]
+                  )
+                  new_funders <- c(new_funders, list(new))
+                }
               }
             }
           }

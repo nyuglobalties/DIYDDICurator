@@ -64,16 +64,18 @@ collDate_server <- function(id, dat, filepth, lang) {
           updated_prds$event[is.na(updated_prds$event) | updated_prds$event == "" ] <- "single"
           updatedData$stdyDscr$stdyInfo$sumDscr$collDate <- NULL
           new_collDate <- list()
-          for(i in 1:length(updated_prds$value)) {
-            if(!is.na(updated_prds$value[i])) {
-              if(updated_prds$value[i] != "") {
-                new_cd <- list(value = updated_prds$value[i],
-                               date = as.character(updated_prds$date[i]),
-                               event = updated_prds$event[i],
-                               cycle = updated_prds$cycle[i],
-                               lang = stringr::str_extract(updated_prds$lang[i], "^[a-z]{2}")
-                )
-                new_collDate <- c(new_collDate, list(new_cd))
+          if(length(updated_prds$value) > 0) {
+            for(i in 1:length(updated_prds$value)) {
+              if(!is.na(updated_prds$value[i])) {
+                if(updated_prds$value[i] != "") {
+                  new_cd <- list(value = updated_prds$value[i],
+                                 date = as.character(updated_prds$date[i]),
+                                 event = updated_prds$event[i],
+                                 cycle = updated_prds$cycle[i],
+                                 lang = stringr::str_extract(updated_prds$lang[i], "^[a-z]{2}")
+                  )
+                  new_collDate <- c(new_collDate, list(new_cd))
+                }
               }
             }
           }
@@ -137,13 +139,15 @@ timeMeth_server <- function(id, dat, filepth, lang) {
           updated_timeMeth <- hot_to_r(input$timeMeth)
           updatedData$stdyDscr$method$dataColl$timeMeth <- NULL
           new_timeMeth <- list()
-          for(i in 1:length(updated_timeMeth$value)) {
-            if(!is.na(updated_timeMeth$value[i])) {
-              if(updated_timeMeth$value[i] != "") {
-                new <- list(value = updated_timeMeth$value[i],
-                            lang  = stringr::str_extract(updated_timeMeth$lang[i], "^[a-z]{2}")
-                )
-                new_timeMeth <- c(new_timeMeth, list(new))
+          if(length(updated_timeMeth$value) > 0) {
+            for(i in 1:length(updated_timeMeth$value)) {
+              if(!is.na(updated_timeMeth$value[i])) {
+                if(updated_timeMeth$value[i] != "") {
+                  new <- list(value = updated_timeMeth$value[i],
+                              lang  = stringr::str_extract(updated_timeMeth$lang[i], "^[a-z]{2}")
+                  )
+                  new_timeMeth <- c(new_timeMeth, list(new))
+                }
               }
             }
           }
@@ -208,13 +212,15 @@ frequenc_server <- function(id, dat, filepth, lang) {
           updated_frequenc <- hot_to_r(input$frequenc)
           updatedData$stdyDscr$method$dataColl$frequenc <- NULL
           new_frequenc <- list()
-          for(i in 1:length(updated_frequenc$value)) {
-            if(!is.na(updated_frequenc$value[i])) {
-              if(updated_frequenc$value[i] != "") {
-                new <- list(value = updated_frequenc$value[i],
-                            lang  = stringr::str_extract(updated_frequenc$lang[i], "^[a-z]{2}")
-                )
-                new_frequenc <- c(new_frequenc, list(new))
+          if(length(updated_frequenc$value) > 0) {
+            for(i in 1:length(updated_frequenc$value)) {
+              if(!is.na(updated_frequenc$value[i])) {
+                if(updated_frequenc$value[i] != "") {
+                  new <- list(value = updated_frequenc$value[i],
+                              lang  = stringr::str_extract(updated_frequenc$lang[i], "^[a-z]{2}")
+                  )
+                  new_frequenc <- c(new_frequenc, list(new))
+                }
               }
             }
           }
@@ -299,16 +305,18 @@ dataCollector_server <- function(id, dat, filepth, lang) {
           updated_dataCollector <- hot_to_r(input$dataCollector)
           updatedData$stdyDscr$method$dataColl$dataCollector <- NULL
           new_dataCollector <- list()
-          for(i in 1:length(updated_dataCollector$value)) {
-            if(!is.na(updated_dataCollector$value[i])) {
-              if(updated_dataCollector$value[i] != "") {
-                new <- list(value = updated_dataCollector$value[i],
-                            abbr = updated_dataCollector$abbr[i],
-                            affiliation = updated_dataCollector$affiliation[i],
-                            role = updated_dataCollector$role[i],
-                            lang  = stringr::str_extract(updated_dataCollector$lang[i], "^[a-z]{2}")
-                )
-                new_dataCollector <- c(new_dataCollector, list(new))
+          if(length(updated_dataCollector$value) > 0) {
+            for(i in 1:length(updated_dataCollector$value)) {
+              if(!is.na(updated_dataCollector$value[i])) {
+                if(updated_dataCollector$value[i] != "") {
+                  new <- list(value = updated_dataCollector$value[i],
+                              abbr = updated_dataCollector$abbr[i],
+                              affiliation = updated_dataCollector$affiliation[i],
+                              role = updated_dataCollector$role[i],
+                              lang  = stringr::str_extract(updated_dataCollector$lang[i], "^[a-z]{2}")
+                  )
+                  new_dataCollector <- c(new_dataCollector, list(new))
+                }
               }
             }
           }
@@ -374,13 +382,15 @@ collMode_server <- function(id, dat, filepth, lang) {
           updated_collMode <- hot_to_r(input$collMode)
           updatedData$stdyDscr$method$dataColl$collMode <- NULL
           new_collMode <- list()
-          for(i in 1:length(updated_collMode$value)) {
+          if(length(updated_collMode$value) > 0) {
             for(i in 1:length(updated_collMode$value)) {
-              if(!is.na(updated_collMode$value[i])) {
-                new <- list(value = updated_collMode$value[i],
-                            lang  = stringr::str_extract(updated_collMode$lang[i], "^[a-z]{2}")
-                )
-                new_collMode <- c(new_collMode, list(new))
+              for(i in 1:length(updated_collMode$value)) {
+                if(!is.na(updated_collMode$value[i])) {
+                  new <- list(value = updated_collMode$value[i],
+                              lang  = stringr::str_extract(updated_collMode$lang[i], "^[a-z]{2}")
+                  )
+                  new_collMode <- c(new_collMode, list(new))
+                }
               }
             }
           }
@@ -447,13 +457,15 @@ collSitu_server <- function(id, dat, filepth, lang) {
           updated_collSitu <- hot_to_r(input$collSitu)
           updatedData$stdyDscr$method$dataColl$collSitu <- NULL
           new_collSitu <- list()
-          for(i in 1:length(updated_collSitu$value)) {
-            if(!is.na(updated_collSitu$value[i])) {
-              if(updated_collSitu$value[i] != "") {
-                new <- list(value = updated_collSitu$value[i],
-                            lang  = stringr::str_extract(updated_collSitu$lang[i], "^[a-z]{2}")
-                )
-                new_collSitu <- c(new_collSitu, list(new))
+          if(length(updated_collSitu$value) > 0) {
+            for(i in 1:length(updated_collSitu$value)) {
+              if(!is.na(updated_collSitu$value[i])) {
+                if(updated_collSitu$value[i] != "") {
+                  new <- list(value = updated_collSitu$value[i],
+                              lang  = stringr::str_extract(updated_collSitu$lang[i], "^[a-z]{2}")
+                  )
+                  new_collSitu <- c(new_collSitu, list(new))
+                }
               }
             }
           }
@@ -526,14 +538,16 @@ collectorTraining_server <- function(id, dat, filepth, lang) {
           updated_collectorTraining <- hot_to_r(input$collectorTraining)
           updatedData$stdyDscr$method$dataColl$collectorTraining <- NULL
           new_collectorTraining <- list()
-          for(i in 1:length(updated_collectorTraining$value)) {
-            if(!is.na(updated_collectorTraining$value[i])) {
-              if(updated_collectorTraining$value[i] != "") {
-                new <- list(value = updated_collectorTraining$value[i],
-                            type = updated_collectorTraining$type[i],
-                            lang  = stringr::str_extract(updated_collectorTraining$lang[i], "^[a-z]{2}")
-                )
-                new_collectorTraining <- c(new_collectorTraining, list(new))
+          if(length(updated_collectorTraining$value) > 0) {
+            for(i in 1:length(updated_collectorTraining$value)) {
+              if(!is.na(updated_collectorTraining$value[i])) {
+                if(updated_collectorTraining$value[i] != "") {
+                  new <- list(value = updated_collectorTraining$value[i],
+                              type = updated_collectorTraining$type[i],
+                              lang  = stringr::str_extract(updated_collectorTraining$lang[i], "^[a-z]{2}")
+                  )
+                  new_collectorTraining <- c(new_collectorTraining, list(new))
+                }
               }
             }
           }
@@ -608,14 +622,16 @@ resInstru_server <- function(id, dat, filepth, lang) {
           updated_resInstru <- hot_to_r(input$resInstru)
           updatedData$stdyDscr$method$dataColl$resInstru <- NULL
           new_resInstru <- list()
-          for(i in 1:length(updated_resInstru$value)) {
-            if(!is.na(updated_resInstru$value[i])) {
-              if(updated_resInstru$value[i] != "") {
-                new <- list(value = updated_resInstru$value[i],
-                            type = updated_resInstru$type[i],
-                            lang  = stringr::str_extract(updated_resInstru$lang[i], "^[a-z]{2}")
-                )
-                new_resInstru <- c(new_resInstru, list(new))
+          if(length(updated_resInstru$value) > 0) {
+            for(i in 1:length(updated_resInstru$value)) {
+              if(!is.na(updated_resInstru$value[i])) {
+                if(updated_resInstru$value[i] != "") {
+                  new <- list(value = updated_resInstru$value[i],
+                              type = updated_resInstru$type[i],
+                              lang  = stringr::str_extract(updated_resInstru$lang[i], "^[a-z]{2}")
+                  )
+                  new_resInstru <- c(new_resInstru, list(new))
+                }
               }
             }
           }
@@ -685,14 +701,16 @@ instrumentDevelopment_server <- function(id, dat, filepth, lang) {
           updated_instrumentDevelopment <- hot_to_r(input$instrumentDevelopment)
           updatedData$stdyDscr$method$dataColl$instrumentDevelopment <- NULL
           new_instrumentDevelopment <- list()
-          for(i in 1:length(updated_instrumentDevelopment$value)) {
-            if(!is.na(updated_instrumentDevelopment$value[i])) {
-              if(updated_instrumentDevelopment$value[i] != "") {
-                new <- list(value = updated_instrumentDevelopment$value[i],
-                            type = updated_instrumentDevelopment$type[i],
-                            lang  = stringr::str_extract(updated_instrumentDevelopment$lang[i], "^[a-z]{2}")
-                )
-                new_instrumentDevelopment <- c(new_instrumentDevelopment, list(new))
+          if(length(updated_instrumentDevelopment$value) > 0) {
+            for(i in 1:length(updated_instrumentDevelopment$value)) {
+              if(!is.na(updated_instrumentDevelopment$value[i])) {
+                if(updated_instrumentDevelopment$value[i] != "") {
+                  new <- list(value = updated_instrumentDevelopment$value[i],
+                              type = updated_instrumentDevelopment$type[i],
+                              lang  = stringr::str_extract(updated_instrumentDevelopment$lang[i], "^[a-z]{2}")
+                  )
+                  new_instrumentDevelopment <- c(new_instrumentDevelopment, list(new))
+                }
               }
             }
           }
@@ -764,14 +782,16 @@ ConOps_server <- function(id, dat, filepth, lang) {
           updated_ConOps <- hot_to_r(input$ConOps)
           updatedData$stdyDscr$method$dataColl$ConOps <- NULL
           new_ConOps <- list()
-          for(i in 1:length(updated_ConOps$value)) {
-            if(!is.na(updated_ConOps$value[i])) {
-              if(updated_ConOps$value[i] != "") {
-                new <- list(value = updated_ConOps$value[i],
-                            agency = updated_ConOps$agency[i],
-                            lang  = stringr::str_extract(updated_ConOps$lang[i], "^[a-z]{2}")
-                )
-                new_ConOps <- c(new_ConOps, list(new))
+          if(length(updated_ConOps$value) > 0) {
+            for(i in 1:length(updated_ConOps$value)) {
+              if(!is.na(updated_ConOps$value[i])) {
+                if(updated_ConOps$value[i] != "") {
+                  new <- list(value = updated_ConOps$value[i],
+                              agency = updated_ConOps$agency[i],
+                              lang  = stringr::str_extract(updated_ConOps$lang[i], "^[a-z]{2}")
+                  )
+                  new_ConOps <- c(new_ConOps, list(new))
+                }
               }
             }
           }
@@ -837,13 +857,15 @@ actMin_server <- function(id, dat, filepth, lang) {
           updated_actMin <- hot_to_r(input$actMin)
           updatedData$stdyDscr$method$dataColl$actMin <- NULL
           new_actMin <- list()
-          for(i in 1:length(updated_actMin$value)) {
-            if(!is.na(updated_actMin$value[i])) {
-              if(updated_actMin$value[i] != "") {
-                new <- list(value = updated_actMin$value[i],
-                            lang  = stringr::str_extract(updated_actMin$lang[i], "^[a-z]{2}")
-                )
-                new_actMin <- c(new_actMin, list(new))
+          if(length(updated_actMin$value) > 0) {
+            for(i in 1:length(updated_actMin$value)) {
+              if(!is.na(updated_actMin$value[i])) {
+                if(updated_actMin$value[i] != "") {
+                  new <- list(value = updated_actMin$value[i],
+                              lang  = stringr::str_extract(updated_actMin$lang[i], "^[a-z]{2}")
+                  )
+                  new_actMin <- c(new_actMin, list(new))
+                }
               }
             }
           }
@@ -909,13 +931,15 @@ sampProc_server <- function(id, dat, filepth, lang) {
           updated_sampProc <- hot_to_r(input$sampProc)
           updatedData$stdyDscr$method$dataColl$sampProc <- NULL
           new_sampProc <- list()
-          for(i in 1:length(updated_sampProc$value)) {
-            if(!is.na(updated_sampProc$value[i])) {
-              if(updated_sampProc$value[i] != "") {
-                new <- list(value = updated_sampProc$value[i],
-                            lang  = stringr::str_extract(updated_sampProc$lang[i], "^[a-z]{2}")
-                )
-                new_sampProc <- c(new_sampProc, list(new))
+          if(length(updated_sampProc$value) > 0) {
+            for(i in 1:length(updated_sampProc$value)) {
+              if(!is.na(updated_sampProc$value[i])) {
+                if(updated_sampProc$value[i] != "") {
+                  new <- list(value = updated_sampProc$value[i],
+                              lang  = stringr::str_extract(updated_sampProc$lang[i], "^[a-z]{2}")
+                  )
+                  new_sampProc <- c(new_sampProc, list(new))
+                }
               }
             }
           }
@@ -981,13 +1005,15 @@ deviat_server <- function(id, dat, filepth, lang) {
           updated_deviat <- hot_to_r(input$deviat)
           updatedData$stdyDscr$method$dataColl$deviat <- NULL
           new_deviat <- list()
-          for(i in 1:length(updated_deviat$value)) {
-            if(!is.na(updated_deviat$value[i])) {
-              if(updated_deviat$value[i] != "") {
-                new <- list(value = updated_deviat$value[i],
-                            lang  = stringr::str_extract(updated_deviat$lang[i], "^[a-z]{2}")
-                )
-                new_deviat <- c(new_deviat, list(new))
+          if(length(updated_deviat$value) > 0) {
+            for(i in 1:length(updated_deviat$value)) {
+              if(!is.na(updated_deviat$value[i])) {
+                if(updated_deviat$value[i] != "") {
+                  new <- list(value = updated_deviat$value[i],
+                              lang  = stringr::str_extract(updated_deviat$lang[i], "^[a-z]{2}")
+                  )
+                  new_deviat <- c(new_deviat, list(new))
+                }
               }
             }
           }
