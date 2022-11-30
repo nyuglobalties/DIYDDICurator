@@ -55,7 +55,7 @@ readme_generation_server <- function(id, dat) {
         file.copy("templates/readme_template.Rmd", tempReport, overwrite = TRUE)
         
         params <- list(data = dat())
-    
+        
         rmarkdown::render(tempReport, output_file = file,
                           params = params,
                           envir = new.env(parent = globalenv()))
@@ -107,7 +107,7 @@ readme_generation_server <- function(id, dat) {
                           "</b> and <b>", dat()$stdyDscr$citation$serStmt[[2]]$serName[[1]]$value, 
                           " (", dat()$stdyDscr$citation$serStmt[[2]]$serName[[1]]$abbr, ")</b> project</h4>")
           } else if(!is.null(dat()$stdyDscr$citation$serStmt[[1]]$serName[[1]]$abbr) &
-                     is.null(dat()$stdyDscr$citation$serStmt[[2]]$serName[[1]]$abbr)) {
+                    is.null(dat()$stdyDscr$citation$serStmt[[2]]$serName[[1]]$abbr)) {
             out <- paste0(out, "<h4>A <b>", dat()$stdyDscr$citation$serStmt[[1]]$serName[[1]]$value, 
                           " (", dat()$stdyDscr$citation$serStmt[[1]]$serName[[1]]$abbr, 
                           ")</b> and <b>", dat()$stdyDscr$citation$serStmt[[2]]$serName[[1]]$value, 
@@ -334,7 +334,7 @@ readme_generation_server <- function(id, dat) {
       anlyUnit <- substr(anlyUnit, 1, nchar(anlyUnit)-2)
       HTML(anlyUnit)
     })
-
+    
     output$kindOfData <- renderText( {
       kindOfData <- ""
       if(length(dat()$stdyDscr$stdyInfo$sumDscr$dataKind) > 0) {
@@ -424,14 +424,22 @@ readme_generation_server <- function(id, dat) {
       }
       cycles = unique(ds$cycle)
       for(c in cycles) {
-        subset <- ds %>% filter(cycle == c)
+        if(is.na(cycles)) {
+          subset <- ds
+        } else {
+          subset <- ds %>% filter(cycle == c)
+        }
         if(length(subset$event) == 1) {
           timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>",
-                             subset$date[1], " (", subset$event[1], ") <br/>")
+                            subset$date[1], " (", subset$event[1], ") <br/>")
         } else {
-          start <- subset %>% filter(event == "start") %>% select(value)
-          end <- subset %>% filter(event == "end") %>% select(value)
-          timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>", start, " to ", end, "<br/>")
+          start <- subset %>% filter(event == "start") %>% select(date)
+          end <- subset %>% filter(event == "end") %>% select(date)
+          if(is.na(cycles)) {
+            timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;", start, " to ", end, "<br/>")
+          } else {
+            timePrd <- paste0(timePrd, "&nbsp; &nbsp;&nbsp; &nbsp;<b>", c, ": </b>", start, " to ", end, "<br/>")
+          }
         }
       }
       timePrd <- substr(timePrd, 1, nchar(timePrd)-5)
@@ -484,7 +492,7 @@ readme_generation_server <- function(id, dat) {
       mode <- substr(mode, 1, nchar(mode)-2)
       HTML(mode)
     })
-
+    
     output$collectorTraining <- renderText( {
       training <- ""
       if(length(dat()$stdyDscr$method$dataColl$collectorTraining) > 0) {
@@ -508,7 +516,7 @@ readme_generation_server <- function(id, dat) {
       situ <- substr(situ, 1, nchar(situ)-2)
       HTML(situ)
     })
-
+    
     output$collDate <- renderText( {
       collDate <- ""
       ds <- tibble(date = character(),
@@ -666,7 +674,7 @@ readme_generation_server <- function(id, dat) {
       HTML(deviat)
     })
     
-
+    
     output$relMat <- renderText( {
       relMat <- ""
       if(length(dat()$stdyDscr$othrStdyMat$relMat) > 0) {
@@ -689,7 +697,7 @@ readme_generation_server <- function(id, dat) {
       }
       HTML(relMat)
     })
-
+    
     output$relStdy <- renderText( {
       relStdy <- ""
       if(length(dat()$stdyDscr$othrStdyMat$relStdy) > 0 &
@@ -708,12 +716,12 @@ readme_generation_server <- function(id, dat) {
           }
         } else if(is.null(n$biblCit) & !is.null(n$description)) {
           relStdy <- paste0(relStdy, "<em>", n$description, 
-                           "<br><br>")
+                            "<br><br>")
         }  
       }
       HTML(relStdy)
     })
-
+    
     output$relPubl <- renderText( {
       relPubl <- ""
       if(length(dat()$stdyDscr$othrStdyMat$relPubl) > 0 &
@@ -764,7 +772,7 @@ readme_generation_server <- function(id, dat) {
       }
       HTML(othRefs)
     })
-            
+    
     output$frequenc <- renderText( {
       frequenc <- ""
       if(length(dat()$stdyDscr$method$dataColl$frequenc) > 0 & 
@@ -774,7 +782,7 @@ readme_generation_server <- function(id, dat) {
          length(dat()$stdyDscr$method$dataColl$sampProc) == 0) {
         frequenc <- "<h4>Sampling Procedure</h4>"
       }
-        
+      
       if(length(dat()$stdyDscr$method$dataColl$frequenc) > 0) {
         frequenc <- paste0(frequenc, "&nbsp; &nbsp;&nbsp; &nbsp;<b>Frequency of Collection: </b>")
         for (n in dat()$stdyDscr$method$dataColl$frequenc) {
