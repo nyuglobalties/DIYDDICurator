@@ -3,6 +3,11 @@
 
 # DIYDDICurator
 
+<!-- badges: start -->
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7405487.svg)](https://doi.org/10.5281/zenodo.7405487)
+<!-- badges: end -->
+
 ## Description
 
 DIYDDICurator is a graphic user interface to the `rddi` package. It is a
